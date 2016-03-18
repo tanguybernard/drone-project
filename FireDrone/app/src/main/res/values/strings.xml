@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">FireDrone</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="Menu">Menu</string>
+    <string name="controle">Contrôle du drône</string>
+    <string name="image">Images du drône</string>
+    <string name="parcours">Définition de parcours</string>
+    <string name="planning">Planning</string>
+    <string name="directive">Directives</string>
+    <string name="rapport">Rapport de terrain</string>
+    <string name="moyen">Moyens engagés</string>
+    <string name="fiche">Fiche d\'intervention</string>
+    <string name="ficheTitre">Fiche d\'intervention</string>
+    <string name="ficheMoyen">Moyens engagés</string>
+    <string name="ficheRapport">Rapport de terrain</string>
+    <string name="ficheDirective">Directive du Centre de Commandement</string>
+    <string name="fichePlanning">Planning</string>
+    <string name="ficheParcours">Définition du parcours du drône</string>
+    <string name="ficheControle">Contrôle du drône</string>
+    <string name="ficheImage">Images du drône</string>
+</resources>
