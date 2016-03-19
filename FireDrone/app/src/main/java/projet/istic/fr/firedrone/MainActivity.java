@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout myDrawer;
 
     private FragmentDrawPath fragmentDrawPath;
+    private DroneControlFragment droneControlFragment;
 
     @Override
     protected void onStart() {
@@ -78,12 +79,17 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_plan:
                 break;
             case R.id.nav_parcours:
-                fragmentDrawPath = new FragmentDrawPath();
+                if(fragmentDrawPath == null) {
+                    fragmentDrawPath = new FragmentDrawPath();
+                }
                 //fragmentDrawPath.getMapAsync(this);
                 fragment = fragmentDrawPath;
                 break;
             case R.id.nav_controle:
-                fragment=new DroneControlFragment();
+                if(droneControlFragment == null) {
+                    droneControlFragment = new DroneControlFragment();
+                }
+                fragment= droneControlFragment;
                 break;
             case R.id.nav_image:
                 break;

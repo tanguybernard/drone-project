@@ -1,6 +1,10 @@
 package projet.istic.fr.firedrone;
 
+import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,10 +15,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
@@ -54,6 +60,7 @@ public class DroneControlFragment extends Fragment implements DroneListener {
     private Button connectButton;
     private Button takeOfftButton;
     private Button gotButton;
+    private Button takeSnapshot;
     Spinner modeSelector;
 
 
@@ -80,6 +87,13 @@ public class DroneControlFragment extends Fragment implements DroneListener {
             @Override
             public void onClick(View v) {
                 goDrone(v);
+            }
+        });
+        takeSnapshot =  (Button)getView().findViewById(R.id.btnSnapshot);
+        takeSnapshot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeSnapshot(v);
             }
         });
 
@@ -116,6 +130,11 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
         VehicleMode vehicleMode = vehicleState.getVehicleMode();
         ArrayAdapter arrayAdapter = (ArrayAdapter) this.modeSelector.getAdapter();
+        if(arrayAdapter == null){
+            Type droneType= this.drone.getAttribute(AttributeType.TYPE);
+            updateVehicleModesForType(droneType.getDroneType());
+            arrayAdapter = (ArrayAdapter) this.modeSelector.getAdapter();
+        }
         this.modeSelector.setSelection(arrayAdapter.getPosition(vehicleMode));
     }
 
@@ -234,18 +253,20 @@ public class DroneControlFragment extends Fragment implements DroneListener {
                 alertUser("Drone Connected");
                 updateConnectedButton(this.drone.isConnected());
                 updateArmButton();
-
+                updateScreenShotButton();
                 break;
 
             case AttributeEvent.STATE_DISCONNECTED:
                 alertUser("Drone Disconnected");
                 updateConnectedButton(this.drone.isConnected());
                 updateArmButton();
+                updateScreenShotButton();
                 break;
 
             case AttributeEvent.STATE_UPDATED:
             case AttributeEvent.STATE_ARMING:
                 updateArmButton();
+                updateScreenShotButton();
                 break;
 
             case AttributeEvent.TYPE_UPDATED:
@@ -283,6 +304,14 @@ public class DroneControlFragment extends Fragment implements DroneListener {
     @Override
     public void onDroneServiceInterrupted(String errorMsg) {
 
+    }
+
+    private void updateScreenShotButton(){
+        if (!this.drone.isConnected()) {
+            takeSnapshot.setVisibility(View.INVISIBLE);
+        } else {
+            takeSnapshot.setVisibility(View.VISIBLE);
+        }
     }
 
     protected void updateArmButton() {
@@ -351,5 +380,34 @@ public class DroneControlFragment extends Fragment implements DroneListener {
                              Bundle savedInstanceState) {
 
         return  inflater.inflate(R.layout.fragment_controle, container, false);
+    }
+
+    private void takeSnapshot(View v) {
+
+// send the intent directly to the google earth activity that can handle search
+       ;
+
+        Gps gps = drone.getAttribute(AttributeType.GPS);
+        Altitude altitude = drone.getAttribute(AttributeType.ALTITUDE);
+        Uri uri = Uri.parse("geo:0,0?q=" + gps.getPosition().getLatitude() + "," + gps.getPosition().getLongitude());
+        alertUser(uri.toString());
+        Intent it = new Intent(Intent.ACTION_VIEW,uri);
+        it.setClassName("com.google.earth",
+                "com.google.earth.EarthActivity");
+// always trap for ActivityNotFound in case Google earth is not on the device
+        try {
+            // launch google earth and fly to location
+            this.startActivity(it);
+        }
+        catch (ActivityNotFoundException e) {
+        }
+    }
+
+    private int convertRangeToZoom(double range) {
+        //see: google.maps.v3.all.debug.js
+        int zoom = (int) Math.round(Math.log(35200000 / range) / Math.log(2));
+        if (zoom < 0) zoom = 0;
+        else if (zoom > 19) zoom = 19;
+        return zoom;
     }
 }

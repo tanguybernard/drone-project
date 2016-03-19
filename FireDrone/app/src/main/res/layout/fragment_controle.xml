@@ -154,5 +154,14 @@
             android:layout_alignParentEnd="true"
             android:layout_column="1"
             android:visibility="invisible" />
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSnapshot"
+            android:text="Prendre une photo"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_column="1"/>
     </LinearLayout>
 </LinearLayout>
