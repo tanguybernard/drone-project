@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         //initialisation de la tower
         this.controlTower = new ControlTower(getApplicationContext());
-
+        droneControlFragment = DroneControlFragment.getInstance();
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -79,16 +79,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_plan:
                 break;
             case R.id.nav_parcours:
-                if(fragmentDrawPath == null) {
-                    fragmentDrawPath = new FragmentDrawPath();
-                }
+                fragmentDrawPath = FragmentDrawPath.getInstance();
+
                 //fragmentDrawPath.getMapAsync(this);
                 fragment = fragmentDrawPath;
                 break;
             case R.id.nav_controle:
-                if(droneControlFragment == null) {
-                    droneControlFragment = new DroneControlFragment();
-                }
+                droneControlFragment = DroneControlFragment.getInstance();
                 fragment= droneControlFragment;
                 break;
             case R.id.nav_image:
@@ -106,7 +103,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
+    public void setDroneMoveListener(DroneControlFragment.DroneMoveListener droneMoveListener){
+        droneControlFragment.setDroneMoveListener(droneMoveListener);
+    }
 
 
     public ControlTower getControlTower(){

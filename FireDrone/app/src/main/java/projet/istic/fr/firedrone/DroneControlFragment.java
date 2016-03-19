@@ -55,6 +55,7 @@ public class DroneControlFragment extends Fragment implements DroneListener {
     private Drone drone;
     private int droneType = Type.TYPE_UNKNOWN;
     private final Handler handler = new Handler();
+    private DroneMoveListener droneMoveListener;
 
 
     private Button connectButton;
@@ -62,7 +63,18 @@ public class DroneControlFragment extends Fragment implements DroneListener {
     private Button gotButton;
     private Button takeSnapshot;
     Spinner modeSelector;
+    private static DroneControlFragment INSTANCE;
 
+    public static DroneControlFragment getInstance(){
+        if(INSTANCE == null){
+            INSTANCE = new DroneControlFragment();
+        }
+        return INSTANCE;
+    }
+
+    private DroneControlFragment(){
+
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
@@ -286,6 +298,12 @@ public class DroneControlFragment extends Fragment implements DroneListener {
                 updateAltitude();
                 updateSpeed();
                 break;
+            case AttributeEvent.GPS_POSITION:
+                if(droneMoveListener != null){
+                    Gps gps = drone.getAttribute(AttributeType.GPS);
+                    droneMoveListener.onDroneMove(new LatLng(gps.getPosition().getLatitude(),gps.getPosition().getLongitude()));
+                }
+                break;
 
             case AttributeEvent.HOME_UPDATED:
                 updateDistanceFromHome();
@@ -403,11 +421,12 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         }
     }
 
-    private int convertRangeToZoom(double range) {
-        //see: google.maps.v3.all.debug.js
-        int zoom = (int) Math.round(Math.log(35200000 / range) / Math.log(2));
-        if (zoom < 0) zoom = 0;
-        else if (zoom > 19) zoom = 19;
-        return zoom;
+    public void setDroneMoveListener(DroneMoveListener droneMoveListener){
+        this.droneMoveListener =droneMoveListener;
+    }
+
+
+    public interface DroneMoveListener{
+        void onDroneMove(LatLng position);
     }
 }
