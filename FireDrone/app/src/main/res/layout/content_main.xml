@@ -12,8 +12,5 @@
     tools:context="projet.istic.fr.firedrone.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-   <FrameLayout
-       android:layout_width="wrap_content"
-       android:id="@+id/droneControle"
-       android:layout_height="wrap_content"></FrameLayout>
+
 </RelativeLayout>

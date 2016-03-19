@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.mission.MissionApi;
@@ -49,6 +50,7 @@ public class DroneControlFragment extends Fragment implements DroneListener {
     private int droneType = Type.TYPE_UNKNOWN;
     private final Handler handler = new Handler();
 
+
     private Button connectButton;
     private Button takeOfftButton;
     private Button gotButton;
@@ -82,6 +84,8 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         });
 
         this.drone = new Drone(getContext());
+        getTower().registerDrone(drone, handler);
+        registerDroneListener();
         this.modeSelector = (Spinner) getView().findViewById(R.id.modeSelect);
         this.modeSelector.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
@@ -132,20 +136,11 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         Random random = new Random();
         drone.sendGuidedPoint(new LatLong(random.nextDouble(), random.nextDouble()), false);*/
         Mission mission = new Mission();
-        Waypoint wayPoint = new Waypoint();
-        wayPoint.setCoordinate(new LatLongAlt(48.1169966, -1.6337051, 53));
-        mission.addMissionItem(wayPoint);
-        Waypoint wayPoint2 = new Waypoint();
-        wayPoint2.setCoordinate(new LatLongAlt(48.114706, -1.639023, 53));
-        mission.addMissionItem(wayPoint2);
-
-        Waypoint wayPoint3 = new Waypoint();
-        wayPoint3.setCoordinate(new LatLongAlt(48.115698, -1.639453, 53));
-        mission.addMissionItem(wayPoint3);
-
-        Waypoint wayPoint4 = new Waypoint();
-        wayPoint4.setCoordinate(new LatLongAlt(48.116125, -1.636741, 53));
-        mission.addMissionItem(wayPoint4);
+        for(LatLng point:getListOfPoint()){
+            Waypoint waypoint = new Waypoint();
+            waypoint.setCoordinate(new LatLongAlt(point.latitude,point.longitude,0));
+            mission.addMissionItem(waypoint);
+        }
         MissionApi.setMission(drone, mission, true);
         MissionApi.loadWaypoints(drone);
     }
@@ -341,6 +336,10 @@ public class DroneControlFragment extends Fragment implements DroneListener {
 
     public Handler getHandler(){
         return handler;
+    }
+
+    public List<LatLng> getListOfPoint(){
+        return ((MainActivity)getActivity()).getArrayPoints();
     }
 
     @Override
