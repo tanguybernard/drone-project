@@ -47,6 +47,8 @@ public class FragmentDrawPath extends SupportMapFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         arrayPoints = new ArrayList<LatLng>();
+        getMapAsync(this);
+
     }
 
 
@@ -72,7 +74,7 @@ public class FragmentDrawPath extends SupportMapFragment implements
         Log.v("MainActivity", "onMapClick(LatLng point)");
 
         //add marker
-        putMarker(point,arrayPoints.size());
+        putMarker(point, arrayPoints.size());
         // settin polyline in the map
         polylineOptions = new PolylineOptions();
         //polygonOptions.strokeColor(Color.RED);
@@ -119,6 +121,10 @@ public class FragmentDrawPath extends SupportMapFragment implements
     public void onCameraChange(CameraPosition cameraPosition) {
         System.out.println("onCameraChange");
 
+    }
+
+    public List<LatLng> getArrayPoints(){
+        return arrayPoints;
     }
 
 
