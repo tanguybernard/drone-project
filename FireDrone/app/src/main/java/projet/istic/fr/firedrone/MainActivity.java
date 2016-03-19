@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
         if(fragment != null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.flContent, fragment).addToBackStack("detailFragment").commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("detailFragment").commit();
         }
         myDrawer.closeDrawers();
     }
