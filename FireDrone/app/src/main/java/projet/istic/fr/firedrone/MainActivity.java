@@ -20,13 +20,9 @@ public class MainActivity extends AppCompatActivity
     //tower pour se connecter au drone et recevoir les évènements du drone
     private ControlTower controlTower;
 
-
     private DrawerLayout myDrawer;
 
     private FragmentDrawPath fragmentDrawPath;
-
-
-
 
     @Override
     protected void onStart() {
@@ -117,7 +113,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public List<LatLng> getArrayPoints(){
+    public List<LatLng> getArrayPointsForMission(){
+        if(fragmentDrawPath == null){
+            return null;
+        }
         return fragmentDrawPath.getArrayPoints();
     }
 

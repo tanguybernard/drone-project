@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -36,7 +37,6 @@ public class FragmentDrawPath extends SupportMapFragment implements
         GoogleMap.OnCameraChangeListener,
         OnMapReadyCallback  {
 
-
     private GoogleMap myMap;
     private List<LatLng> arrayPoints = null;//List of mark points
     private PolylineOptions polylineOptions;//add lines bettwen markers
@@ -56,7 +56,6 @@ public class FragmentDrawPath extends SupportMapFragment implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         googleMap.setOnMapClickListener(this);
         googleMap.setOnMapLongClickListener(this);
         googleMap.setOnCameraChangeListener(this);

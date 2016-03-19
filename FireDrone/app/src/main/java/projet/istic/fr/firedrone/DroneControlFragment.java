@@ -135,14 +135,18 @@ public class DroneControlFragment extends Fragment implements DroneListener {
        /* System.out.println("fffdfgdfgdfgdfgdfgfdgdfgdfgfgdfggdgd");
         Random random = new Random();
         drone.sendGuidedPoint(new LatLong(random.nextDouble(), random.nextDouble()), false);*/
-        Mission mission = new Mission();
-        for(LatLng point:getListOfPoint()){
-            Waypoint waypoint = new Waypoint();
-            waypoint.setCoordinate(new LatLongAlt(point.latitude,point.longitude,0));
-            mission.addMissionItem(waypoint);
+        List<LatLng> positions =getListOfPoint();
+        if(positions != null) {
+            Mission mission = new Mission();
+
+            for (LatLng point :positions) {
+                Waypoint waypoint = new Waypoint();
+                waypoint.setCoordinate(new LatLongAlt(point.latitude, point.longitude, 0));
+                mission.addMissionItem(waypoint);
+            }
+            MissionApi.setMission(drone, mission, true);
+            MissionApi.loadWaypoints(drone);
         }
-        MissionApi.setMission(drone, mission, true);
-        MissionApi.loadWaypoints(drone);
     }
 
     protected void updateDistanceFromHome() {
@@ -339,7 +343,7 @@ public class DroneControlFragment extends Fragment implements DroneListener {
     }
 
     public List<LatLng> getListOfPoint(){
-        return ((MainActivity)getActivity()).getArrayPoints();
+        return ((MainActivity)getActivity()).getArrayPointsForMission();
     }
 
     @Override
