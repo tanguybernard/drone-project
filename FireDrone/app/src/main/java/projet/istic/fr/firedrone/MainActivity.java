@@ -267,6 +267,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
+        System.out.println("onCameraChange");
 
     }
 }
