@@ -1,20 +1,13 @@
-package ramage.istic.fr.droneapplication;
+package projet.istic.fr.firedrone;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.apis.mission.MissionApi;
@@ -45,27 +39,54 @@ import com.o3dr.services.android.lib.drone.property.Type;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 
 import java.util.List;
-import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements TowerListener,DroneListener {
+/**
+ * Created by ramage on 18/03/16.
+ */
+public class DroneControlFragment extends Fragment implements DroneListener {
 
-    private ControlTower controlTower;
+
     private Drone drone;
     private int droneType = Type.TYPE_UNKNOWN;
     private final Handler handler = new Handler();
 
 
+    private Button connectButton;
+    private Button takeOfftButton;
+    private Button gotButton;
     Spinner modeSelector;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        // Initialize the service manager
-        this.controlTower = new ControlTower(getApplicationContext());
-        this.drone = new Drone(getApplicationContext());
-        this.modeSelector = (Spinner)findViewById(R.id.modeSelect);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+        connectButton = (Button)getView().findViewById(R.id.btnConnect);
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBtnConnectTap(v);
+            }
+        });
+        takeOfftButton =  (Button)getView().findViewById(R.id.btnArmTakeOff);
+        takeOfftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onArmButtonTap(v);
+            }
+        });
+        gotButton =  (Button)getView().findViewById(R.id.btnGo);
+        gotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goDrone(v);
+            }
+        });
+
+        this.drone = new Drone(getContext());
+        getTower().registerDrone(drone, handler);
+        registerDroneListener();
+        this.modeSelector = (Spinner) getView().findViewById(R.id.modeSelect);
         this.modeSelector.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -85,8 +106,8 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
     }
 
     protected void updateVehicleModesForType(int droneType) {
-        List<VehicleMode> vehicleModes =  VehicleMode.getVehicleModePerDroneType(droneType);
-        ArrayAdapter<VehicleMode> vehicleModeArrayAdapter = new ArrayAdapter<VehicleMode>(this, android.R.layout.simple_spinner_item, vehicleModes);
+        List<VehicleMode> vehicleModes = VehicleMode.getVehicleModePerDroneType(droneType);
+        ArrayAdapter<VehicleMode> vehicleModeArrayAdapter = new ArrayAdapter<VehicleMode>(getContext(), android.R.layout.simple_spinner_item, vehicleModes);
         vehicleModeArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.modeSelector.setAdapter(vehicleModeArrayAdapter);
     }
@@ -94,53 +115,44 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
     protected void updateVehicleMode() {
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
         VehicleMode vehicleMode = vehicleState.getVehicleMode();
-        ArrayAdapter arrayAdapter = (ArrayAdapter)this.modeSelector.getAdapter();
+        ArrayAdapter arrayAdapter = (ArrayAdapter) this.modeSelector.getAdapter();
         this.modeSelector.setSelection(arrayAdapter.getPosition(vehicleMode));
     }
 
     protected void updateAltitude() {
-        TextView altitudeTextView = (TextView)findViewById(R.id.altitudeValueTextView);
+        TextView altitudeTextView = (TextView) getView().findViewById(R.id.altitudeValueTextView);
         Altitude droneAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         altitudeTextView.setText(String.format("%3.1f", droneAltitude.getAltitude()) + "m");
     }
 
     protected void updateSpeed() {
-        TextView speedTextView = (TextView)findViewById(R.id.speedValueTextView);
+        TextView speedTextView = (TextView) getView().findViewById(R.id.speedValueTextView);
         Speed droneSpeed = this.drone.getAttribute(AttributeType.SPEED);
         speedTextView.setText(String.format("%3.1f", droneSpeed.getGroundSpeed()) + "m/s");
     }
 
-    public void goDrone(View view){
+    public void goDrone(View view) {
        /* System.out.println("fffdfgdfgdfgdfgdfgfdgdfgdfgfgdfggdgd");
         Random random = new Random();
         drone.sendGuidedPoint(new LatLong(random.nextDouble(), random.nextDouble()), false);*/
         Mission mission = new Mission();
-        Waypoint wayPoint = new Waypoint();
-        wayPoint.setCoordinate(new LatLongAlt(48.1169966, -1.6337051, 53));
-        mission.addMissionItem(wayPoint);
-        Waypoint wayPoint2 = new Waypoint();
-        wayPoint2.setCoordinate(new LatLongAlt(48.114706,-1.639023, 53));
-        mission.addMissionItem(wayPoint2);
-
-        Waypoint wayPoint3 = new Waypoint();
-        wayPoint3.setCoordinate(new LatLongAlt(48.115698,-1.639453, 53));
-        mission.addMissionItem(wayPoint3);
-
-        Waypoint wayPoint4 = new Waypoint();
-        wayPoint4.setCoordinate(new LatLongAlt(48.116125,-1.636741, 53));
-        mission.addMissionItem(wayPoint4);
+        for(LatLng point:getListOfPoint()){
+            Waypoint waypoint = new Waypoint();
+            waypoint.setCoordinate(new LatLongAlt(point.latitude,point.longitude,0));
+            mission.addMissionItem(waypoint);
+        }
         MissionApi.setMission(drone, mission, true);
         MissionApi.loadWaypoints(drone);
     }
 
     protected void updateDistanceFromHome() {
-        TextView distanceTextView = (TextView)findViewById(R.id.distanceValueTextView);
+        TextView distanceTextView = (TextView) getView().findViewById(R.id.distanceValueTextView);
         Altitude droneAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         double vehicleAltitude = droneAltitude.getAltitude();
         Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
         LatLong vehiclePosition = droneGps.getPosition();
 
-        double distanceFromHome =  0;
+        double distanceFromHome = 0;
 
         if (droneGps.isValid()) {
             LatLongAlt vehicle3DPosition = new LatLongAlt(vehiclePosition.getLatitude(), vehiclePosition.getLongitude(), vehicleAltitude);
@@ -158,16 +170,14 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
             return 0;
         }
         double dx = pointA.getLatitude() - pointB.getLatitude();
-        double dy  = pointA.getLongitude() - pointB.getLongitude();
+        double dy = pointA.getLongitude() - pointB.getLongitude();
         double dz = pointA.getAltitude() - pointB.getAltitude();
-        return Math.sqrt(dx*dx + dy*dy + dz*dz);
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        this.controlTower.connect(this);
-
     }
 
     @Override
@@ -177,12 +187,12 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
             this.drone.disconnect();
             updateConnectedButton(false);
         }
-        this.controlTower.unregisterDrone(this.drone);
-        this.controlTower.disconnect();
+        getTower().unregisterDrone(this.drone);
+
     }
 
     public void onBtnConnectTap(View view) {
-        if(this.drone.isConnected()) {
+        if (this.drone.isConnected()) {
             this.drone.disconnect();
         } else {
             Bundle extraParams = new Bundle();
@@ -194,11 +204,10 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
     }
 
     protected void alertUser(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     protected void updateConnectedButton(Boolean isConnected) {
-        Button connectButton = (Button)findViewById(R.id.btnConnect);
         if (isConnected) {
             connectButton.setText("Disconnect");
         } else {
@@ -206,17 +215,6 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
         }
     }
 
-
-    @Override
-    public void onTowerConnected() {
-        this.controlTower.registerDrone(this.drone, this.handler);
-        this.drone.registerDroneListener(this);
-    }
-
-    @Override
-    public void onTowerDisconnected() {
-
-    }
 
     @Override
     public void onDroneConnectionFailed(ConnectionResult result) {
@@ -267,6 +265,10 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
             case AttributeEvent.HOME_UPDATED:
                 updateDistanceFromHome();
                 break;
+            case AttributeEvent.MISSION_UPDATED:
+                System.out.println("mission received");
+                break;
+
             default:
                 Log.i("DRONE_EVENT", event);
                 break;
@@ -281,28 +283,27 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
 
     protected void updateArmButton() {
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
-        Button armButton = (Button)findViewById(R.id.btnArmTakeOff);
 
         if (!this.drone.isConnected()) {
-            armButton.setVisibility(View.INVISIBLE);
+            takeOfftButton.setVisibility(View.INVISIBLE);
         } else {
-            armButton.setVisibility(View.VISIBLE);
+            takeOfftButton.setVisibility(View.VISIBLE);
         }
 
         if (vehicleState.isFlying()) {
             // Land
-            armButton.setText("LAND");
+            takeOfftButton.setText("LAND");
         } else if (vehicleState.isArmed()) {
             // Take off
-            armButton.setText("TAKE OFF");
-        } else if (vehicleState.isConnected()){
+            takeOfftButton.setText("TAKE OFF");
+        } else if (vehicleState.isConnected()) {
             // Connected but not Armed
-            armButton.setText("ARM");
+            takeOfftButton.setText("ARM");
         }
     }
 
     public void onArmButtonTap(View view) {
-        Button thisButton = (Button)view;
+        Button thisButton = (Button) view;
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
 
         if (vehicleState.isFlying()) {
@@ -314,11 +315,37 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
         } else if (!vehicleState.isConnected()) {
             // Connect
             alertUser("Connect to a drone first");
-        } else if (vehicleState.isConnected() && !vehicleState.isArmed()){
+        } else if (vehicleState.isConnected() && !vehicleState.isArmed()) {
             // Connected but not Armed
             this.drone.arm(true);
         }
     }
 
+    public ControlTower getTower(){
+        return ((MainActivity)getActivity()).getControlTower();
+    }
 
+    public void registerDroneListener(){
+        drone.registerDroneListener(this);
+
+    }
+
+    public Drone getDrone(){
+        return drone;
+    }
+
+    public Handler getHandler(){
+        return handler;
+    }
+
+    public List<LatLng> getListOfPoint(){
+        return ((MainActivity)getActivity()).getArrayPoints();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        return  inflater.inflate(R.layout.fragment_controle, container, false);
+    }
 }

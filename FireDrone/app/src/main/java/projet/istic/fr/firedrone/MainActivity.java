@@ -7,10 +7,11 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,24 +33,46 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.o3dr.android.client.ControlTower;
+import com.o3dr.android.client.interfaces.TowerListener;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraChangeListener,
+        implements NavigationView.OnNavigationItemSelectedListener,TowerListener,GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraChangeListener,
         OnMapReadyCallback {
+
+    //tower pour se connecter au drone et recevoir les évènements du drone
+    private ControlTower controlTower;
+
 
     private DrawerLayout myDrawer;
     private GoogleMap myMap;
-    SupportMapFragment supportMapFragment;
 
-    private ArrayList<LatLng> arrayPoints = null;
+    private List<LatLng> arrayPoints = null;
     PolylineOptions polylineOptions;
 
     private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        this.controlTower.connect(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.controlTower.disconnect();
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //initialisation de la tower
+        this.controlTower = new ControlTower(getApplicationContext());
 
         arrayPoints = new ArrayList<LatLng>();
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -58,12 +81,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         setupDrawerContent(navigationView);
-
-
-        supportMapFragment = new SupportMapFragment();
-        supportMapFragment.getMapAsync(this);
-
-
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -78,101 +95,53 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void selectDrawerItem(MenuItem item) {
-
-        Log.v("MainActivity", "selectDrawItem(MenuItem item)");
-        // Create a new fragment and specify the planet to show based on
-        // position
         Fragment fragment = null;
-
-        Class fragmentClass;
-
-        System.out.println(item.getTitle());
-
-        System.out.println(R.id.nav_parcours == item.getItemId());
-
-
-
-
-                switch (item.getItemId()) {
-                    case R.id.nav_fiche:
-                        fragmentClass = FragmentFiche.class;
-                        break;
-                    case R.id.nav_moyen:
-                        fragmentClass = FragmentMoyen.class;
-                        break;
-                    case R.id.nav_rapport:
-                        fragmentClass = FragmentRapport.class;
-                        break;
-                    case R.id.nav_directive:
-                        fragmentClass = FragmentDirective.class;
-                        break;
-                    case R.id.nav_plan:
-                        fragmentClass = FragmentPlanning.class;
-                        break;
-                    case R.id.nav_parcours:
-                        System.out.println("IAM in nav_parcours");
-                        fragmentClass = null;
-
-                        getSupportFragmentManager().beginTransaction().replace(R.id.flContent, supportMapFragment).addToBackStack("detailFragment").commit();
-
-
-                        break;
-                    case R.id.nav_controle:
-                        fragmentClass = FragmentControle.class;
-                        break;
-                    case R.id.nav_image:
-                        fragmentClass = FragmentImage.class;
-                        break;
-                    default:
-                        fragmentClass = FragmentFiche.class;
-                }
-
-                try {
-                    if(item.getItemId()!=R.id.nav_parcours){
-                        fragment = (Fragment) fragmentClass.newInstance();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-        if(item.getItemId()!=R.id.nav_parcours) {
-
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.flContent, fragment);
-            fragmentTransaction.commit();
-
+        switch (item.getItemId()) {
+            case R.id.nav_fiche:
+                break;
+            case R.id.nav_moyen:
+                break;
+            case R.id.nav_rapport:
+                break;
+            case R.id.nav_directive:
+                break;
+            case R.id.nav_plan:
+                break;
+            case R.id.nav_parcours:
+                SupportMapFragment supportMapFragment = new SupportMapFragment();
+                supportMapFragment.getMapAsync(this);
+                fragment = supportMapFragment;
+                break;
+            case R.id.nav_controle:
+                fragment=new DroneControlFragment();
+                break;
+            case R.id.nav_image:
+                break;
         }
+        if(fragment != null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.flContent, fragment).addToBackStack("detailFragment").commit();
+        }
+        myDrawer.closeDrawers();
+    }
 
-                // Highlight the selected item, update the title, and close the drawer
-//        menuItem.setChecked(true);
-//        setTitle(menuItem.getTitle());
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        return false;
+    }
 
-                myDrawer.closeDrawers();
-            }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
 
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                return false;
-            }
+        googleMap.setOnMapClickListener(this);
+        googleMap.setOnMapLongClickListener(this);
+        googleMap.setOnCameraChangeListener(this);
 
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-
-                googleMap.setOnMapClickListener(this);
-                googleMap.setOnMapLongClickListener(this);
-                googleMap.setOnCameraChangeListener(this);
-
-                myMap = googleMap;
-                MarkerOptions marker=new MarkerOptions();
-                marker.position(rennes_istic);
-                myMap.addMarker(marker);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
-
-
-            }
+        myMap = googleMap;
+        MarkerOptions marker=new MarkerOptions();
+        marker.position(rennes_istic);
+        myMap.addMarker(marker);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
+    }
 
 
 
@@ -235,7 +204,6 @@ public class MainActivity extends AppCompatActivity
 
         polylineOptions.addAll(arrayPoints);
         myMap.addPolyline(polylineOptions);
-
     }
 
 
@@ -254,8 +222,6 @@ public class MainActivity extends AppCompatActivity
                         .position(clickedPosition)
                         .title(Integer.toString(num))
         );
-
-
     }
 
     @Override
@@ -268,6 +234,25 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         System.out.println("onCameraChange");
+
+    }
+
+    public ControlTower getControlTower(){
+        return controlTower;
+    }
+
+    @Override
+    public void onTowerConnected() {
+        //on enregistre le drone dans la tower
+
+    }
+
+    public List<LatLng> getArrayPoints(){
+        return arrayPoints;
+    }
+
+    @Override
+    public void onTowerDisconnected() {
 
     }
 }
