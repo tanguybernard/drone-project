@@ -5,7 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,14 +18,20 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
+import android.widget.TextView;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -43,11 +53,21 @@ public class FragmentDrawPath extends SupportMapFragment implements
     private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
 
 
+    public static FragmentDrawPath newInstance() {
+        FragmentDrawPath f = new FragmentDrawPath();
+        return f;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        arrayPoints = new ArrayList<LatLng>();
-        getMapAsync(this);
+
+        if(savedInstanceState==null){
+            arrayPoints = new ArrayList<LatLng>();
+            getMapAsync(this);
+        }
+
 
     }
 
@@ -66,6 +86,7 @@ public class FragmentDrawPath extends SupportMapFragment implements
         marker.position(rennes_istic);
         myMap.addMarker(marker);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
+
     }
 
 
@@ -85,6 +106,28 @@ public class FragmentDrawPath extends SupportMapFragment implements
 
         polylineOptions.addAll(arrayPoints);
         myMap.addPolyline(polylineOptions);
+
+
+        Marker marker = myMap.addMarker(new MarkerOptions()
+                .position(new LatLng(37.7750, 122.4183))
+                .title("San Francisco")
+                .snippet("Population: 776733"));
+
+        Marker mar = myMap.addMarker(new MarkerOptions()
+                .position(rennes_istic)
+                .title("Rennes")
+                .snippet("Population: ??"));
+
+        List<LatLng> childList = new ArrayList<LatLng>(); // new routs
+        childList.add(new LatLng(48.1157045,-1.6379779));
+        childList.add(new LatLng(48.1155670,- 1.6372698));
+        childList.add(new LatLng(48.1153670,- 1.6372698));
+        childList.add(new LatLng(48.1150670,- 1.6372698));
+
+
+        //(rennes_istic);
+        //animateMarker(myMap,mar,childList,false);
+
     }
 
 
@@ -126,6 +169,73 @@ public class FragmentDrawPath extends SupportMapFragment implements
     public List<LatLng> getArrayPoints(){
         return arrayPoints;
     }
+
+
+
+
+    private Location convertLatLngToLocation(LatLng latLng) {
+        Location location = new Location("someLoc");
+        location.setLatitude(latLng.latitude);
+        location.setLongitude(latLng.longitude);
+        return location;
+    }
+
+
+
+
+    public static void setAnimation(GoogleMap myMap, final List<LatLng> directionPoint, final Bitmap bitmap) {
+
+
+        Marker marker = myMap.addMarker(new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                .position(directionPoint.get(0))
+                .flat(true));
+
+        myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(directionPoint.get(0), 10));
+
+        animateMarker(myMap, marker, directionPoint, false);
+    }
+
+
+    private static void animateMarker(GoogleMap myMap, final Marker marker, final List<LatLng> directionPoint,
+                                      final boolean hideMarker) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        Projection proj = myMap.getProjection();
+        final long duration = 30000;
+
+        final Interpolator interpolator = new LinearInterpolator();
+
+        handler.post(new Runnable() {
+            int i = 0;
+
+            @Override
+            public void run() {
+                System.out.println("run marker");
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed
+                        / duration);
+                if (i < directionPoint.size())
+                    marker.setPosition(directionPoint.get(i));
+                i++;
+
+
+                if (t < 1.0) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 3000);
+                } else {
+                    if (hideMarker) {
+                        marker.setVisible(false);
+                    } else {
+                        marker.setVisible(true);
+                    }
+                }
+            }
+        });
+    }
+
+
+
 
 
 

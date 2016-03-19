@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_plan:
                 break;
             case R.id.nav_parcours:
-                fragmentDrawPath = new FragmentDrawPath();
+                fragmentDrawPath = FragmentDrawPath.newInstance();
                 //fragmentDrawPath.getMapAsync(this);
                 fragment = fragmentDrawPath;
                 break;
