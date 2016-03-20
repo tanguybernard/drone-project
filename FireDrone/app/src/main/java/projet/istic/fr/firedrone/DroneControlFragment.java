@@ -75,9 +75,7 @@ public class DroneControlFragment extends Fragment {
         return INSTANCE;
     }
 
-    private DroneControlFragment(){
 
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){

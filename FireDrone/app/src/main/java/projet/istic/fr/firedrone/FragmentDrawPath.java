@@ -2,6 +2,7 @@ package projet.istic.fr.firedrone;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -56,6 +58,10 @@ public class FragmentDrawPath extends SupportMapFragment implements
     private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
     private static FragmentDrawPath INSTANCE;
 
+    Marker markerDrone;
+
+
+
 
     public static FragmentDrawPath getInstance() {
         if(INSTANCE == null){
@@ -64,9 +70,7 @@ public class FragmentDrawPath extends SupportMapFragment implements
         return INSTANCE;
     }
 
-    private FragmentDrawPath(){
 
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,10 +81,20 @@ public class FragmentDrawPath extends SupportMapFragment implements
             getMapAsync(this);
         }
 
+
+
         ((MainActivity)getActivity()).setDroneMoveListener(new DroneListenerEvent.DroneMoveListener() {
             @Override
-            public void onDroneMove(LatLng position) {
+            public void onDroneMove(LatLng point) {
                 //Lorsque le drone change de position il appelle cette méthode
+
+
+                System.out.println("run marker");
+                System.out.println(point);
+
+                markerDrone.setPosition(point);
+                markerDrone.setVisible(true);
+
 
             }
         });
@@ -99,8 +113,17 @@ public class FragmentDrawPath extends SupportMapFragment implements
         myMap = googleMap;
         MarkerOptions marker=new MarkerOptions();
         marker.position(rennes_istic);
+
         myMap.addMarker(marker);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
+
+
+
+        markerDrone = myMap.addMarker(new MarkerOptions()
+                        .position(rennes_istic)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36))
+        );
+
 
     }
 
