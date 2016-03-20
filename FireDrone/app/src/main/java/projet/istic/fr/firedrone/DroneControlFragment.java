@@ -46,16 +46,19 @@ import com.o3dr.services.android.lib.drone.property.VehicleMode;
 
 import java.util.List;
 
+import projet.istic.fr.firedrone.listener.DroneListenerEvent;
+
 /**
  * Created by ramage on 18/03/16.
  */
-public class DroneControlFragment extends Fragment implements DroneListener {
+public class DroneControlFragment extends Fragment {
 
 
     private Drone drone;
     private int droneType = Type.TYPE_UNKNOWN;
     private final Handler handler = new Handler();
-    private DroneMoveListener droneMoveListener;
+    private DroneListenerEvent droneListenerEvent;
+
 
 
     private Button connectButton;
@@ -79,6 +82,12 @@ public class DroneControlFragment extends Fragment implements DroneListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        this.drone = new Drone(getContext());
+        if(!getTower().isTowerConnected()) {
+            getTower().connect((MainActivity) getActivity());
+        }
+        getTower().registerDrone(drone, handler);
+        drone.registerDroneListener(droneListenerEvent);
 
         connectButton = (Button)getView().findViewById(R.id.btnConnect);
         connectButton.setOnClickListener(new View.OnClickListener() {
@@ -109,9 +118,6 @@ public class DroneControlFragment extends Fragment implements DroneListener {
             }
         });
 
-        this.drone = new Drone(getContext());
-        getTower().registerDrone(drone, handler);
-        registerDroneListener();
         this.modeSelector = (Spinner) getView().findViewById(R.id.modeSelect);
         this.modeSelector.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
@@ -124,6 +130,15 @@ public class DroneControlFragment extends Fragment implements DroneListener {
                 // Do nothing
             }
         });
+
+        updateConnectedButton();
+        updateDistanceFromHome();
+        updateAltitude();
+        updateScreenShotButton();
+        updateArmButton();
+        updateSpeed();
+        updateVehicleMode();
+        updateVehicleModesForType(droneType);
     }
 
     public void onFlightModeSelected(View view) {
@@ -131,14 +146,14 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         this.drone.changeVehicleMode(vehicleMode);
     }
 
-    protected void updateVehicleModesForType(int droneType) {
+    public void updateVehicleModesForType(int droneType) {
         List<VehicleMode> vehicleModes = VehicleMode.getVehicleModePerDroneType(droneType);
         ArrayAdapter<VehicleMode> vehicleModeArrayAdapter = new ArrayAdapter<VehicleMode>(getContext(), android.R.layout.simple_spinner_item, vehicleModes);
         vehicleModeArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.modeSelector.setAdapter(vehicleModeArrayAdapter);
     }
 
-    protected void updateVehicleMode() {
+    public void updateVehicleMode() {
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
         VehicleMode vehicleMode = vehicleState.getVehicleMode();
         ArrayAdapter arrayAdapter = (ArrayAdapter) this.modeSelector.getAdapter();
@@ -150,13 +165,13 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         this.modeSelector.setSelection(arrayAdapter.getPosition(vehicleMode));
     }
 
-    protected void updateAltitude() {
+    public void updateAltitude() {
         TextView altitudeTextView = (TextView) getView().findViewById(R.id.altitudeValueTextView);
         Altitude droneAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         altitudeTextView.setText(String.format("%3.1f", droneAltitude.getAltitude()) + "m");
     }
 
-    protected void updateSpeed() {
+    public void updateSpeed() {
         TextView speedTextView = (TextView) getView().findViewById(R.id.speedValueTextView);
         Speed droneSpeed = this.drone.getAttribute(AttributeType.SPEED);
         speedTextView.setText(String.format("%3.1f", droneSpeed.getGroundSpeed()) + "m/s");
@@ -180,7 +195,7 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         }
     }
 
-    protected void updateDistanceFromHome() {
+    public void updateDistanceFromHome() {
         TextView distanceTextView = (TextView) getView().findViewById(R.id.distanceValueTextView);
         Altitude droneAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         double vehicleAltitude = droneAltitude.getAltitude();
@@ -218,12 +233,6 @@ public class DroneControlFragment extends Fragment implements DroneListener {
     @Override
     public void onStop() {
         super.onStop();
-        if (this.drone.isConnected()) {
-            this.drone.disconnect();
-            updateConnectedButton(false);
-        }
-        getTower().unregisterDrone(this.drone);
-
     }
 
     public void onBtnConnectTap(View view) {
@@ -238,12 +247,12 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         }
     }
 
-    protected void alertUser(String message) {
+    public void alertUser(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    protected void updateConnectedButton(Boolean isConnected) {
-        if (isConnected) {
+    public void updateConnectedButton() {
+        if (drone.isConnected()) {
             connectButton.setText("Disconnect");
         } else {
             connectButton.setText("Connect");
@@ -251,80 +260,7 @@ public class DroneControlFragment extends Fragment implements DroneListener {
     }
 
 
-    @Override
-    public void onDroneConnectionFailed(ConnectionResult result) {
-
-    }
-
-    @Override
-    public void onDroneEvent(String event, Bundle extras) {
-
-        switch (event) {
-
-            case AttributeEvent.STATE_CONNECTED:
-                alertUser("Drone Connected");
-                updateConnectedButton(this.drone.isConnected());
-                updateArmButton();
-                updateScreenShotButton();
-                break;
-
-            case AttributeEvent.STATE_DISCONNECTED:
-                alertUser("Drone Disconnected");
-                updateConnectedButton(this.drone.isConnected());
-                updateArmButton();
-                updateScreenShotButton();
-                break;
-
-            case AttributeEvent.STATE_UPDATED:
-            case AttributeEvent.STATE_ARMING:
-                updateArmButton();
-                updateScreenShotButton();
-                break;
-
-            case AttributeEvent.TYPE_UPDATED:
-                Type newDroneType = this.drone.getAttribute(AttributeType.TYPE);
-                if (newDroneType.getDroneType() != this.droneType) {
-                    this.droneType = newDroneType.getDroneType();
-                    updateVehicleModesForType(this.droneType);
-                }
-                break;
-
-            case AttributeEvent.STATE_VEHICLE_MODE:
-                updateVehicleMode();
-                break;
-
-
-            case AttributeEvent.SPEED_UPDATED:
-                updateAltitude();
-                updateSpeed();
-                break;
-            case AttributeEvent.GPS_POSITION:
-                if(droneMoveListener != null){
-                    Gps gps = drone.getAttribute(AttributeType.GPS);
-                    droneMoveListener.onDroneMove(new LatLng(gps.getPosition().getLatitude(),gps.getPosition().getLongitude()));
-                }
-                break;
-
-            case AttributeEvent.HOME_UPDATED:
-                updateDistanceFromHome();
-                break;
-            case AttributeEvent.MISSION_UPDATED:
-                System.out.println("mission received");
-                break;
-
-            default:
-                Log.i("DRONE_EVENT", event);
-                break;
-
-        }
-    }
-
-    @Override
-    public void onDroneServiceInterrupted(String errorMsg) {
-
-    }
-
-    private void updateScreenShotButton(){
+    public void updateScreenShotButton(){
         if (!this.drone.isConnected()) {
             takeSnapshot.setVisibility(View.INVISIBLE);
         } else {
@@ -332,7 +268,7 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         }
     }
 
-    protected void updateArmButton() {
+    public void updateArmButton() {
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
 
         if (!this.drone.isConnected()) {
@@ -376,23 +312,6 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         return ((MainActivity)getActivity()).getControlTower();
     }
 
-    public void registerDroneListener(){
-        drone.registerDroneListener(this);
-
-    }
-
-    public Drone getDrone(){
-        return drone;
-    }
-
-    public Handler getHandler(){
-        return handler;
-    }
-
-    public List<LatLng> getListOfPoint(){
-        return ((MainActivity)getActivity()).getArrayPointsForMission();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -408,25 +327,36 @@ public class DroneControlFragment extends Fragment implements DroneListener {
         Gps gps = drone.getAttribute(AttributeType.GPS);
         Altitude altitude = drone.getAttribute(AttributeType.ALTITUDE);
         Uri uri = Uri.parse("geo:0,0?q=" + gps.getPosition().getLatitude() + "," + gps.getPosition().getLongitude());
-        alertUser(uri.toString());
         Intent it = new Intent(Intent.ACTION_VIEW,uri);
         it.setClassName("com.google.earth",
                 "com.google.earth.EarthActivity");
-// always trap for ActivityNotFound in case Google earth is not on the device
+        // always trap for ActivityNotFound in case Google earth is not on the device
         try {
             // launch google earth and fly to location
             this.startActivity(it);
         }
         catch (ActivityNotFoundException e) {
+            alertUser("Google earth not exist on this device.");
         }
     }
 
-    public void setDroneMoveListener(DroneMoveListener droneMoveListener){
-        this.droneMoveListener =droneMoveListener;
+    private List<LatLng> getListOfPoint() {
+        return ((MainActivity) getActivity()).getArrayPointsForMission();
     }
 
+    public void setDroneListernEvent(DroneListenerEvent pDroneListenerEvent){
+        droneListenerEvent = pDroneListenerEvent;
+    }
 
-    public interface DroneMoveListener{
-        void onDroneMove(LatLng position);
+    public int getDroneType() {
+        return droneType;
+    }
+
+    public void setDroneType(int pDroneType){
+        droneType = pDroneType;
+    }
+
+    public Drone getDrone(){
+        return drone;
     }
 }

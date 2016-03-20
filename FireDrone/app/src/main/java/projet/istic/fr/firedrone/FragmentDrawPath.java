@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +40,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 
 
 public class FragmentDrawPath extends SupportMapFragment implements
@@ -74,11 +77,11 @@ public class FragmentDrawPath extends SupportMapFragment implements
             getMapAsync(this);
         }
 
-        ((MainActivity)getActivity()).setDroneMoveListener(new DroneControlFragment.DroneMoveListener() {
+        ((MainActivity)getActivity()).setDroneMoveListener(new DroneListenerEvent.DroneMoveListener() {
             @Override
             public void onDroneMove(LatLng position) {
                 //Lorsque le drone change de position il appelle cette méthode
-                
+
             }
         });
 
