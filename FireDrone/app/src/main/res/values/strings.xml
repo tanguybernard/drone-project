@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">FireDrone</string>
-
+    <string name="google_app_id">AIzaSyCfVwxuXH_0nALYAS4iaiXyYGVb-59AVSs</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
     <string name="Menu">Menu</string>
     <string name="controle">Contrôle du drône</string>

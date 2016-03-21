@@ -5,24 +5,32 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.interfaces.DroneListener;
+import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.connection.ConnectionResult;
+import com.o3dr.services.android.lib.drone.mission.Mission;
+import com.o3dr.services.android.lib.drone.mission.MissionItemType;
+import com.o3dr.services.android.lib.drone.mission.item.MissionItem;
+import com.o3dr.services.android.lib.drone.mission.item.spatial.Waypoint;
 import com.o3dr.services.android.lib.drone.property.Gps;
 import com.o3dr.services.android.lib.drone.property.Type;
 
-import projet.istic.fr.firedrone.DroneControlFragment;
+import java.util.ArrayList;
+import java.util.List;
+
+import projet.istic.fr.firedrone.FragmentControle;
 
 /**
  * Created by ramage on 20/03/16.
  */
 public class DroneListenerEvent implements DroneListener {
 
-    private DroneControlFragment controlFragement;
+    private FragmentControle controlFragement;
     private boolean usingControlPanel;
     private DroneMoveListener droneMoveListener;
 
-    public DroneListenerEvent(DroneControlFragment pDroneControlFragment){
+    public DroneListenerEvent(FragmentControle pDroneControlFragment){
         controlFragement = pDroneControlFragment;
         controlFragement.setDroneListernEvent(this);
     }
@@ -93,7 +101,10 @@ public class DroneListenerEvent implements DroneListener {
             case AttributeEvent.GPS_POSITION:
                 if(droneMoveListener != null){
                     Gps gps = controlFragement.getDrone().getAttribute(AttributeType.GPS);
-                    droneMoveListener.onDroneMove(new LatLng(gps.getPosition().getLatitude(),gps.getPosition().getLongitude()));
+                    LatLong position = gps.getPosition();
+                    if(position != null) {
+                        droneMoveListener.onDroneMove(new LatLng(gps.getPosition().getLatitude(), gps.getPosition().getLongitude()));
+                    }
                 }
                 break;
 
@@ -101,7 +112,17 @@ public class DroneListenerEvent implements DroneListener {
                 controlFragement.updateDistanceFromHome();
                 break;
             case AttributeEvent.MISSION_UPDATED:
-                controlFragement.alertUser("MISSION RECEIVED");
+                if(droneMoveListener != null) {
+                    List<LatLng> pointsMissions = new ArrayList<LatLng>();
+                    Mission mission = controlFragement.getDrone().getAttribute(AttributeType.MISSION);
+                    for(MissionItem item :mission.getMissionItems()){
+                        if(item.getType() == MissionItemType.WAYPOINT){
+                            Waypoint point = (Waypoint)item;
+                            pointsMissions.add(new LatLng(point.getCoordinate().getLatitude(),point.getCoordinate().getLongitude()));
+                        }
+                    }
+                    droneMoveListener.droneReceivedMissionPoint(pointsMissions);
+                }
                 break;
 
             default:
@@ -123,5 +144,7 @@ public class DroneListenerEvent implements DroneListener {
 
     public interface DroneMoveListener{
         void onDroneMove(LatLng position);
+
+        void droneReceivedMissionPoint(List<LatLng> pointsMissions);
     }
 }

@@ -81,8 +81,6 @@ public class FragmentDrawPath extends SupportMapFragment implements
             getMapAsync(this);
         }
 
-
-
         ((MainActivity)getActivity()).setDroneMoveListener(new DroneListenerEvent.DroneMoveListener() {
             @Override
             public void onDroneMove(LatLng point) {
@@ -91,10 +89,17 @@ public class FragmentDrawPath extends SupportMapFragment implements
 
                 System.out.println("run marker");
                 System.out.println(point);
+                if(markerDrone != null) {
+                    markerDrone.setPosition(point);
+                    markerDrone.setVisible(true);
+                }
 
-                markerDrone.setPosition(point);
-                markerDrone.setVisible(true);
 
+
+            }
+
+            @Override
+            public void droneReceivedMissionPoint(List<LatLng> pointsMissions) {
 
             }
         });

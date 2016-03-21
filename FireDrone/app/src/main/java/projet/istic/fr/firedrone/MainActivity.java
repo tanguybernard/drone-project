@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 import com.o3dr.android.client.ControlTower;
+import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.interfaces.TowerListener;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity
     private DroneListenerEvent droneListenerEvent;
 
     private FragmentDrawPath fragmentDrawPath;
-    private DroneControlFragment droneControlFragment;
+    private FragmentControle droneControlFragment;
 
     @Override
     protected void onStart() {
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity
         if (droneControlFragment.getDrone().isConnected()) {
             droneControlFragment.getDrone().disconnect();
         }
-       controlTower.unregisterDrone(droneControlFragment.getDrone());
+        controlTower.unregisterDrone(droneControlFragment.getDrone());
         controlTower.disconnect();
     }
 
@@ -52,13 +53,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //initialisation de la tower
-        droneControlFragment = DroneControlFragment.getInstance();
+        droneControlFragment = FragmentControle.getInstance();
+        droneControlFragment.setDrone( new Drone(getApplicationContext()));;
         this.controlTower = new ControlTower(getApplicationContext());
         droneListenerEvent = new DroneListenerEvent(droneControlFragment);
         fragmentDrawPath = FragmentDrawPath.getInstance();
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = fragmentDrawPath;
                 break;
             case R.id.nav_controle:
-                droneControlFragment = DroneControlFragment.getInstance();
+                droneControlFragment = FragmentControle.getInstance();
                 usingControlDrone = true;
                 fragment= droneControlFragment;
                 break;
@@ -112,13 +113,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        droneListenerEvent.setUsingControlPanel(false);
+    }
+
+    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         return false;
     }
 
 
     public void setDroneMoveListener(DroneListenerEvent.DroneMoveListener droneMoveListener){
-        droneListenerEvent.setDroneMoveListener(droneMoveListener);
+        if(droneListenerEvent != null) {
+            droneListenerEvent.setDroneMoveListener(droneMoveListener);
+        }
     }
 
 
@@ -128,7 +137,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTowerConnected() {
-
+        controlTower.registerDrone(droneControlFragment.getDrone(), droneControlFragment.getHandler());
     }
 
     public List<LatLng> getArrayPointsForMission(){

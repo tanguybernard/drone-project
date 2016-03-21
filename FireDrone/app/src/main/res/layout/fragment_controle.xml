@@ -162,6 +162,7 @@
             android:text="Prendre une photo"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_column="1"/>
+            android:layout_column="1" />
+
     </LinearLayout>
 </LinearLayout>
