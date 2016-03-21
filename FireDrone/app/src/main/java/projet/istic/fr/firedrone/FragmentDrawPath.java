@@ -81,7 +81,7 @@ public class FragmentDrawPath extends SupportMapFragment implements
             getMapAsync(this);
         }
 
-        ((MainActivity)getActivity()).setDroneMoveListener(new DroneListenerEvent.DroneMoveListener() {
+        ((MainActivity)getActivity()).setDroneMoveListener(new DroneListenerEvent.DroneActionMapListener() {
             @Override
             public void onDroneMove(LatLng point) {
                 //Lorsque le drone change de position il appelle cette méthode

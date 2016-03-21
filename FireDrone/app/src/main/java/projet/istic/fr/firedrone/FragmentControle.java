@@ -41,22 +41,30 @@ import projet.istic.fr.firedrone.listener.DroneListenerEvent;
  */
 public class FragmentControle extends Fragment {
 
-
+    //référence vers le drône commandé par l'application
     private Drone drone;
-    private int droneType = Type.TYPE_UNKNOWN;
+    //type du drône
+    private int droneType = Type.TYPE_COPTER;
+
     private final Handler handler = new Handler();
+
     //listener qui va écouter tout les évènements envoyés par le drone
     private DroneListenerEvent droneListenerEvent;
 
+    //liste des boutons utilisés par le panel de contrôle du drône
     private Button connectButton;
-    private Button takeOfftButton;
-    private Button gotButton;
-    private Button takeSnapshot;
+    private Button takeOffButton;
+    private Button goButton;
+    private Button takeSnapshotButton;
+
+    //spinner de sélection du mode du drône
     Spinner modeSelector;
+
+    //Instance
     private static FragmentControle INSTANCE;
 
 
-
+    //singleton, une seule instance du fragment controle
     public static FragmentControle getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new FragmentControle();
@@ -67,11 +75,14 @@ public class FragmentControle extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //si la tour n'est pas connecté on essaye de se connecter
         if (!getTower().isTowerConnected()) {
             getTower().connect((MainActivity) getActivity());
         }
+        //on enregistre le drone et on le lie au listener event
         drone.registerDroneListener(droneListenerEvent);
 
+        //récupération des boutons et set des listeners onClick
         connectButton = (Button) getView().findViewById(R.id.btnConnect);
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,32 +90,36 @@ public class FragmentControle extends Fragment {
                 onBtnConnectTap(v);
             }
         });
-        takeOfftButton = (Button) getView().findViewById(R.id.btnArmTakeOff);
-        takeOfftButton.setOnClickListener(new View.OnClickListener() {
+        takeOffButton = (Button) getView().findViewById(R.id.btnArmTakeOff);
+        takeOffButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onArmButtonTap(v);
             }
         });
-        gotButton = (Button) getView().findViewById(R.id.btnGo);
-        gotButton.setOnClickListener(new View.OnClickListener() {
+        goButton = (Button) getView().findViewById(R.id.btnGo);
+        goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goDrone(v);
             }
         });
-        takeSnapshot = (Button) getView().findViewById(R.id.btnSnapshot);
-        takeSnapshot.setOnClickListener(new View.OnClickListener() {
+        takeSnapshotButton = (Button) getView().findViewById(R.id.btnSnapshot);
+        takeSnapshotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takeSnapshot(v);
             }
         });
 
+        //récupération du spinner
         this.modeSelector = (Spinner) getView().findViewById(R.id.modeSelect);
+
+        //lorsqu'on a sélectionné un mode
         this.modeSelector.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //mise à jour du mode du drône
                 onFlightModeSelected(view);
             }
 
@@ -114,6 +129,7 @@ public class FragmentControle extends Fragment {
             }
         });
 
+        //on met à jour le graphiques des différents boutons du panel
         updateConnectedButton();
         updateDistanceFromHome();
         updateAltitude();
@@ -125,6 +141,7 @@ public class FragmentControle extends Fragment {
     }
 
     public void onFlightModeSelected(View view) {
+        //mise à jour du mode du drône
         VehicleMode vehicleMode = (VehicleMode) this.modeSelector.getSelectedItem();
         this.drone.changeVehicleMode(vehicleMode);
     }
@@ -151,36 +168,42 @@ public class FragmentControle extends Fragment {
 
 
     public void updateAltitude() {
+        //mise à jour du textview affichant l'altitude du drône
         TextView altitudeTextView = (TextView) getView().findViewById(R.id.altitudeValueTextView);
         Altitude droneAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         altitudeTextView.setText(String.format("%3.1f", droneAltitude.getAltitude()) + "m");
     }
 
     public void updateSpeed() {
+        //mise à jour de la Tewtview affichant la vitesse du drône
         TextView speedTextView = (TextView) getView().findViewById(R.id.speedValueTextView);
         Speed droneSpeed = this.drone.getAttribute(AttributeType.SPEED);
         speedTextView.setText(String.format("%3.1f", droneSpeed.getGroundSpeed()) + "m/s");
     }
 
     public void goDrone(View view) {
-       /* System.out.println("fffdfgdfgdfgdfgdfgfdgdfgdfgfgdfggdgd");
-        Random random = new Random();
-        drone.sendGuidedPoint(new LatLong(random.nextDouble(), random.nextDouble()), false);*/
+        //envoi du drône en mission
+
+        //récupérations des points choisi par l'utilisateur
         List<LatLng> positions = getListOfPoint();
         if (positions != null) {
+            //création de la mission
             Mission mission = new Mission();
 
+            //parcours de tous les points sélectionnés
             for (LatLng point : positions) {
                 Waypoint waypoint = new Waypoint();
                 waypoint.setCoordinate(new LatLongAlt(point.latitude, point.longitude, 0));
                 mission.addMissionItem(waypoint);
             }
+            //on envoi le drône en mission
             MissionApi.setMission(drone, mission, true);
             MissionApi.loadWaypoints(drone);
         }
     }
 
     public void updateDistanceFromHome() {
+        //mise à jour du Textview affichant la distance du drône à la maison
         TextView distanceTextView = (TextView) getView().findViewById(R.id.distanceValueTextView);
         Altitude droneAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
         double vehicleAltitude = droneAltitude.getAltitude();
@@ -221,13 +244,19 @@ public class FragmentControle extends Fragment {
     }
 
     public void onBtnConnectTap(View view) {
+        //lorsqu'on clique sur le bouton connect
         if (this.drone.isConnected()) {
+            //si on était connecté, on se déconnecte
             this.drone.disconnect();
         } else {
             Bundle extraParams = new Bundle();
+            //port 14550
             extraParams.putInt(ConnectionType.EXTRA_UDP_SERVER_PORT, 14550); // Set default port to 14550
 
+            //type UDP
             ConnectionParameter connectionParams = new ConnectionParameter(ConnectionType.TYPE_UDP, extraParams, null);
+
+            //on se connecte au drône
             this.drone.connect(connectionParams);
         }
     }
@@ -237,6 +266,7 @@ public class FragmentControle extends Fragment {
     }
 
     public void updateConnectedButton() {
+        //Mise à jour du texte du bouton connecté
         if (drone.isConnected()) {
             connectButton.setText("Disconnect");
         } else {
@@ -246,38 +276,44 @@ public class FragmentControle extends Fragment {
 
 
     public void updateScreenShotButton() {
+        //mise à jour de la visibilité du bouton prendre une photo
         if (!this.drone.isConnected()) {
-            takeSnapshot.setVisibility(View.INVISIBLE);
+            takeSnapshotButton.setVisibility(View.INVISIBLE);
         } else {
-            takeSnapshot.setVisibility(View.VISIBLE);
+            takeSnapshotButton.setVisibility(View.VISIBLE);
         }
     }
 
     public void updateArmButton() {
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
 
+        //mise à jour du bouton takeoff en fonction de la connexion au drone
         if (!this.drone.isConnected()) {
-            takeOfftButton.setVisibility(View.INVISIBLE);
+            takeOffButton.setVisibility(View.INVISIBLE);
         } else {
-            takeOfftButton.setVisibility(View.VISIBLE);
+            takeOffButton.setVisibility(View.VISIBLE);
         }
 
+        //on affiche un message en fonction de l'état du drône
         if (vehicleState.isFlying()) {
             // Land
-            takeOfftButton.setText("LAND");
+            takeOffButton.setText("LAND");
         } else if (vehicleState.isArmed()) {
             // Take off
-            takeOfftButton.setText("TAKE OFF");
+            takeOffButton.setText("TAKE OFF");
         } else if (vehicleState.isConnected()) {
             // Connected but not Armed
-            takeOfftButton.setText("ARM");
+            takeOffButton.setText("ARM");
         }
     }
 
     public void onArmButtonTap(View view) {
+        //lorsqu'on clique sur le bouton arm
         Button thisButton = (Button) view;
+        //état du drône
         State vehicleState = this.drone.getAttribute(AttributeType.STATE);
 
+        //on met à jour le drône en fonction de l'état dans lequel y est
         if (vehicleState.isFlying()) {
             // Land
             this.drone.changeVehicleMode(VehicleMode.COPTER_LAND);
@@ -293,6 +329,7 @@ public class FragmentControle extends Fragment {
         }
     }
 
+    //récupération du tower
     public ControlTower getTower() {
         return ((MainActivity) getActivity()).getControlTower();
     }
@@ -307,11 +344,13 @@ public class FragmentControle extends Fragment {
 
     }
 
+    //récupération de la liste des points choisies par l'utilisateur
     private List<LatLng> getListOfPoint() {
         return ((MainActivity) getActivity()).getArrayPointsForMission();
     }
 
-    public void setDroneListernEvent(DroneListenerEvent pDroneListenerEvent) {
+    //on set le listener
+    public void setDroneListenerEvent(DroneListenerEvent pDroneListenerEvent) {
         droneListenerEvent = pDroneListenerEvent;
     }
 
