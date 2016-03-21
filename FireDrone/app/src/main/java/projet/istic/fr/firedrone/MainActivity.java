@@ -8,11 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.List;
-
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.interfaces.TowerListener;
+
+import java.util.List;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 
@@ -29,6 +28,7 @@ public class MainActivity extends AppCompatActivity
 
     private FragmentDrawPath fragmentDrawPath;
     private DroneControlFragment droneControlFragment;
+    private FragmentFiche fragmentFiche;
 
     @Override
     protected void onStart() {
@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_fiche:
+                fragmentFiche = FragmentFiche.getInstance();
+                fragment = fragmentFiche;
                 break;
             case R.id.nav_moyen:
                 break;
