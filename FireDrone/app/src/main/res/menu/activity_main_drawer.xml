@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_fiche"
+            android:icon="@drawable/ic_menu_camera"
+            android:checked="true"
+            android:title="@string/fiche" />
+        <item
+            android:id="@+id/nav_moyen"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/moyen" />
+        <item
+            android:id="@+id/nav_rapport"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/rapport" />
+    </group>
+
+    <item android:title="Centre de commandement">
+        <menu>
+            <item
+                android:id="@+id/nav_directive"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/directive" />
+            <item
+                android:id="@+id/nav_plan"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/planning" />
+            <item
+                android:id="@+id/nav_parcours"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/parcours" />
+        </menu>
+    </item>
+
+    <item android:title="Drône">
+        <menu>
+            <item
+                android:id="@+id/nav_controle"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/controle" />
+            <item
+                android:id="@+id/nav_image"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="@string/image" />
+
+        </menu>
+    </item>
+
+</menu>

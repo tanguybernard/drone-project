@@ -1,9 +1,14 @@
 package ramage.istic.fr.droneapplication;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,6 +24,7 @@ import android.widget.Toast;
 
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
+import com.o3dr.android.client.apis.mission.MissionApi;
 import com.o3dr.android.client.interfaces.DroneListener;
 import com.o3dr.android.client.interfaces.TowerListener;
 import com.o3dr.services.android.lib.coordinate.LatLong;
@@ -28,6 +34,8 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
 import com.o3dr.services.android.lib.drone.connection.ConnectionResult;
 import com.o3dr.services.android.lib.drone.connection.ConnectionType;
+import com.o3dr.services.android.lib.drone.mission.Mission;
+import com.o3dr.services.android.lib.drone.mission.item.spatial.Waypoint;
 import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.Gps;
 import com.o3dr.services.android.lib.drone.property.Home;
@@ -45,7 +53,10 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
     private Drone drone;
     private int droneType = Type.TYPE_UNKNOWN;
     private final Handler handler = new Handler();
+
+
     Spinner modeSelector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +111,26 @@ public class MainActivity extends AppCompatActivity implements TowerListener,Dro
     }
 
     public void goDrone(View view){
-        System.out.println("fffdfgdfgdfgdfgdfgfdgdfgdfgfgdfggdgd");
+       /* System.out.println("fffdfgdfgdfgdfgdfgfdgdfgdfgfgdfggdgd");
         Random random = new Random();
-        drone.sendGuidedPoint(new LatLong(random.nextDouble(), random.nextDouble()), false);
+        drone.sendGuidedPoint(new LatLong(random.nextDouble(), random.nextDouble()), false);*/
+        Mission mission = new Mission();
+        Waypoint wayPoint = new Waypoint();
+        wayPoint.setCoordinate(new LatLongAlt(48.1169966, -1.6337051, 53));
+        mission.addMissionItem(wayPoint);
+        Waypoint wayPoint2 = new Waypoint();
+        wayPoint2.setCoordinate(new LatLongAlt(48.114706,-1.639023, 53));
+        mission.addMissionItem(wayPoint2);
+
+        Waypoint wayPoint3 = new Waypoint();
+        wayPoint3.setCoordinate(new LatLongAlt(48.115698,-1.639453, 53));
+        mission.addMissionItem(wayPoint3);
+
+        Waypoint wayPoint4 = new Waypoint();
+        wayPoint4.setCoordinate(new LatLongAlt(48.116125,-1.636741, 53));
+        mission.addMissionItem(wayPoint4);
+        MissionApi.setMission(drone, mission, true);
+        MissionApi.loadWaypoints(drone);
     }
 
     protected void updateDistanceFromHome() {
