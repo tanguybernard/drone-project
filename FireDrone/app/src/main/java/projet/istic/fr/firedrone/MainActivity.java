@@ -27,11 +27,11 @@ public class MainActivity extends AppCompatActivity
     //listener qui va écouter tout les évènements envoyés par le drone
     private DroneListenerEvent droneListenerEvent;
 
-    private FragmentDrawPath fragmentDrawPath;
-    private FragmentFiche fragmentFiche;
+    private MapFragment fragmentDrawPath;
+    private FicheFragment fragmentFiche;
 
     //fragment pour contrôler le drône
-    private FragmentControle droneControlFragment;
+    private ControleFragment droneControlFragment;
 
     @Override
     protected void onStart() {
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         //instanciation du fragment de contrôle du drône
-        droneControlFragment = FragmentControle.getInstance();
+        droneControlFragment = ControleFragment.getInstance();
         //on crée le drône içi
         droneControlFragment.setDrone( new Drone(getApplicationContext()));;
         //création du listener qui écoute le drône
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         //instanciation du contrôle tower
         this.controlTower = new ControlTower(getApplicationContext());
 
-        fragmentDrawPath = FragmentDrawPath.getInstance();
+        fragmentDrawPath = MapFragment.getInstance();
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_fiche:
-                fragmentFiche = FragmentFiche.getInstance();
+                fragmentFiche = FicheFragment.getInstance();
                 fragment = fragmentFiche;
                 break;
             case R.id.nav_moyen:
@@ -105,13 +105,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_plan:
                 break;
             case R.id.nav_parcours:
-                fragmentDrawPath = FragmentDrawPath.getInstance();
+                fragmentDrawPath = MapFragment.getInstance();
 
                 //fragmentDrawPath.getMapAsync(this);
                 fragment = fragmentDrawPath;
                 break;
             case R.id.nav_controle:
-                droneControlFragment = FragmentControle.getInstance();
+                droneControlFragment = ControleFragment.getInstance();
                 usingControlDrone = true;
                 fragment= droneControlFragment;
                 break;

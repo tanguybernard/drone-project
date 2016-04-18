@@ -1,7 +1,6 @@
 package projet.istic.fr.firedrone.listener;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.interfaces.DroneListener;
@@ -19,7 +18,7 @@ import com.o3dr.services.android.lib.drone.property.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import projet.istic.fr.firedrone.FragmentControle;
+import projet.istic.fr.firedrone.ControleFragment;
 
 /**
  * Created by ramage on 20/03/16.
@@ -27,7 +26,7 @@ import projet.istic.fr.firedrone.FragmentControle;
 public class DroneListenerEvent implements DroneListener {
 
     //référence vers le fragment de contrôle du drone
-    private FragmentControle controlFragement;
+    private ControleFragment controlFragement;
 
     //variable indiquant si on est dans le panel de contrôle du drone
     private boolean usingControlPanel;
@@ -35,7 +34,7 @@ public class DroneListenerEvent implements DroneListener {
     //listener qui va être appelé par le fragment map quand le drône a effectué certaines actions
     private DroneActionMapListener droneMoveListener;
 
-    public DroneListenerEvent(FragmentControle pDroneControlFragment){
+    public DroneListenerEvent(ControleFragment pDroneControlFragment){
         controlFragement = pDroneControlFragment;
         controlFragement.setDroneListenerEvent(this);
     }
@@ -162,7 +161,6 @@ public class DroneListenerEvent implements DroneListener {
             default:
                 //Log.i("DRONE_EVENT", event);
                 break;
-
         }
     }
 
