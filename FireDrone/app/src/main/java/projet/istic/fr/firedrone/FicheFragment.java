@@ -6,9 +6,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import projet.istic.fr.firedrone.adapter.CustomListAdapter;
 import projet.istic.fr.firedrone.listener.InterventionAPI;
+import projet.istic.fr.firedrone.model.InterventionItem;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -34,7 +41,7 @@ public class FicheFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
 
-        final View view = inflater.inflate(R.layout.fragment_fiche,container,false);
+        /**final View view = inflater.inflate(R.layout.fragment_fiche,container,false);
 
         final Intervention intervention =new Intervention();
 
@@ -64,9 +71,46 @@ public class FicheFragment extends Fragment {
             public void failure(RetrofitError error) {
                 Log.d("==retrofit==", error.toString());
             }
+        });*/
+
+
+
+        final View view = inflater.inflate(R.layout.intervention_main,container,false);
+
+        ArrayList image_details = getListData();
+        final ListView lv1 = (ListView) view.findViewById(R.id.interventionList);
+
+        lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
+        lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                Object o = lv1.getItemAtPosition(position);
+                InterventionItem newsData = (InterventionItem) o;
+            }
         });
+
+
 
         return view;
     }
 
+    private ArrayList getListData() {
+        ArrayList<InterventionItem> results = new ArrayList<InterventionItem>();
+
+        InterventionItem newsData = new InterventionItem();
+        newsData.setMyId("ecf456");
+        newsData.setCodeSinistre("Feu de foret");
+        newsData.setAdress("Les gayeulles Rennes");
+        results.add(newsData);
+
+        InterventionItem newsData2 = new InterventionItem();
+        newsData2.setMyId("ecf45667");
+        newsData2.setCodeSinistre("Feu de foret2");
+        newsData2.setAdress("Les gayeulles Rennes2");
+        results.add(newsData2);
+
+        // Add some more dummy data for testing
+        return results;
+    }
 }
