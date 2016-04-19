@@ -1,16 +1,27 @@
 package projet.istic.fr.firedrone;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.DropBoxManager;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,95 +33,144 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
+import projet.istic.fr.firedrone.map.DragListener;
+import projet.istic.fr.firedrone.map.ManagePolyline;
 
 
 public class MapFragment extends SupportMapFragment implements
         GoogleMap.OnMapClickListener,
         GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnCameraChangeListener,
-        OnMapReadyCallback  {
+        GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline {
 
     private GoogleMap myMap;
-    private List<LatLng> arrayPoints = null;//List of mark points
+    //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
+    private Map<String, Marker> listMarkers = null;
+
     private PolylineOptions polylineOptions;//add lines bettwen markers
     private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
     private static MapFragment INSTANCE;
+    private Polyline polyline;
 
+    //liste des points parcourus par le drône
+    private PolylineOptions polylineOptionsDrone;
+
+    //bouton de suppression de marqueur
+    private ImageButton suppressionMarker;
+
+    //marqueur du drône
     Marker markerDrone;
 
 
-
-
     public static MapFragment getInstance() {
-        if(INSTANCE == null){
+        if (INSTANCE == null) {
             INSTANCE = new MapFragment();
         }
         return INSTANCE;
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(savedInstanceState==null){
-            arrayPoints = new ArrayList<LatLng>();
+        if (savedInstanceState == null) {
+            listMarkers = new LinkedHashMap<String, Marker>();
             getMapAsync(this);
         }
 
-        ((MainActivity)getActivity()).setDroneMoveListener(new DroneListenerEvent.DroneActionMapListener() {
+        ((MainActivity) getActivity()).setDroneMoveListener(new DroneListenerEvent.DroneActionMapListener() {
             @Override
             public void onDroneMove(LatLng point) {
 
                 //Lorsque le drone change de position il appelle cette méthode
-                System.out.println("run marker");
-                System.out.println(point);
-                if(markerDrone != null) {
+                if (markerDrone != null) {
                     markerDrone.setPosition(point);
                     markerDrone.setVisible(true);
+                    addPolylineDrone(point);
                 }
 
             }
 
+            //lorsqu'un drone recoit un ordre de mission, il appelle cette méthode là
             @Override
             public void droneReceivedMissionPoint(List<LatLng> pointsMissions) {
+                //on cherche à trouver tous les marqueurs proche des points (à moins de 1 mètres) reçues par le drône
+                for(Marker marker : listMarkers.values()){
 
+                    //pour tous les points recues par le drône
+                    for(LatLng point:pointsMissions) {
+                        float[] result = new float[1];
+                        //calcul de la distance entre le marqueur et le point
+                        Location.distanceBetween(marker.getPosition().latitude, marker.getPosition().longitude, point.latitude, point.longitude, result);
+                        //si on est à moins de 1 mètre on change la couleur de l'icône
+                        if (result[0]<1) {
+                            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        }
+                    }
+                }
             }
         });
 
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FrameLayout mapView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
 
+            //création du bouton de suppression des marqueurs
+            suppressionMarker = new ImageButton(getContext());
+            suppressionMarker.setPadding(5, 5, 5, 5);
+            suppressionMarker.setBackgroundColor(DragListener.COLOR_BUTTON);
+            suppressionMarker.setImageResource(R.drawable.delete_24dp_rouge);
+            suppressionMarker.setVisibility(View.INVISIBLE);
+
+            //ajout du bouton de suppression et placement
+            mapView.addView(suppressionMarker, new FrameLayout.LayoutParams(150, 150, Gravity.CENTER_HORIZONTAL));
+
+        if(myMap != null){
+            //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
+            myMap.setOnMarkerDragListener(new DragListener(suppressionMarker, myMap, this));
+        }
+        return mapView;
+    }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //passage en mode Earth (avec les routes)
+        googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         googleMap.setOnMapClickListener(this);
         googleMap.setOnMapLongClickListener(this);
-        googleMap.setOnCameraChangeListener(this);
-
         myMap = googleMap;
-        MarkerOptions marker=new MarkerOptions();
+
+        MarkerOptions marker = new MarkerOptions();
+
         marker.position(rennes_istic);
 
         myMap.addMarker(marker);
+
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
-
-
 
         markerDrone = myMap.addMarker(new MarkerOptions()
                         .position(rennes_istic)
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36))
         );
 
+        initPolylineDrone();
 
+        //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
+        myMap.setOnMarkerDragListener(new DragListener(suppressionMarker, myMap, this));
     }
 
 
@@ -119,39 +179,12 @@ public class MapFragment extends SupportMapFragment implements
         Log.v("MainActivity", "onMapClick(LatLng point)");
 
         //add marker
-        putMarker(point, arrayPoints.size());
-        // settin polyline in the map
-        polylineOptions = new PolylineOptions();
-        //polygonOptions.strokeColor(Color.RED);
-        polylineOptions.color(Color.BLUE);
-        polylineOptions.width(5);
-        arrayPoints.add(point);
-
-
-        polylineOptions.addAll(arrayPoints);
-        myMap.addPolyline(polylineOptions);
-
-
-        Marker marker = myMap.addMarker(new MarkerOptions()
-                .position(new LatLng(37.7750, 122.4183))
-                .title("San Francisco")
-                .snippet("Population: 776733"));
+        putMarker(point, listMarkers.size());
 
         Marker mar = myMap.addMarker(new MarkerOptions()
                 .position(rennes_istic)
                 .title("Rennes")
                 .snippet("Population: ??"));
-
-        List<LatLng> childList = new ArrayList<LatLng>(); // new routs
-        childList.add(new LatLng(48.1157045,-1.6379779));
-        childList.add(new LatLng(48.1155670,- 1.6372698));
-        childList.add(new LatLng(48.1153670,- 1.6372698));
-        childList.add(new LatLng(48.1150670,- 1.6372698));
-
-
-        //(rennes_istic);
-        //animateMarker(myMap,mar,childList,false);
-
     }
 
 
@@ -161,26 +194,20 @@ public class MapFragment extends SupportMapFragment implements
      * @param num for indicate the number of the merker
      */
     public void putMarker(LatLng clickedPosition,int num){
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        Bitmap bmp = Bitmap.createBitmap(200, 50, conf);
-        Canvas canvas = new Canvas(bmp);
-
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.FILL);
-
 
         //canvas.drawText(Integer.toString(num), 0, 50, paint); // paint defines the text color, stroke width, size
-        myMap.addMarker(new MarkerOptions()
+        Marker marker = myMap.addMarker(new MarkerOptions()
                         .position(clickedPosition)
-                        .title(Integer.toString(num))
-        );
+                        .title(Integer.toString(num)).draggable(true));
+        addPolyline(marker);
+
     }
+
 
     @Override
     public void onMapLongClick(LatLng point) {
-        myMap.clear();
-        arrayPoints.clear();
+        //myMap.clear();
+        //listMarkers.clear();
     }
 
 
@@ -190,8 +217,8 @@ public class MapFragment extends SupportMapFragment implements
 
     }
 
-    public List<LatLng> getArrayPoints(){
-        return arrayPoints;
+    public Collection<LatLng> getListMarkers(){
+        return getListPoint();
     }
 
 
@@ -207,7 +234,7 @@ public class MapFragment extends SupportMapFragment implements
 
 
 
-    public static void setAnimation(GoogleMap myMap, final List<LatLng> directionPoint, final Bitmap bitmap) {
+    public void setAnimation(GoogleMap myMap, final List<LatLng> directionPoint, final Bitmap bitmap) {
 
 
         Marker marker = myMap.addMarker(new MarkerOptions()
@@ -221,7 +248,7 @@ public class MapFragment extends SupportMapFragment implements
     }
 
 
-    private static void animateMarker(GoogleMap myMap, final Marker marker, final List<LatLng> directionPoint,
+    private void animateMarker(GoogleMap myMap, final Marker marker, final List<LatLng> directionPoint,
                                       final boolean hideMarker) {
         final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
@@ -256,5 +283,68 @@ public class MapFragment extends SupportMapFragment implements
                 }
             }
         });
+    }
+
+    private List<LatLng> getListPoint(){
+        List<LatLng> listPoint = new ArrayList<>();
+        for(Marker marker: listMarkers.values()){
+            listPoint.add(marker.getPosition());
+        }
+        return listPoint;
+    }
+
+    @Override
+    public void updatePolyline() {
+        // settin polyline in the map
+        polylineOptions = new PolylineOptions();
+        //polygonOptions.strokeColor(Color.RED);
+        polylineOptions.color(Color.BLUE);
+        polylineOptions.width(5);
+        polylineOptions.addAll(getListPoint());
+
+        //s'il existe déjà un polyline, on le supprime
+        if(polyline != null){
+            polyline.remove();
+        }
+        //récupération du polyline
+        polyline=myMap.addPolyline(polylineOptions);
+
+        int i=0;
+        //on remet dans l'ordre les numéros des marqueurs
+        for( Marker marker :listMarkers.values() ){
+            marker.setTitle(String.valueOf(i));
+            i++;
+        }
+    }
+
+    private void initPolylineDrone(){
+
+        // settin polyline in the map
+        polylineOptionsDrone = new PolylineOptions();
+        //polygonOptions.strokeColor(Color.RED);
+        polylineOptionsDrone.color(Color.YELLOW);
+        polylineOptionsDrone.width(7);
+        myMap.addPolyline(polylineOptionsDrone);
+    }
+
+    private void addPolylineDrone(LatLng point){
+        polylineOptionsDrone.add(point);
+    }
+
+
+    @Override
+    public void removePoint(Marker marker) {
+        //suppression d'un marqueur sur la carte
+        listMarkers.remove(marker.getId());
+        //mise à jour des polylines
+        updatePolyline();
+    }
+
+    @Override
+    public void addPolyline(Marker marker) {
+        //ajout d'un marqueur
+        listMarkers.put(marker.getId(), marker);
+        //mise à jour des polylines
+        updatePolyline();
     }
 }

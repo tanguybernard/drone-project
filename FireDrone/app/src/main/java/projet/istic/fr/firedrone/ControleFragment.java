@@ -32,6 +32,7 @@ import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.Type;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 
+import java.util.Collection;
 import java.util.List;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
@@ -185,7 +186,7 @@ public class ControleFragment extends Fragment {
         //envoi du drône en mission
 
         //récupérations des points choisi par l'utilisateur
-        List<LatLng> positions = getListOfPoint();
+        Collection<LatLng> positions = getListOfPoint();
         if (positions != null) {
             //création de la mission
             Mission mission = new Mission();
@@ -345,7 +346,7 @@ public class ControleFragment extends Fragment {
     }
 
     //récupération de la liste des points choisies par l'utilisateur
-    private List<LatLng> getListOfPoint() {
+    private Collection<LatLng> getListOfPoint() {
         return ((MainActivity) getActivity()).getArrayPointsForMission();
     }
 

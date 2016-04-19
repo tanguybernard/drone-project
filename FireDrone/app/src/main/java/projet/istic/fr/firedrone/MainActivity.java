@@ -12,6 +12,7 @@ import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.interfaces.TowerListener;
 
+import java.util.Collection;
 import java.util.List;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
@@ -155,11 +156,11 @@ public class MainActivity extends AppCompatActivity
         controlTower.registerDrone(droneControlFragment.getDrone(), droneControlFragment.getHandler());
     }
 
-    public List<LatLng> getArrayPointsForMission(){
+    public Collection<LatLng> getArrayPointsForMission(){
         if(fragmentDrawPath == null){
             return null;
         }
-        return fragmentDrawPath.getArrayPoints();
+        return fragmentDrawPath.getListMarkers();
     }
 
     @Override
