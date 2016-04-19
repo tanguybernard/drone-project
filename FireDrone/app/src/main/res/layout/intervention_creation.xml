@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="10dp"
+    >
+
+    <TextView android:id="@+id/textView1" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" android:text="@string/intervention_info"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:textColor="#fff"
+        />
+
+
+
+    <TextView android:id="@+id/textName" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1" android:layout_marginTop="13dp"
+        android:text="Id intervention" android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#fff"
+        />
+
+    <EditText android:id="@+id/name" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_alignBottom="@+id/textName"
+        android:layout_toRightOf="@+id/textName" android:ems="30"
+        android:inputType="text" android:paddingLeft="10dp"
+        android:textColor="#fff"
+
+        >
+
+        <requestFocus />
+    </EditText>
+
+
+
+    <Button android:id="@+id/save" style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="@string/save_intervention"
+        android:layout_below="@+id/textName"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

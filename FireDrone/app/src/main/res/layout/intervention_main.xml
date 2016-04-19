@@ -8,14 +8,13 @@
     <ListView android:id="@+id/interventionList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/add"
+        android:layout_above="@+id/addIntervention"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
 
-    <Button android:id="@+id/add" style="?android:attr/buttonStyleSmall"
+    <Button android:id="@+id/addIntervention" style="?android:attr/buttonStyleSmall"
         android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:onClick="addWine"
         android:text="@string/add_intervention"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"

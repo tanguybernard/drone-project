@@ -1,34 +1,30 @@
 package projet.istic.fr.firedrone;
 
+/**
+ * Created by tbernard on 19/04/16.
+ */
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.ArrayList;
 
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
-import projet.istic.fr.firedrone.listener.InterventionAPI;
 import projet.istic.fr.firedrone.model.InterventionItem;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
-/**
- * Created by nduquesne on 18/03/16.
- */
-public class FicheFragment extends Fragment {
+
+
+
+
+
+public class CreateInterventionFragment extends Fragment {
 
     public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
 
@@ -49,34 +45,34 @@ public class FicheFragment extends Fragment {
 
         /**final View view = inflater.inflate(R.layout.fragment_fiche,container,false);
 
-        final Intervention intervention =new Intervention();
+         final Intervention intervention =new Intervention();
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(END_POINT)
-                .build();
-        InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
-        interventionAPI.GetIntervention("56eff377b760a2df933ccd61", new Callback<Intervention>() {
-            @Override
-            public void success(Intervention intervention, Response response) {
+         RestAdapter restAdapter = new RestAdapter.Builder()
+         .setEndpoint(END_POINT)
+         .build();
+         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+         interventionAPI.GetIntervention("56eff377b760a2df933ccd61", new Callback<Intervention>() {
+        @Override
+        public void success(Intervention intervention, Response response) {
 
-                TextView id= (TextView)view.findViewById(R.id.textView);
-                TextView content =(TextView)view.findViewById(R.id.textView2);
-                TextView date = (TextView)view.findViewById(R.id.textView3);
-                TextView type=(TextView)view.findViewById(R.id.textView4);
-                TextView author =(TextView)view.findViewById(R.id.textView5);
+        TextView id= (TextView)view.findViewById(R.id.textView);
+        TextView content =(TextView)view.findViewById(R.id.textView2);
+        TextView date = (TextView)view.findViewById(R.id.textView3);
+        TextView type=(TextView)view.findViewById(R.id.textView4);
+        TextView author =(TextView)view.findViewById(R.id.textView5);
 
-                id.setText(intervention.id);
-                content.setText(intervention.content);
-                date.setText(intervention.date);
-                type.setText(intervention.type);
-                author.setText(intervention.author);
+        id.setText(intervention.id);
+        content.setText(intervention.content);
+        date.setText(intervention.date);
+        type.setText(intervention.type);
+        author.setText(intervention.author);
 
-           }
+        }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d("==retrofit==", error.toString());
-            }
+        @Override
+        public void failure(RetrofitError error) {
+        Log.d("==retrofit==", error.toString());
+        }
         });*/
 
 
@@ -96,21 +92,6 @@ public class FicheFragment extends Fragment {
             }
         });
 
-        final Button btnAddIntervention = (Button) view.findViewById(R.id.addIntervention);
-
-        btnAddIntervention.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CreateInterventionFragment createInterventionFragment = new CreateInterventionFragment();
-
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, createInterventionFragment).commit();
-
-            }
-        });
-
-
-
 
         return view;
     }
@@ -129,7 +110,7 @@ public class FicheFragment extends Fragment {
         results.add(newsData);
 
         InterventionItem newsData2 = new InterventionItem();
-        newsData2.setMyId("ecf45667");
+        newsData2.setMyId("ecf456676666666666666666666");
         newsData2.setCodeSinistre("Feu de foret2");
         newsData2.setAdress("Les gayeulles Rennes2");
         results.add(newsData2);
@@ -139,3 +120,4 @@ public class FicheFragment extends Fragment {
     }
 
 }
+
