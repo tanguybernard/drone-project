@@ -21,4 +21,7 @@
     <string name="ficheParcours">Définition du parcours du drône</string>
     <string name="ficheControle">Contrôle du drône</string>
     <string name="ficheImage">Images du drône</string>
+    <string name="add_intervention">Ajouter intervention</string>
+    <string name="intervention_info">Infos intervention</string>
+    <string name="save_intervention">Sauver intervention</string>
 </resources>
