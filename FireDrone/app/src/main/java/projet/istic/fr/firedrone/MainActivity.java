@@ -5,6 +5,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity
 
     private MapFragment fragmentDrawPath;
     private FicheFragment fragmentFiche;
+
+    private MoyenFragment fragmentMoyen;
 
     //fragment pour contrôler le drône
     private ControleFragment droneControlFragment;
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity
         droneControlFragment.setDrone( new Drone(getApplicationContext()));;
         //création du listener qui écoute le drône
         droneListenerEvent = new DroneListenerEvent(droneControlFragment);
+        //fragmentMoyen = MoyenFragment.getInstance();
 
         //instanciation du contrôle tower
         this.controlTower = new ControlTower(getApplicationContext());
@@ -98,6 +102,9 @@ public class MainActivity extends AppCompatActivity
                 fragment = fragmentFiche;
                 break;
             case R.id.nav_moyen:
+                fragmentMoyen = MoyenFragment.getInstance();
+                Log.d("TAG", "selectDrawerItem: ");
+                fragment = fragmentMoyen;
                 break;
             case R.id.nav_rapport:
                 break;
