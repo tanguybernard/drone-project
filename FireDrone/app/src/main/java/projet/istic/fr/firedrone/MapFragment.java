@@ -128,15 +128,16 @@ public class MapFragment extends SupportMapFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FrameLayout mapView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
 
-            //création du bouton de suppression des marqueurs
-            suppressionMarker = new ImageButton(getContext());
-            suppressionMarker.setPadding(5, 5, 5, 5);
-            suppressionMarker.setBackgroundColor(DragListener.COLOR_BUTTON);
-            suppressionMarker.setImageResource(R.drawable.delete_24dp_rouge);
-            suppressionMarker.setVisibility(View.INVISIBLE);
+        //création du bouton de suppression des marqueurs
+        suppressionMarker = new ImageButton(getContext());
+        suppressionMarker.setPadding(5, 5, 5, 5);
+        suppressionMarker.setBackgroundColor(DragListener.COLOR_BUTTON);
+        suppressionMarker.setImageResource(R.drawable.delete_24dp_rouge);
+        suppressionMarker.setVisibility(View.INVISIBLE);
 
-            //ajout du bouton de suppression et placement
-            mapView.addView(suppressionMarker, new FrameLayout.LayoutParams(150, 150, Gravity.CENTER_HORIZONTAL));
+        //ajout du bouton de suppression et placement
+        mapView.addView(suppressionMarker, new FrameLayout.LayoutParams(150, 150, Gravity.CENTER_HORIZONTAL));
+
 
         if(myMap != null){
             //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
