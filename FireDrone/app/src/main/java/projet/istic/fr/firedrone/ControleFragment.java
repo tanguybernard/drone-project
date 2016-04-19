@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
-import com.o3dr.android.client.apis.mission.MissionApi;
+import com.o3dr.android.client.apis.MissionApi;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.coordinate.LatLongAlt;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
@@ -198,8 +198,8 @@ public class ControleFragment extends Fragment {
                 mission.addMissionItem(waypoint);
             }
             //on envoi le drône en mission
-            MissionApi.setMission(drone, mission, true);
-            MissionApi.loadWaypoints(drone);
+            MissionApi.getApi(drone).setMission(mission, true);
+            MissionApi.getApi(drone).loadWaypoints();
         }
     }
 
