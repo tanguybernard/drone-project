@@ -1,6 +1,6 @@
 package projet.istic.fr.firedrone.listener;
 
-import projet.istic.fr.firedrone.Intervention;
+import projet.istic.fr.firedrone.model.Intervention;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
