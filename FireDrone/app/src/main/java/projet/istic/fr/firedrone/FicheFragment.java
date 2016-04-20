@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import projet.istic.fr.firedrone.listener.InterventionAPI;
+import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -53,10 +53,6 @@ public class FicheFragment extends Fragment {
                 TextView author =(TextView)view.findViewById(R.id.textView5);
 
                 id.setText(intervention.id);
-                content.setText(intervention.content);
-                date.setText(intervention.date);
-                type.setText(intervention.type);
-                author.setText(intervention.author);
 
            }
 
