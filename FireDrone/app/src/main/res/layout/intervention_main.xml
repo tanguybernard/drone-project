@@ -25,12 +25,12 @@
         android:elevation="3dp"
         android:paddingTop="8dp"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_above="@+id/addIntervention"
+        android:layout_above="@+id/btnAddIntervention"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
 
-    <Button android:id="@+id/addIntervention" style="?android:attr/buttonStyleSmall"
+    <Button android:id="@+id/btnAddIntervention" style="?android:attr/buttonStyleSmall"
         android:layout_width="fill_parent" android:layout_height="wrap_content"
         android:text="@string/add_intervention"
         android:layout_alignParentBottom="true"

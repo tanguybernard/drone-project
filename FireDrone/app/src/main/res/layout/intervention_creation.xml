@@ -54,12 +54,12 @@
         android:divider="#323232"
         android:dividerHeight="1dp"
         android:scrollbars="none"
-        android:layout_above="@+id/save"
+        android:layout_above="@+id/btnSaveIntervention"
         android:layout_below="@+id/codeSinistreList">
     </ListView>
 
 
-    <Button android:id="@+id/save" style="?android:attr/buttonStyleSmall"
+    <Button android:id="@+id/btnSaveIntervention" style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="@string/save_intervention"
         android:layout_alignParentBottom="true"

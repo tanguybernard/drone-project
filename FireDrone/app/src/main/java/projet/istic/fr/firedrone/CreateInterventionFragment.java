@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
@@ -100,6 +102,17 @@ public class CreateInterventionFragment extends Fragment {
                 InterventionItem newsData = (InterventionItem) o;
             }
         });*/
+
+
+        final Button btnSaveIntervention = (Button) view.findViewById(R.id.btnSaveIntervention);
+
+        btnSaveIntervention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNewIntervention(v);
+            }
+        });
+
 
         final Spinner codeSinistreList = (Spinner) view.findViewById(R.id.codeSinistreList);
 
@@ -181,6 +194,28 @@ public class CreateInterventionFragment extends Fragment {
         return view;
     }
 
+
+    public void sendNewIntervention(View view){
+
+        ListView listView = (ListView) getView().findViewById(R.id.moyenListView);
+       // ListView listView = (ListView) view.findViewById(R.id.moyenListView);
+
+        //int first = listView.getFirstVisiblePosition();
+        int count = listView.getChildCount();
+        for (int i=0; i<count; i++) {
+
+            TextView t = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_name);
+            TextView t1 = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_quantity);
+
+            System.out.println(t.getText());
+            System.out.println(t1.getText());
+
+
+        }
+
+
+
+    }
 
 
 

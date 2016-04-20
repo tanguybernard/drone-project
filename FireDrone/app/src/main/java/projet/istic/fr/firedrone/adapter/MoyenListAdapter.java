@@ -50,6 +50,7 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenItem> {
         final Button addQuantity = (Button) convertView.findViewById(R.id.btn_q_add);
 
 
+
         subQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +64,7 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenItem> {
                 modifyQuantity(v,true);
             }
         });
+
 
 
         System.out.println(item.getName());
@@ -104,6 +106,10 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenItem> {
         }
 
     }
+
+
+
+
 
 
 

@@ -80,7 +80,7 @@ public class FicheFragment extends Fragment {
             }
         });
 
-        final Button btnAddIntervention = (Button) view.findViewById(R.id.addIntervention);
+        final Button btnAddIntervention = (Button) view.findViewById(R.id.btnAddIntervention);
 
         btnAddIntervention.setOnClickListener(new View.OnClickListener() {
             @Override
