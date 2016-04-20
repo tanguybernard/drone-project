@@ -2,7 +2,7 @@ package projet.istic.fr.firedrone.ModelAPI;
 
 import java.util.List;
 
-import projet.istic.fr.firedrone.Intervention;
+import projet.istic.fr.firedrone.model.Intervention;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
