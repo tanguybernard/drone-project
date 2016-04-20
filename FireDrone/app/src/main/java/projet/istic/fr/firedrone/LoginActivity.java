@@ -68,14 +68,20 @@ public class LoginActivity extends AppCompatActivity {
         String password = passField.getText().toString();
 
 
-        if(login=="admin" && password=="admin"){
+        System.out.println(login);
+        System.out.println(password);
 
+        if(login.equals("admin")){
+
+            System.out.println("connected");
             Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
             LoginActivity.this.startActivity(myIntent);
             setResult(RESULT_OK, myIntent);
             finish();
+            return;
 
         }
+        System.out.println("disconnected");
 
 
         final UserLogin userLogin = new UserLogin(login,password);
