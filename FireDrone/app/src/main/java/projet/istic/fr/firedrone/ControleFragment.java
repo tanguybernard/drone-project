@@ -80,9 +80,12 @@ public class ControleFragment extends Fragment {
         if (!getTower().isTowerConnected()) {
             getTower().connect((MainActivity) getActivity());
         }
-        //on enregistre le drone et on le lie au listener event
-        drone.registerDroneListener(droneListenerEvent);
 
+        if(drone != null) {
+            //on enregistre le drone et on le lie au listener event
+            drone.registerDroneListener(droneListenerEvent);
+
+        }
         //récupération des boutons et set des listeners onClick
         connectButton = (Button) getView().findViewById(R.id.btnConnect);
         connectButton.setOnClickListener(new View.OnClickListener() {
