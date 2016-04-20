@@ -47,11 +47,20 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenItem> {
         }
 
         final Button subQuantity = (Button) convertView.findViewById(R.id.btn_q_sub);
+        final Button addQuantity = (Button) convertView.findViewById(R.id.btn_q_add);
+
 
         subQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                subQuantity(v);
+                modifyQuantity(v,false);
+            }
+        });
+
+        addQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                modifyQuantity(v,true);
             }
         });
 
@@ -70,29 +79,29 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenItem> {
      * Decrease quantity of vehicle
      * @param v
      */
-    public void subQuantity(View v){
+    public void modifyQuantity(View v,boolean addSub){
 
         View parentRow = (View) v.getParent();
 
         ListView listView = (ListView) parentRow.getParent();
         final int position = listView.getPositionForView(parentRow);
-        System.out.println("ttttttttttttttttttttttttttttttt");
-        System.out.println(position);
 
-        //Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+        View vv = listView.getChildAt(position);
 
-        //Integer quantity =null;
-
+        TextView tt = (TextView)vv.findViewById(R.id.moyen_quantity);
+        int quantity = Integer.parseInt(tt.getText().toString());
 
 
-        /*System.out.println(quantity);
+        if(addSub){
+            tt.setText(Integer.toString(quantity + 1));
 
-        if(quantity!=null && quantity>0){
+        }
+        else{
+            if(quantity>0) {
+                tt.setText(Integer.toString(quantity - 1));
+            }
 
-            TextView tt = (TextView)view.findViewById(R.id.quantity);
-            tt.setText(Integer.toString(quantity - 1));
-
-        }*/
+        }
 
     }
 
