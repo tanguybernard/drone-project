@@ -24,4 +24,6 @@
     <string name="add_intervention">Ajouter intervention</string>
     <string name="intervention_info">Infos intervention</string>
     <string name="save_intervention">Sauver intervention</string>
+    <string name="btn_valid">Valider</string>
+    <string name="btn_cancel">Annuler</string>
 </resources>
