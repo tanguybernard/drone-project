@@ -33,4 +33,6 @@ public class UserService {
 	public void update(User user) {
 		repository.save(user);
 	}
+
+	public User getByLogin (String login){ return repository.findByLogin(login);}
 }

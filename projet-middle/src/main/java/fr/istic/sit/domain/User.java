@@ -1,5 +1,6 @@
 package fr.istic.sit.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 
 
@@ -44,6 +45,7 @@ public class User {
 		this.phone = phone;
 	}
 
+	@JsonIgnore
 	public String getId() {
 		return id;
 	}
@@ -60,6 +62,7 @@ public class User {
 		this.login = login;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}

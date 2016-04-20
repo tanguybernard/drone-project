@@ -14,9 +14,9 @@ import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.interfaces.TowerListener;
 
 import java.util.Collection;
-import java.util.List;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
+import projet.istic.fr.firedrone.map.TabMapFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,TowerListener{
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
     //listener qui va écouter tout les évènements envoyés par le drone
     private DroneListenerEvent droneListenerEvent;
 
-    private MapFragment fragmentDrawPath;
+    private TabMapFragment fragmentDrawPath;
     private FicheFragment fragmentFiche;
 
     private MoyenFragment fragmentMoyen;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         //instanciation du contrôle tower
         this.controlTower = new ControlTower(getApplicationContext());
 
-        fragmentDrawPath = MapFragment.getInstance();
+        fragmentDrawPath = TabMapFragment.getInstance();
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_plan:
                 break;
             case R.id.nav_parcours:
-                fragmentDrawPath = MapFragment.getInstance();
+                fragmentDrawPath = TabMapFragment.getInstance();
 
                 //fragmentDrawPath.getMapAsync(this);
                 fragment = fragmentDrawPath;
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity
         if(fragmentDrawPath == null){
             return null;
         }
-        return fragmentDrawPath.getListMarkers();
+        return null;
     }
 
     @Override

@@ -17,30 +17,35 @@ import fr.istic.sit.service.UserService;
 public class UserController {
 	
 	@Autowired
-	private UserService service;
+	private UserService userService;
 
     @RequestMapping("")
     public List<User> users() {
-        return service.getAll();
+        return userService.getAll();
     }
 
-    @RequestMapping("/{id}")
+    /*@RequestMapping("/{id}")
     public User searchUser(@PathVariable String id) {
-    	return service.getId(id);
+    	return userService.getId(id);
+    } */
+
+    @RequestMapping("/{login}")
+    public User searchUser(@PathVariable String login) {
+        return userService.getByLogin(login);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public void insert(@RequestBody User user){
-    	service.insert(user);
+    	userService.insert(user);
     }
     
     @RequestMapping(method = RequestMethod.PATCH)
     public void update(@RequestBody User user){
-    	service.update(user);
+    	userService.update(user);
     }
 
     @RequestMapping(method=RequestMethod.DELETE, value="{id}")
     public void delete(@PathVariable String id) {
-    	service.delete(service.getId(id));
+    	userService.delete(userService.getId(id));
     }
 }

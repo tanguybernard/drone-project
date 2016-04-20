@@ -1,18 +1,13 @@
 package projet.istic.fr.firedrone;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.DropBoxManager;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -38,8 +33,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +40,10 @@ import java.util.Map;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.DragListener;
 import projet.istic.fr.firedrone.map.ManagePolyline;
+import projet.istic.fr.firedrone.map.PagerAdapterMap;
 
 
-public class MapFragment extends SupportMapFragment implements
+public class MapDroneFragment extends SupportMapFragment implements
         GoogleMap.OnMapClickListener,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline {
@@ -60,11 +54,14 @@ public class MapFragment extends SupportMapFragment implements
 
     private PolylineOptions polylineOptions;//add lines bettwen markers
     private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
-    private static MapFragment INSTANCE;
+    private static MapDroneFragment INSTANCE;
     private Polyline polyline;
 
-    //liste des points parcourus par le drône
+    //options polyline du drone
     private PolylineOptions polylineOptionsDrone;
+    private Polyline polylineDrone;
+    //dernier point atteint par le drône
+    private LatLng dernierPoint;
 
     //bouton de suppression de marqueur
     private ImageButton suppressionMarker;
@@ -73,9 +70,9 @@ public class MapFragment extends SupportMapFragment implements
     Marker markerDrone;
 
 
-    public static MapFragment getInstance() {
+    public static MapDroneFragment getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new MapFragment();
+            INSTANCE = new MapDroneFragment();
         }
         return INSTANCE;
     }
@@ -168,6 +165,7 @@ public class MapFragment extends SupportMapFragment implements
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36))
         );
 
+        //initialisation de l'option de polyline du drône
         initPolylineDrone();
 
         //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
@@ -325,11 +323,14 @@ public class MapFragment extends SupportMapFragment implements
         //polygonOptions.strokeColor(Color.RED);
         polylineOptionsDrone.color(Color.YELLOW);
         polylineOptionsDrone.width(7);
-        myMap.addPolyline(polylineOptionsDrone);
     }
 
+
     private void addPolylineDrone(LatLng point){
-        polylineOptionsDrone.add(point);
+        if(dernierPoint != null) {
+            polylineDrone = myMap.addPolyline(polylineOptionsDrone.add(dernierPoint, point));
+        }
+        dernierPoint = point;
     }
 
 

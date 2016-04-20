@@ -3,27 +3,17 @@ package projet.istic.fr.firedrone;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.ArrayList;
 
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
-import projet.istic.fr.firedrone.listener.InterventionAPI;
 import projet.istic.fr.firedrone.model.InterventionItem;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by nduquesne on 18/03/16.
@@ -66,10 +56,6 @@ public class FicheFragment extends Fragment {
                 TextView author =(TextView)view.findViewById(R.id.textView5);
 
                 id.setText(intervention.id);
-                content.setText(intervention.content);
-                date.setText(intervention.date);
-                type.setText(intervention.type);
-                author.setText(intervention.author);
 
            }
 
