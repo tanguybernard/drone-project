@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,47 +15,47 @@ import java.util.List;
 import projet.istic.fr.firedrone.FicheFragment;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.InterventionItem;
+import projet.istic.fr.firedrone.model.MoyenItem;
 
 /**
  * Created by tbernard on 18/04/16.
  */
-public class CustomListAdapter extends ArrayAdapter<InterventionItem> {
+public class MoyenListAdapter extends ArrayAdapter<MoyenItem> {
     private ArrayList<InterventionItem> listData;
     private LayoutInflater layoutInflater;
 
-    public CustomListAdapter(Context aContext, List<InterventionItem> listData) {
+    public MoyenListAdapter(Context aContext, List<MoyenItem> listData) {
         super(aContext,0,listData);
         //layoutInflater = LayoutInflater.from(aContext);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        InterventionItem item = getItem(position);
+        MoyenItem item = getItem(position);
         System.out.println("toto");System.out.println(position);
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.intervention_infos, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.moyen_item, null);
             holder = new ViewHolder();
-            holder.myId = (TextView) convertView.findViewById(R.id.myId);
-            holder.codeSinistre = (TextView) convertView.findViewById(R.id.codeSinistre);
-            holder.adress = (TextView) convertView.findViewById(R.id.adress);
+            holder.myName = (TextView) convertView.findViewById(R.id.moyen_name);
+            holder.quantity = (EditText) convertView.findViewById(R.id.moyen_quantity);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
 
-        System.out.println(item.getCodeSinistre());
-        holder.myId.setText(item.getMyId());
-        //holder.codeSinistre.setText("By, " + listData.get(position).getCodeSinistre());
-        holder.codeSinistre.setText(item.getCodeSinistre());
-        holder.adress.setText(item.getAdress());
+        System.out.println(item.getName());
+        holder.myName.setText(item.getName());
+        //holder.quantity.setText(item.getQuantity());
+
+
         return convertView;
     }
 
     static class ViewHolder {
-        TextView myId;
-        TextView codeSinistre;
-        TextView adress;
+        TextView myName;
+        EditText quantity;
+
     }
 }

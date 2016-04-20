@@ -1,4 +1,4 @@
-package projet.istic.fr.firedrone;
+package projet.istic.fr.firedrone.model;
 import com.google.gson.annotations.SerializedName;
 
 /**

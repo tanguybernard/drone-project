@@ -4,6 +4,7 @@ package projet.istic.fr.firedrone.model;
  * Created by tbernard on 18/04/16.
  */
 public class InterventionItem {
+
     private String myId;
     private String codeSinistre;
     private String adress;

@@ -9,7 +9,7 @@
         android:layout_alignParentTop="true" android:text="@string/intervention_info"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
-        android:textColor="#fff"
+        android:textColor="#000000"
         />
 
 
@@ -17,27 +17,51 @@
     <TextView android:id="@+id/textName" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1" android:layout_marginTop="13dp"
-        android:text="Id intervention" android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#fff"
+        android:text="Nom intervention :" android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#000000"
         />
 
     <EditText android:id="@+id/name" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_alignBottom="@+id/textName"
         android:layout_toRightOf="@+id/textName" android:ems="30"
         android:inputType="text" android:paddingLeft="10dp"
-        android:textColor="#fff"
-
+        android:textColor="#000000"
         >
 
         <requestFocus />
     </EditText>
 
 
+    <TextView android:id="@+id/chooseCodeSinistre" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textName" android:text="Choix code sinistre"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="10dp" android:textColor="#fff" />
+
+    <Spinner android:id="@+id/codeSinistreList" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:layout_alignTop="@+id/chooseCodeSinistre"
+        android:layout_centerHorizontal="true" />
+
+
+
+    <ListView
+        android:id="@+id/moyenListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#323232"
+        android:dividerHeight="1dp"
+        android:scrollbars="none"
+        android:layout_above="@+id/save"
+        android:layout_below="@+id/codeSinistreList">
+    </ListView>
+
 
     <Button android:id="@+id/save" style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="@string/save_intervention"
-        android:layout_below="@+id/textName"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
 

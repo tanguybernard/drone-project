@@ -110,8 +110,6 @@ public class FicheFragment extends Fragment {
         });
 
 
-
-
         return view;
     }
 
