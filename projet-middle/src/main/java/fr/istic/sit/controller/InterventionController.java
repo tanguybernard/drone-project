@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.istic.sit.domain.Intervention;
+import fr.istic.sit.domain.Way;
 import fr.istic.sit.service.InterventionService;
 
 /**
@@ -26,6 +27,11 @@ public class InterventionController {
     @RequestMapping("/{id}")
     public Intervention searchIntervention(@PathVariable String id) {
     	return service.getId(id);
+    }
+    
+    @RequestMapping("/ways/{id}")
+    public List<Way> searchWaysOfIntervention(@PathVariable String id) {
+    	return service.getId(id).getWays();
     }
     
     @RequestMapping("")
