@@ -9,42 +9,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.istic.sit.domain.Intervention;
-import fr.istic.sit.service.InterventionService;
+import fr.istic.sit.domain.Way;
+import fr.istic.sit.service.WayService;
 
 /**
  * Created by fracma on 3/18/16.
  */
 
 @RestController
-@RequestMapping("/intervention")
-public class InterventionController {
+@RequestMapping("/way")
+public class WayController {
 
     @Autowired
-    private InterventionService service;
+    private WayService service;
     
     @RequestMapping("/{id}")
-    public Intervention searchIntervention(@PathVariable String id) {
+    public Way searchWay(@PathVariable String id) {
     	return service.getId(id);
     }
     
     @RequestMapping("")
-    public List<Intervention> interventions() {
+    public List<Way> ways() {
     	return service.getAll();
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public void insertIntervention(@RequestBody Intervention intervention){
-    	service.insert(intervention);
+    public void insertWay(@RequestBody Way way){
+    	service.insert(way);
     }
     
     @RequestMapping(method = RequestMethod.PATCH)
-    public void updateIntervention(@RequestBody Intervention intervention){
-    	service.update(intervention);
+    public void updateWay(@RequestBody Way way){
+    	service.update(way);
     }
     
     @RequestMapping(method=RequestMethod.DELETE, value="{id}")
-    public void deleteIntervention(@PathVariable String id) {
+    public void deleteWay(@PathVariable String id) {
     	service.delete(service.getId(id));
     }
 }
