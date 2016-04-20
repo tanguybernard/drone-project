@@ -5,8 +5,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
-import projet.istic.fr.firedrone.MapDroneFragment;
+import java.util.Collection;
 
 /**
  * Created by ramage on 19/04/16.
@@ -22,7 +23,7 @@ public class PagerAdapterMap extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch(position){
             case 0:return MapDroneFragment.getInstance();
-            case 1: return new SupportMapFragment();
+            case 1: return new MapMoyenFragment();
         }
         return null;
 
@@ -40,5 +41,9 @@ public class PagerAdapterMap extends FragmentStatePagerAdapter {
             case 1: return "Moyen";
         }
         return null;
+    }
+
+    public Collection<LatLng> getListPointMissionDrone() {
+        return MapDroneFragment.getInstance().getListMarkers();
     }
 }

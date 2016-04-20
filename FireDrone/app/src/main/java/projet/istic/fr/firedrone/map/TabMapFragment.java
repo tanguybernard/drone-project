@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Collection;
+
 import projet.istic.fr.firedrone.R;
 
 /**
@@ -20,7 +24,7 @@ public class TabMapFragment extends Fragment {
 
     //Instance
     private static TabMapFragment INSTANCE;
-
+    private PagerAdapterMap pagerAdapter;
 
     //singleton, une seule instance du fragment controle
     public static TabMapFragment getInstance() {
@@ -36,7 +40,7 @@ public class TabMapFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tab_map, container, false);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
 
-        PagerAdapter pagerAdapter = new PagerAdapterMap(getChildFragmentManager());
+        pagerAdapter = new PagerAdapterMap(getChildFragmentManager());
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setTabsFromPagerAdapter(pagerAdapter);
@@ -45,5 +49,8 @@ public class TabMapFragment extends Fragment {
         return view;
     }
 
+    public Collection<LatLng> getListPointForMissionDrone(){
+        return pagerAdapter.getListPointMissionDrone();
+    }
 
 }

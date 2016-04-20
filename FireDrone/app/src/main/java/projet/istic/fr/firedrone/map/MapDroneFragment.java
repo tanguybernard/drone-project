@@ -1,4 +1,4 @@
-package projet.istic.fr.firedrone;
+package projet.istic.fr.firedrone.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -6,8 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,10 +35,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import projet.istic.fr.firedrone.MainActivity;
+import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
-import projet.istic.fr.firedrone.map.DragListener;
-import projet.istic.fr.firedrone.map.ManagePolyline;
-import projet.istic.fr.firedrone.map.PagerAdapterMap;
 
 
 public class MapDroneFragment extends SupportMapFragment implements

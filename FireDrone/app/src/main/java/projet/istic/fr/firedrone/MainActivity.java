@@ -19,7 +19,7 @@ import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,TowerListener{
+        implements TowerListener{
 
     //tower pour se connecter au drone et recevoir les évènements du drone
     private ControlTower controlTower;
@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
         setupDrawerContent(navigationView);
     }
 
@@ -140,12 +139,6 @@ public class MainActivity extends AppCompatActivity
         droneListenerEvent.setUsingControlPanel(false);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        return false;
-    }
-
-
     public void setDroneMoveListener(DroneListenerEvent.DroneActionMapListener droneMoveListener){
         if(droneListenerEvent != null) {
             droneListenerEvent.setDroneMoveListener(droneMoveListener);
@@ -167,7 +160,7 @@ public class MainActivity extends AppCompatActivity
         if(fragmentDrawPath == null){
             return null;
         }
-        return null;
+        return TabMapFragment.getInstance().getListPointForMissionDrone();
     }
 
     @Override
