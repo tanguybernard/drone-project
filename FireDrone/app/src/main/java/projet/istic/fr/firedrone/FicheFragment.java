@@ -112,6 +112,12 @@ public class FicheFragment extends Fragment {
         newsData.setAdress("Les gayeulles Rennes");
         results.add(newsData);
 
+        newsData = new InterventionItem();
+        newsData.setMyId("ecf4565");
+        newsData.setCodeSinistre("Accident");
+        newsData.setAdress("Lonchamps rennes");
+        results.add(newsData);
+
         InterventionItem newsData2 = new InterventionItem();
         newsData2.setMyId("ecf45667");
         newsData2.setCodeSinistre("Feu de foret2");
