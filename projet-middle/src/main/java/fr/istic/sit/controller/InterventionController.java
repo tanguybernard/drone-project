@@ -1,9 +1,16 @@
 package fr.istic.sit.controller;
 
-import fr.istic.sit.dao.InteventionRepository;
-import fr.istic.sit.domain.Intervention;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import fr.istic.sit.domain.Intervention;
+import fr.istic.sit.service.InterventionService;
 
 /**
  * Created by fracma on 3/18/16.
@@ -14,18 +21,30 @@ import org.springframework.web.bind.annotation.*;
 public class InterventionController {
 
     @Autowired
-    InteventionRepository inteventionRepository;
-
-    @RequestMapping("/{idIntervention}")
-    public Intervention getIntervention(@PathVariable String idIntervention) {
-        System.out.println("getIntervention... ");
-        return inteventionRepository.findOne(idIntervention);
+    private InterventionService service;
+    
+    @RequestMapping("/{id}")
+    public Intervention searchIntervention(@PathVariable String id) {
+    	return service.getId(id);
     }
-
+    
+    @RequestMapping("")
+    public List<Intervention> interventions() {
+    	return service.getAll();
+    }
+    
     @RequestMapping(method = RequestMethod.POST)
-    public Intervention getIntervention(@RequestBody Intervention intervention) {
-        System.out.println("setIntervention... "+intervention);
-        return inteventionRepository.save(intervention);
+    public void insertIntervention(@RequestBody Intervention intervention){
+    	service.insert(intervention);
     }
-
+    
+    @RequestMapping(method = RequestMethod.PATCH)
+    public void updateIntervention(@RequestBody Intervention intervention){
+    	service.update(intervention);
+    }
+    
+    @RequestMapping(method=RequestMethod.DELETE, value="{id}")
+    public void deleteIntervention(@PathVariable String id) {
+    	service.delete(service.getId(id));
+    }
 }

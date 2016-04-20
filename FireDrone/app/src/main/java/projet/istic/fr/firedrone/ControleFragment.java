@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
-import com.o3dr.android.client.apis.mission.MissionApi;
+import com.o3dr.android.client.apis.MissionApi;
 import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.coordinate.LatLongAlt;
 import com.o3dr.services.android.lib.drone.attribute.AttributeType;
@@ -32,6 +32,7 @@ import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.Type;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
 
+import java.util.Collection;
 import java.util.List;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
@@ -79,9 +80,12 @@ public class ControleFragment extends Fragment {
         if (!getTower().isTowerConnected()) {
             getTower().connect((MainActivity) getActivity());
         }
-        //on enregistre le drone et on le lie au listener event
-        drone.registerDroneListener(droneListenerEvent);
 
+        if(drone != null) {
+            //on enregistre le drone et on le lie au listener event
+            drone.registerDroneListener(droneListenerEvent);
+
+        }
         //récupération des boutons et set des listeners onClick
         connectButton = (Button) getView().findViewById(R.id.btnConnect);
         connectButton.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +189,7 @@ public class ControleFragment extends Fragment {
         //envoi du drône en mission
 
         //récupérations des points choisi par l'utilisateur
-        List<LatLng> positions = getListOfPoint();
+        Collection<LatLng> positions = getListOfPoint();
         if (positions != null) {
             //création de la mission
             Mission mission = new Mission();
@@ -197,8 +201,8 @@ public class ControleFragment extends Fragment {
                 mission.addMissionItem(waypoint);
             }
             //on envoi le drône en mission
-            MissionApi.setMission(drone, mission, true);
-            MissionApi.loadWaypoints(drone);
+            MissionApi.getApi(drone).setMission(mission, true);
+            MissionApi.getApi(drone).loadWaypoints();
         }
     }
 
@@ -345,7 +349,7 @@ public class ControleFragment extends Fragment {
     }
 
     //récupération de la liste des points choisies par l'utilisateur
-    private List<LatLng> getListOfPoint() {
+    private Collection<LatLng> getListOfPoint() {
         return ((MainActivity) getActivity()).getArrayPointsForMission();
     }
 

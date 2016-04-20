@@ -5,6 +5,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -12,9 +13,10 @@ import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.interfaces.TowerListener;
 
-import java.util.List;
+import java.util.Collection;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
+import projet.istic.fr.firedrone.map.TabMapFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,TowerListener{
@@ -27,8 +29,10 @@ public class MainActivity extends AppCompatActivity
     //listener qui va écouter tout les évènements envoyés par le drone
     private DroneListenerEvent droneListenerEvent;
 
-    private MapFragment fragmentDrawPath;
+    private TabMapFragment fragmentDrawPath;
     private FicheFragment fragmentFiche;
+
+    private MoyenFragment fragmentMoyen;
 
     //fragment pour contrôler le drône
     private ControleFragment droneControlFragment;
@@ -63,11 +67,12 @@ public class MainActivity extends AppCompatActivity
         droneControlFragment.setDrone( new Drone(getApplicationContext()));;
         //création du listener qui écoute le drône
         droneListenerEvent = new DroneListenerEvent(droneControlFragment);
+        //fragmentMoyen = MoyenFragment.getInstance();
 
         //instanciation du contrôle tower
         this.controlTower = new ControlTower(getApplicationContext());
 
-        fragmentDrawPath = MapFragment.getInstance();
+        fragmentDrawPath = TabMapFragment.getInstance();
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -97,6 +102,9 @@ public class MainActivity extends AppCompatActivity
                 fragment = fragmentFiche;
                 break;
             case R.id.nav_moyen:
+                fragmentMoyen = MoyenFragment.getInstance();
+                Log.d("TAG", "selectDrawerItem: ");
+                fragment = fragmentMoyen;
                 break;
             case R.id.nav_rapport:
                 break;
@@ -105,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_plan:
                 break;
             case R.id.nav_parcours:
-                fragmentDrawPath = MapFragment.getInstance();
+                fragmentDrawPath = TabMapFragment.getInstance();
 
                 //fragmentDrawPath.getMapAsync(this);
                 fragment = fragmentDrawPath;
@@ -155,11 +163,11 @@ public class MainActivity extends AppCompatActivity
         controlTower.registerDrone(droneControlFragment.getDrone(), droneControlFragment.getHandler());
     }
 
-    public List<LatLng> getArrayPointsForMission(){
+    public Collection<LatLng> getArrayPointsForMission(){
         if(fragmentDrawPath == null){
             return null;
         }
-        return fragmentDrawPath.getArrayPoints();
+        return null;
     }
 
     @Override
