@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,24 +40,67 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenItem> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.moyen_item, null);
             holder = new ViewHolder();
             holder.myName = (TextView) convertView.findViewById(R.id.moyen_name);
-            holder.quantity = (EditText) convertView.findViewById(R.id.moyen_quantity);
+            holder.quantity = (TextView) convertView.findViewById(R.id.moyen_quantity);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        final Button subQuantity = (Button) convertView.findViewById(R.id.btn_q_sub);
+
+        subQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subQuantity(v);
+            }
+        });
+
 
         System.out.println(item.getName());
         holder.myName.setText(item.getName());
-        //holder.quantity.setText(item.getQuantity());
+        holder.quantity.setText(String.valueOf(item.getQuantity()), TextView.BufferType.EDITABLE);
 
 
         return convertView;
     }
 
+
+
+    /**
+     * Decrease quantity of vehicle
+     * @param v
+     */
+    public void subQuantity(View v){
+
+        View parentRow = (View) v.getParent();
+
+        ListView listView = (ListView) parentRow.getParent();
+        final int position = listView.getPositionForView(parentRow);
+        System.out.println("ttttttttttttttttttttttttttttttt");
+        System.out.println(position);
+
+        //Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+
+        //Integer quantity =null;
+
+
+
+        /*System.out.println(quantity);
+
+        if(quantity!=null && quantity>0){
+
+            TextView tt = (TextView)view.findViewById(R.id.quantity);
+            tt.setText(Integer.toString(quantity - 1));
+
+        }*/
+
+    }
+
+
+
     static class ViewHolder {
         TextView myName;
-        EditText quantity;
+        TextView quantity;
 
     }
 }

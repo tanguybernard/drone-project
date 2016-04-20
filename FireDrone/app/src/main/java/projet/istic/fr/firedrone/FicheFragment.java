@@ -79,8 +79,6 @@ public class FicheFragment extends Fragment {
             }
         });*/
 
-
-
         final View view = inflater.inflate(R.layout.intervention_main,container,false);
 
         ArrayList image_details = getListData();
@@ -118,6 +116,8 @@ public class FicheFragment extends Fragment {
      * @return list data of an interventions
      */
     private ArrayList getListData() {
+
+
         ArrayList<InterventionItem> results = new ArrayList<InterventionItem>();
 
         InterventionItem newsData = new InterventionItem();
