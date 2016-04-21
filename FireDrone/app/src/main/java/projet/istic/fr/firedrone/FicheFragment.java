@@ -132,6 +132,9 @@ public class FicheFragment extends Fragment {
                 .build();
 
         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+
+        final ArrayList<InterventionItem> results = new ArrayList<InterventionItem>();
+
         interventionAPI.getIntervention("IN_PROGRESS", new Callback<List<Intervention>>() {
 
             @Override
@@ -142,8 +145,8 @@ public class FicheFragment extends Fragment {
 
                 //[{"id":"1","sinisterCode":null,"date":"20/03/2016","address":"31 avenue du Professeur Charles Foulon","latitude":"42","longitude":"42","status":"IN_PROGRESS","ways":null},{"id":"571889ecb7604711a85a6b1b","sinisterCode":null,"date":"20160421_100433","address":null,"latitude":null,"longitude":null,"status":"IN_PROGRESS","ways":null},{"id":"5718c26eb760d213a96a67b8","sinisterCode":null,"date":"21/04/2016","address":"dummy adress","latitude":null,"longitude":null,"status":"IN_PROGRESS","ways":null},{"id":"5718cc44b7601ac3c46c43a0","sinisterCode":"Malaise","date":"21/04/2016","address":"teste adress z","latitude":null,"longitude":null,"status":"IN_PROGRESS","ways":null},{"id":"5718d351b7607eb45fba6e64","sinisterCode":null,"date":"20/03/2016","address":"31 avenue du Professeur Charles Foulon","latitude":"42","longitude":"42","status":"IN_PROGRESS","ways":null}]
 
-                System.out.println("RESULT");
-                System.out.println(bodyString);
+
+
 
                 JSONArray reader = null;
                 try {
@@ -152,10 +155,22 @@ public class FicheFragment extends Fragment {
                     e.printStackTrace();
                 }
 
+                InterventionItem newsData;
                 for (int i = 0; i < reader.length(); i++) {
                     try {
                         JSONObject elt = (JSONObject) reader.get(i);
-                        System.out.println(elt.get("address"));
+
+                        newsData = new InterventionItem();
+                        String id = (elt.get("id")!=null) ? elt.get("id").toString() : "";
+                        newsData.setMyId(id);
+                        String sinisterCode = (elt.get("sinisterCode")!=null) ? elt.get("sinisterCode").toString() : "";
+                        newsData.setCodeSinistre(sinisterCode);
+                        String address = (elt.get("address")!=null) ? elt.get("address").toString() : "";
+                        newsData.setAdress(address);
+
+                        results.add(newsData);
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -174,28 +189,6 @@ public class FicheFragment extends Fragment {
 
 
 
-
-        ArrayList<InterventionItem> results = new ArrayList<InterventionItem>();
-
-        InterventionItem newsData = new InterventionItem();
-        newsData.setMyId("ecf456");
-        newsData.setCodeSinistre("Feu de foret");
-        newsData.setAdress("Les gayeulles Rennes");
-        results.add(newsData);
-
-        newsData = new InterventionItem();
-        newsData.setMyId("ecf4565");
-        newsData.setCodeSinistre("Accident");
-        newsData.setAdress("Lonchamps rennes");
-        results.add(newsData);
-
-        InterventionItem newsData2 = new InterventionItem();
-        newsData2.setMyId("ecf45667");
-        newsData2.setCodeSinistre("Feu de foret2");
-        newsData2.setAdress("Les gayeulles Rennes2");
-        results.add(newsData2);
-
-        // Add some more dummy data for testing
         return results;
     }
 
