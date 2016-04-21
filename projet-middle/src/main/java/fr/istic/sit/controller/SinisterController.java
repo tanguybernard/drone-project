@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.istic.sit.domain.Sinister;
+import fr.istic.sit.domain.Way;
 import fr.istic.sit.service.SinisterService;
 
 /**
