@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -196,6 +197,17 @@ public class CreateInterventionFragment extends Fragment {
 
     public void sendNewIntervention(View view){
 
+        EditText addressInter = (EditText) getView().findViewById(R.id.addressIntervention);
+
+        Spinner spinner = (Spinner) getView().findViewById(R.id.codeSinistreList);
+
+        String sinisterCode = spinner.getSelectedItem().toString();
+
+        System.out.println("CODE SINISTRE");
+        System.out.println(sinisterCode);
+
+
+
         ListView listView = (ListView) getView().findViewById(R.id.moyenListView);
        // ListView listView = (ListView) view.findViewById(R.id.moyenListView);
 
@@ -216,8 +228,8 @@ public class CreateInterventionFragment extends Fragment {
         String currentDateandTime = sdf.format(new Date());
 
 
-
-        final Intervention intervention = new Intervention("FEU_DE_FORET",currentDateandTime,"263 Avenue Général Leclerc, 35000 Rennes","FINISHED");
+        //"263 Avenue Général Leclerc, 35000 Rennes"
+        final Intervention intervention = new Intervention(sinisterCode,currentDateandTime,addressInter.getText().toString(),"IN_PROGRESS");
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(END_POINT)
@@ -256,10 +268,6 @@ public class CreateInterventionFragment extends Fragment {
 
         String[] values = getResources().getStringArray(R.array.moyens);
 
-
-
-        //System.out.println(values[2]);
-
         MoyenInterventionItem newsData;
 
         for (String value :values
@@ -272,7 +280,6 @@ public class CreateInterventionFragment extends Fragment {
             results.add(newsData);
 
         }
-
 
 
         // Add some more dummy data for testing
