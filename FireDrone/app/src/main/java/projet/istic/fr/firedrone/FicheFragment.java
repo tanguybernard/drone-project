@@ -10,10 +10,21 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
+import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.InterventionItem;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * Created by nduquesne on 18/03/16.
@@ -113,6 +124,35 @@ public class FicheFragment extends Fragment {
      * @return list data of an interventions
      */
     private ArrayList getListData() {
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+
+        InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+        interventionAPI.getIntervention("IN_PROGRESS", new Callback<List<Intervention>>() {
+
+            @Override
+            public void success(List<Intervention> interventions, Response response) {
+
+
+                String bodyString = new String(((TypedByteArray) response.getBody()).getBytes());
+
+
+                System.out.println("RESULT");
+                System.out.println(bodyString);
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                System.out.println(error);
+
+            }
+        });
+
+
 
 
         ArrayList<InterventionItem> results = new ArrayList<InterventionItem>();

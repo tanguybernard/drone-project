@@ -23,9 +23,11 @@ public class Intervention {
     @SerializedName("status")
     public String status;
 
+    @SerializedName("latitude")
+    private String latitude;
 
-    //private String latitude;
-    //private String longitude;
+    @SerializedName("longitude")
+    private String longitude;
 
     //private List<Way> ways;
 

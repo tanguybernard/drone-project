@@ -3,10 +3,12 @@ package projet.istic.fr.firedrone.ModelAPI;
 import java.util.List;
 
 import projet.istic.fr.firedrone.model.Intervention;
+import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 /**
  * Created by mamadian on 21/03/16.
@@ -18,9 +20,13 @@ public interface InterventionAPI {
          * @param queryParam
          * @param response
          */
-
         @GET("/intervention/{queryId}")
-        public void GetIntervention(@Path("queryId") String queryParam,retrofit.Callback<Intervention> response);
+        public void getInterventionById(@Path("queryId") String queryParam,retrofit.Callback<Intervention> response);
+
+        @GET("/intervention")
+        public void getIntervention(
+                @Query("status") String status, Callback<List<Intervention>> response);
+
 
         /**
          * Permet de recuperer toutes les interventions
