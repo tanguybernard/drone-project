@@ -4,7 +4,6 @@ package projet.istic.fr.firedrone;
  * Created by tbernard on 19/04/16.
  */
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,11 +21,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
-import projet.istic.fr.firedrone.ModelAPI.UserLoginApi;
 import projet.istic.fr.firedrone.adapter.MoyenListAdapter;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
-import projet.istic.fr.firedrone.model.UserLogin;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
