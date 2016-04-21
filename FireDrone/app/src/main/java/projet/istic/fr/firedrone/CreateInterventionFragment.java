@@ -4,31 +4,33 @@ package projet.istic.fr.firedrone;
  * Created by tbernard on 19/04/16.
  */
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
-import projet.istic.fr.firedrone.adapter.CustomListAdapter;
+import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
+import projet.istic.fr.firedrone.ModelAPI.UserLoginApi;
 import projet.istic.fr.firedrone.adapter.MoyenListAdapter;
-import projet.istic.fr.firedrone.model.InterventionItem;
-import projet.istic.fr.firedrone.model.MoyenItem;
+import projet.istic.fr.firedrone.model.Intervention;
+import projet.istic.fr.firedrone.model.MoyenInterventionItem;
+import projet.istic.fr.firedrone.model.UserLogin;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class CreateInterventionFragment extends Fragment {
@@ -148,7 +150,7 @@ public class CreateInterventionFragment extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                             Object o = lv1.getItemAtPosition(position);
-                            MoyenItem newsData = (MoyenItem) o;
+                            MoyenInterventionItem newsData = (MoyenInterventionItem) o;
                         }
                     });
                 }
@@ -164,7 +166,7 @@ public class CreateInterventionFragment extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                             Object o = lv1.getItemAtPosition(position);
-                            MoyenItem newsData = (MoyenItem) o;
+                            MoyenInterventionItem newsData = (MoyenInterventionItem) o;
                         }
                     });
                 }
@@ -213,6 +215,32 @@ public class CreateInterventionFragment extends Fragment {
 
         }
 
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String currentDateandTime = sdf.format(new Date());
+
+
+
+        final Intervention intervention = new Intervention("FEU_DE_FORET",currentDateandTime,"263 Avenue Général Leclerc, 35000 Rennes","FINISHED");
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(END_POINT)
+                .build();
+
+        InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+        interventionAPI.createIntervention(intervention, new Callback<Intervention>() {
+
+            @Override
+            public void success(Intervention intervention, Response response) {
+                System.out.println("ca fonctionne");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                System.out.println(error);
+
+            }
+        });
+
 
 
     }
@@ -227,7 +255,7 @@ public class CreateInterventionFragment extends Fragment {
      */
     private ArrayList getListData() {
         System.out.println("LOL");
-        ArrayList<MoyenItem> results = new ArrayList<MoyenItem>();
+        ArrayList<MoyenInterventionItem> results = new ArrayList<MoyenInterventionItem>();
 
         String[] values = getResources().getStringArray(R.array.moyens);
 
@@ -235,11 +263,11 @@ public class CreateInterventionFragment extends Fragment {
 
         //System.out.println(values[2]);
 
-        MoyenItem newsData;
+        MoyenInterventionItem newsData;
 
         for (String value :values
              ) {
-            newsData = new MoyenItem();
+            newsData = new MoyenInterventionItem();
 
             System.out.println(value);
             newsData.setName(value);

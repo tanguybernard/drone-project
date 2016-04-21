@@ -5,35 +5,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import projet.istic.fr.firedrone.FicheFragment;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.InterventionItem;
-import projet.istic.fr.firedrone.model.MoyenItem;
+import projet.istic.fr.firedrone.model.MoyenInterventionItem;
 
 /**
  * Created by tbernard on 18/04/16.
  */
-public class MoyenListAdapter extends ArrayAdapter<MoyenItem> {
+public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
     private ArrayList<InterventionItem> listData;
     private LayoutInflater layoutInflater;
 
-    public MoyenListAdapter(Context aContext, List<MoyenItem> listData) {
+    public MoyenListAdapter(Context aContext, List<MoyenInterventionItem> listData) {
         super(aContext,0,listData);
         //layoutInflater = LayoutInflater.from(aContext);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        MoyenItem item = getItem(position);
+        MoyenInterventionItem item = getItem(position);
         System.out.println("toto");System.out.println(position);
         ViewHolder holder;
         if (convertView == null) {

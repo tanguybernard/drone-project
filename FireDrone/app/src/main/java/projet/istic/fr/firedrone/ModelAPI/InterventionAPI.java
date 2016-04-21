@@ -26,7 +26,7 @@ public interface InterventionAPI {
          * Permet de recuperer toutes les interventions
          * @param response
          */
-        @GET("/interventions")
+        @GET("/intervention")
         public void GetInterventions(retrofit.Callback<List<Intervention>> response);
 
         /**
