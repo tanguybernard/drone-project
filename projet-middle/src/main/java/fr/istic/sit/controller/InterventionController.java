@@ -29,7 +29,7 @@ public class InterventionController {
     	return service.getId(id);
     }
     
-    @RequestMapping("/ways/{id}")
+    @RequestMapping("/{id}/way")
     public List<Way> searchWaysOfIntervention(@PathVariable String id) {
     	return service.getId(id).getWays();
     }

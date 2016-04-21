@@ -45,6 +45,13 @@
     <string name="add_intervention">Ajouter intervention</string>
     <string name="intervention_info">Infos intervention</string>
     <string name="save_intervention">Sauver intervention</string>
+    <string name="lbl_mean_type">Type de moyen : </string>
+    <string name="lbl_hour_call">Appelé à  : </string>
+    <string name="lbl_hour_arriv">Arrivé à : </string>
+    <string name="lbl_hour_engaged">Engagé à  : </string>
+    <string name="lbl_hour_free">Libéré à : </string>
     <string name="btn_valid">Valider</string>
     <string name="btn_cancel">Annuler</string>
+    <string name="lbl_add_mean">Ajouter un moyen</string>
+    <string name="lbl_edit_mean">Modifier un moyen</string>
 </resources>

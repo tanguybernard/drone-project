@@ -15,14 +15,13 @@ public class Intervention {
     private String address;
     private String latitude;
     private String longitude;
-    private String author;
     private String status;
     private List<Way> ways;
 
     public Intervention() {}
 
     public Intervention(String id, String sinisterCode, String date, String address, String latitude, 
-    		String longitude, String author, String status, List<Way> ways) {
+    		String longitude, String status, List<Way> ways) {
         this.id = id;
         this.sinisterCode = sinisterCode;
         this.date = date;
@@ -80,14 +79,6 @@ public class Intervention {
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
-
-	public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
     
     public String getStatus() {
 		return status;
@@ -114,7 +105,6 @@ public class Intervention {
                 ", address='" + address + '\'' +
                 ", latitude='" + latitude + '\'' +
                 ", longitude='" + longitude + '\'' +
-                ", author='" + author + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }
