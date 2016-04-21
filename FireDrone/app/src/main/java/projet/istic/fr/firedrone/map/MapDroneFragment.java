@@ -51,7 +51,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
     private PolylineOptions polylineOptions;//add lines bettwen markers
     private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
-    private static MapDroneFragment INSTANCE;
+
     private Polyline polyline;
 
     //options polyline du drone
@@ -66,6 +66,7 @@ public class MapDroneFragment extends SupportMapFragment implements
     //marqueur du drône
     Marker markerDrone;
 
+    private static MapDroneFragment INSTANCE;
 
     public static MapDroneFragment getInstance() {
         if (INSTANCE == null) {
@@ -125,7 +126,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         //création du bouton de suppression des marqueurs
         suppressionMarker = new ImageButton(getContext());
         suppressionMarker.setPadding(5, 5, 5, 5);
-        suppressionMarker.setBackgroundColor(DragListener.COLOR_BUTTON);
+        suppressionMarker.setBackgroundColor(DragRemoveOnMapListener.COLOR_BUTTON);
         suppressionMarker.setImageResource(R.drawable.delete_24dp_rouge);
         suppressionMarker.setVisibility(View.INVISIBLE);
 
@@ -135,7 +136,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         if(myMap != null){
             //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
-            myMap.setOnMarkerDragListener(new DragListener(suppressionMarker, myMap, this));
+            myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this));
         }
         return mapView;
     }
@@ -166,7 +167,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         initPolylineDrone();
 
         //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
-        myMap.setOnMarkerDragListener(new DragListener(suppressionMarker, myMap, this));
+        myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this));
     }
 
 

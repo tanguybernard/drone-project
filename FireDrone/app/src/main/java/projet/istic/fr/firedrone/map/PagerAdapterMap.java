@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Collection;
@@ -23,7 +22,7 @@ public class PagerAdapterMap extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch(position){
             case 0:return MapDroneFragment.getInstance();
-            case 1: return new MapMoyenFragment();
+            case 1: return PanelMapMoyenFragment.getInstance();
         }
         return null;
 

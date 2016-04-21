@@ -1,5 +1,9 @@
 package projet.istic.fr.firedrone.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import projet.istic.fr.firedrone.R;
+
 /**
  * Created by christophe on 19/04/16.
  */
@@ -8,10 +12,43 @@ public class MeansItem {
     long mlInterventionId = -1;
     String msMeanCode = "";
     String msMeanLib = "";
-    String msMeanHCall = "";
-    String msMeanHArriv = "";
-    String msMeanHEngaged = "";
+    String msMeanHCall = null;
+    String msMeanHArriv = null;
+    String msMeanHEngaged = null;
     String msMeanHFree = "";
+    CouleurMoyen color;
+    LatLng position;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MeansItem meansItem = (MeansItem) o;
+
+        if (mlMeanId != meansItem.mlMeanId) return false;
+        if (mlInterventionId != meansItem.mlInterventionId) return false;
+        if (msMeanCode != null ? !msMeanCode.equals(meansItem.msMeanCode) : meansItem.msMeanCode != null)
+            return false;
+        if (msMeanLib != null ? !msMeanLib.equals(meansItem.msMeanLib) : meansItem.msMeanLib != null)
+            return false;
+        if (msMeanHCall != null ? !msMeanHCall.equals(meansItem.msMeanHCall) : meansItem.msMeanHCall != null)
+            return false;
+        if (msMeanHArriv != null ? !msMeanHArriv.equals(meansItem.msMeanHArriv) : meansItem.msMeanHArriv != null)
+            return false;
+        if (msMeanHEngaged != null ? !msMeanHEngaged.equals(meansItem.msMeanHEngaged) : meansItem.msMeanHEngaged != null)
+            return false;
+        if (msMeanHFree != null ? !msMeanHFree.equals(meansItem.msMeanHFree) : meansItem.msMeanHFree != null)
+            return false;
+        if (color != meansItem.color) return false;
+        return !(position != null ? !position.equals(meansItem.position) : meansItem.position != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (mlMeanId ^ (mlMeanId >>> 32));
+    }
 
     public long getMlMeanId() {
         return mlMeanId;
@@ -75,5 +112,12 @@ public class MeansItem {
 
     public void setMsMeanHFree(String msMeanHFree) {
         this.msMeanHFree = msMeanHFree;
+    }
+
+    public Integer getResource(){
+        if(mlMeanId ==1){
+            return R.drawable.delete_24dp_rouge;
+        }
+        return R.drawable.drone_36_36;
     }
 }
