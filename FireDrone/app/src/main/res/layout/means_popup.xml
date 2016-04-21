@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
+            android:text="@string/lbl_mean_type"
             android:id="@+id/lblTxtMeans" />
 
         <Spinner
