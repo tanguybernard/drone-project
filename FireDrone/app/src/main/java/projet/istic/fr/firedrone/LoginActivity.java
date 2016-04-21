@@ -6,9 +6,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.JsonReader;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.google.gson.JsonObject;
+
+import java.io.UnsupportedEncodingException;
 
 import projet.istic.fr.firedrone.ModelAPI.UserLoginApi;
 import projet.istic.fr.firedrone.model.UserLogin;
@@ -68,6 +74,9 @@ public class LoginActivity extends AppCompatActivity {
         String password = passField.getText().toString();
 
 
+
+
+
         System.out.println(login);
         System.out.println(password);
 
@@ -88,10 +97,21 @@ public class LoginActivity extends AppCompatActivity {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(END_POINT)
                 .build();
+
+
+        String basicAuth = "Basic " + Base64.encodeToString(String.format("%s:%s", "drone_android", "4ndr01d").getBytes(), Base64.NO_WRAP);
+
+
+
         UserLoginApi userLoginApi = restAdapter.create(UserLoginApi.class);
-        userLoginApi.connectUser(userLogin, new Callback<UserLogin>() {
+        userLoginApi.connectUser(basicAuth, new Callback<UserLogin>() {
             @Override
             public void success(UserLogin userLogin, Response response) {
+
+
+                System.out.println(response.getBody());
+
+
                 Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
 
                 myIntent.putExtra("userRole", response.toString());
@@ -102,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
+                System.out.println(error);
 
             }
         });
