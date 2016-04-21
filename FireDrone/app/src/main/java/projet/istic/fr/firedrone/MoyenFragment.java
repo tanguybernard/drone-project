@@ -60,17 +60,17 @@ public class MoyenFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         final Button addMeans = (Button) view.findViewById(R.id.btnAddMean);
         addMeans.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 MoyenAlertDialog popUp = new MoyenAlertDialog();
+                popUp.setDialogType(IDX_H_CALL, view);
                 popUp.show(getFragmentManager(), "");
             }
         });
-
     }
 
     private TableRow addRow(String[] plsValues, boolean pbHeader) {
@@ -156,25 +156,32 @@ public class MoyenFragment extends Fragment {
         table.addView(element);
     }
 
-    public void addMean(String psCode, String psHCall) {
-        final String [] columnMean = {psCode, psHCall, "", "", ""};
-        final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
-        TableRow element = addRow(columnMean, false);
-        final int rowIdx = table.getChildCount();
-        element.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editMean(v, rowIdx);
-            }
-        });
-        table.addView(element);
-        // send to server
-        MeansItem oNewMean = new MeansItem();
-        oNewMean.setMsMeanCode(psCode);
-        oNewMean.setMsMeanHCall(psHCall);
+    public void addMean(int piType, final String psCode, String psHCall, final int piLine) {
+        if (piType > IDX_CODE) {
+            editMean(piType, psCode, psHCall, piLine);
+        } else {
+            final String[] columnMean = {psCode, psHCall, "", "", ""};
+            final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
+            TableRow element = addRow(columnMean, false);
+            final int rowIdx = table.getChildCount();
+            element.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MoyenAlertDialog popUp = new MoyenAlertDialog();
+                    popUp.setDialogType(IDX_H_ARRIV, v);
+                    popUp.show(getFragmentManager(), "");
+                    editMean(IDX_H_ARRIV, psCode, "", piLine);
+                }
+            });
+            table.addView(element);
+            // send to server
+            MeansItem oNewMean = new MeansItem();
+            oNewMean.setMsMeanCode(psCode);
+            oNewMean.setMsMeanHCall(psHCall);
+        }
     }
 
-    public void editMean(View poView, int piLineIndex) {
+    public void editMean(int piType, String psCode, String psHCall, int piLineIndex) {
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
         TableRow element = (TableRow) table.getChildAt(piLineIndex);
         for (int colIdx = 0; colIdx < element.getChildCount(); colIdx++) {

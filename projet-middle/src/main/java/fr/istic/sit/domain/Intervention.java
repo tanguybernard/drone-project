@@ -10,21 +10,20 @@ import org.springframework.data.annotation.Id;
 public class Intervention {
     @Id
     private String id;
-    private String code;
+    private String sinisterCode;
     private String date;
     private String address;
     private String latitude;
     private String longitude;
-    private String author;
     private String status;
-    private List<Way> ways;    
+    private List<Way> ways;
 
     public Intervention() {}
 
-    public Intervention(String id, String code, String date, String address, String latitude, 
-    		String longitude, String author, String status, List<Way> ways) {
+    public Intervention(String id, String sinisterCode, String date, String address, String latitude, 
+    		String longitude, String status, List<Way> ways) {
         this.id = id;
-        this.code = code;
+        this.sinisterCode = sinisterCode;
         this.date = date;
         this.address = address;
         this.latitude = latitude;
@@ -49,12 +48,12 @@ public class Intervention {
         this.date = date;
     }
 
-    public String getCode() {
-		return code;
+    public String getSinisterCode() {
+		return sinisterCode;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setSinisterCode(String sinisterCode) {
+		this.sinisterCode = sinisterCode;
 	}
 
 	public String getAddress() {
@@ -80,14 +79,6 @@ public class Intervention {
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
-
-	public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
     
     public String getStatus() {
 		return status;
@@ -109,12 +100,11 @@ public class Intervention {
     public String toString() {
         return "Intervention{" +
                 "id='" + id + '\'' +
-                ", code='" + code + '\'' +
+                ", sinisterCode='" + sinisterCode + '\'' +
                 ", date='" + date + '\'' +
                 ", address='" + address + '\'' +
                 ", latitude='" + latitude + '\'' +
                 ", longitude='" + longitude + '\'' +
-                ", author='" + author + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }

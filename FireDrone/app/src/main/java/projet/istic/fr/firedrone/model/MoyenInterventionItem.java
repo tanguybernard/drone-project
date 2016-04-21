@@ -3,7 +3,7 @@ package projet.istic.fr.firedrone.model;
 /**
  * Created by tbernard on 19/04/16.
  */
-public class MoyenItem {
+public class MoyenInterventionItem {
 
     private String name;
 

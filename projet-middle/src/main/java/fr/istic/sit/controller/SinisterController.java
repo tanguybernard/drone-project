@@ -9,42 +9,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.istic.sit.domain.Sinister;
 import fr.istic.sit.domain.Way;
-import fr.istic.sit.service.WayService;
+import fr.istic.sit.service.SinisterService;
 
 /**
  * Created by fracma on 3/18/16.
  */
 
 @RestController
-@RequestMapping("/way")
-public class WayController {
+@RequestMapping("/sinister")
+public class SinisterController {
 
     @Autowired
-    private WayService service;
+    private SinisterService service;
     
     @RequestMapping("/{id}")
-    public Way searchWay(@PathVariable String id) {
+    public Sinister searchSinister(@PathVariable String id) {
     	return service.getId(id);
     }
     
     @RequestMapping("")
-    public List<Way> ways() {
+    public List<Sinister> sinisters() {
     	return service.getAll();
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public void insertWay(@RequestBody Way way){
-    	service.insert(way);
+    public void insertSinister(@RequestBody Sinister sinister){
+    	service.insert(sinister);
     }
     
     @RequestMapping(method = RequestMethod.PATCH)
-    public void updateWay(@RequestBody Way way){
-    	service.update(way);
+    public void updateSinister(@RequestBody Sinister sinister){
+    	service.update(sinister);
     }
     
     @RequestMapping(method=RequestMethod.DELETE, value="{id}")
-    public void deleteWay(@PathVariable String id) {
+    public void deleteSinister(@PathVariable String id) {
     	service.delete(service.getId(id));
     }
 }
