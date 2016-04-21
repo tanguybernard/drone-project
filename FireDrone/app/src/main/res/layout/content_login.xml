@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="projet.istic.fr.firedrone.LoginActivity">
+
+    <TextView
+        android:layout_width="184dp"
+        android:layout_height="48dp"
+        android:text="@string/login_hint" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint=""
+        android:ems="10"
+        android:id="@+id/loginField"
+        android:text="admin" />
+
+    <TextView
+        android:layout_width="157dp"
+        android:layout_height="67dp"
+        android:text="@string/pass_hint" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/passField"
+        android:text="admin" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/validateLoginButton"
+        android:id="@+id/loginButton" />
+
+</LinearLayout>

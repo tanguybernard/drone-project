@@ -9,16 +9,16 @@ public class Intervention {
     @SerializedName("id")
     public  String id;
 
-    @SerializedName("content")
-    public String content;
+    @SerializedName("codeSinistre")
+    public String codeSinistre;
 
     @SerializedName("date")
     public String date;
 
-    @SerializedName("type")
-    public String type;
+    @SerializedName("adresse")
+    public String adresse;
 
-    @SerializedName("author")
-    public String author;
+    @SerializedName("satatus")
+    public String satatus;
 
 }

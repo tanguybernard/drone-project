@@ -3,27 +3,17 @@ package projet.istic.fr.firedrone;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.ArrayList;
 
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
-import projet.istic.fr.firedrone.listener.InterventionAPI;
 import projet.istic.fr.firedrone.model.InterventionItem;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by nduquesne on 18/03/16.
@@ -66,10 +56,6 @@ public class FicheFragment extends Fragment {
                 TextView author =(TextView)view.findViewById(R.id.textView5);
 
                 id.setText(intervention.id);
-                content.setText(intervention.content);
-                date.setText(intervention.date);
-                type.setText(intervention.type);
-                author.setText(intervention.author);
 
            }
 
@@ -78,8 +64,6 @@ public class FicheFragment extends Fragment {
                 Log.d("==retrofit==", error.toString());
             }
         });*/
-
-
 
         final View view = inflater.inflate(R.layout.intervention_main,container,false);
 
@@ -96,7 +80,7 @@ public class FicheFragment extends Fragment {
             }
         });
 
-        final Button btnAddIntervention = (Button) view.findViewById(R.id.addIntervention);
+        final Button btnAddIntervention = (Button) view.findViewById(R.id.btnAddIntervention);
 
         btnAddIntervention.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,12 +102,20 @@ public class FicheFragment extends Fragment {
      * @return list data of an interventions
      */
     private ArrayList getListData() {
+
+
         ArrayList<InterventionItem> results = new ArrayList<InterventionItem>();
 
         InterventionItem newsData = new InterventionItem();
         newsData.setMyId("ecf456");
         newsData.setCodeSinistre("Feu de foret");
         newsData.setAdress("Les gayeulles Rennes");
+        results.add(newsData);
+
+        newsData = new InterventionItem();
+        newsData.setMyId("ecf4565");
+        newsData.setCodeSinistre("Accident");
+        newsData.setAdress("Lonchamps rennes");
         results.add(newsData);
 
         InterventionItem newsData2 = new InterventionItem();

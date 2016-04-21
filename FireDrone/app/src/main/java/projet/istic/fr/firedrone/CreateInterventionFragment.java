@@ -4,6 +4,9 @@ package projet.istic.fr.firedrone;
  * Created by tbernard on 19/04/16.
  */
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +19,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -97,6 +103,17 @@ public class CreateInterventionFragment extends Fragment {
             }
         });*/
 
+
+        final Button btnSaveIntervention = (Button) view.findViewById(R.id.btnSaveIntervention);
+
+        btnSaveIntervention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNewIntervention(v);
+            }
+        });
+
+
         final Spinner codeSinistreList = (Spinner) view.findViewById(R.id.codeSinistreList);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),
@@ -104,10 +121,11 @@ public class CreateInterventionFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         codeSinistreList.setAdapter(adapter);
 
+
+
         codeSinistreList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-
 
 
                 Spinner spinner = (Spinner)view.findViewById(R.id.codeSinistreList);
@@ -115,7 +133,28 @@ public class CreateInterventionFragment extends Fragment {
                 System.out.println(text);
 
                 if(text.equals("Incident")){
-                    System.out.println("MOIUAOAAO");
+                    System.out.println("Incident ");
+                    ArrayList image_details = getListData();
+                    final ListView lv1 = (ListView) view.findViewById(R.id.moyenListView);
+
+
+                    MoyenListAdapter moyenListAdapter = new MoyenListAdapter(getContext(), image_details);
+
+                    lv1.setAdapter(moyenListAdapter);
+
+
+                    lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                            Object o = lv1.getItemAtPosition(position);
+                            MoyenItem newsData = (MoyenItem) o;
+                        }
+                    });
+                }
+
+                else if(text.equals("Feu de foret")){
+                    System.out.println("MOIUAOAAO333");
                     ArrayList image_details = getListData();
                     final ListView lv1 = (ListView) view.findViewById(R.id.moyenListView);
 
@@ -129,13 +168,6 @@ public class CreateInterventionFragment extends Fragment {
                         }
                     });
                 }
-
-                else if(text.equals("Feu de foret")){
-                    System.out.println("MOIUAOAAO");
-                    //Button bttt = (Button)view.findViewById(R.id.moyen_name);
-                    //bttt.setText("LOLILO");
-                }
-
 
                 // your code here
                 //if (spinner1x.equals("poison")){
@@ -157,8 +189,36 @@ public class CreateInterventionFragment extends Fragment {
         });
 
 
+
+
         return view;
     }
+
+
+    public void sendNewIntervention(View view){
+
+        ListView listView = (ListView) getView().findViewById(R.id.moyenListView);
+       // ListView listView = (ListView) view.findViewById(R.id.moyenListView);
+
+        //int first = listView.getFirstVisiblePosition();
+        int count = listView.getChildCount();
+        for (int i=0; i<count; i++) {
+
+            TextView t = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_name);
+            TextView t1 = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_quantity);
+
+            System.out.println(t.getText());
+            System.out.println(t1.getText());
+
+
+        }
+
+
+
+    }
+
+
+
 
 
     /**
@@ -166,14 +226,20 @@ public class CreateInterventionFragment extends Fragment {
      * @return list data of an interventions
      */
     private ArrayList getListData() {
+        System.out.println("LOL");
         ArrayList<MoyenItem> results = new ArrayList<MoyenItem>();
 
         String[] values = getResources().getStringArray(R.array.moyens);
 
-        MoyenItem newsData = new MoyenItem();
+
+
+        //System.out.println(values[2]);
+
+        MoyenItem newsData;
 
         for (String value :values
              ) {
+            newsData = new MoyenItem();
 
             System.out.println(value);
             newsData.setName(value);
