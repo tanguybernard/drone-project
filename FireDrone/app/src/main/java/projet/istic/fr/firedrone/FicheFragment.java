@@ -67,10 +67,21 @@ public class FicheFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.intervention_main,container,false);
 
+        //Création de la liste et affichage dans la listview
         ArrayList image_details = getListData();
+        //A remplacer par un appel à la base de données pour obtenir les interventions actives
+
         final ListView lv1 = (ListView) view.findViewById(R.id.interventionList);
 
         lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
+
+        //Faire le replace de la frame par google map avec en attribut de méthode les adresses des interventions
+        MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
+
+        FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
+        transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
+
+
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override

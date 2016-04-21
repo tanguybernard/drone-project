@@ -1,9 +1,5 @@
 package fr.istic.sit;
 
-import fr.istic.sit.dao.UserRepository;
-import fr.istic.sit.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -30,4 +26,6 @@ public class Application {
 				.build()
 				.pathMapping("/");
 	}
+
 }
+
