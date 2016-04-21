@@ -25,38 +25,32 @@ import javax.xml.xpath.XPathFactory;
  */
 public class CoordinateItem {
 
-    private Long latitude;
+    private String latitude;
 
-    private Long longitude;
+    private String longitude;
 
-    public CoordinateItem(Long latitude, Long longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
-    public CoordinateItem(Long latitude) {
-        this.latitude = latitude;
-    }
-
-    public Long getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Long latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public Long getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Long longitude) {
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public CoordinateItem(String latitude, String longitude) {
+        this.latitude = latitude;
         this.longitude = longitude;
     }
 
     public CoordinateItem()
-
     {
-
     }
 }
