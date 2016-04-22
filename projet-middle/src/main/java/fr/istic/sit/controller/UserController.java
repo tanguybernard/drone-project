@@ -24,10 +24,6 @@ public class UserController {
         return userService.getAll();
     }
 
-    /*@RequestMapping("/{id}")
-    public User searchUser(@PathVariable String id) {
-    	return userService.getId(id);
-    } */
 
     @RequestMapping("/{login}")
     public User searchUser(@PathVariable String login) {

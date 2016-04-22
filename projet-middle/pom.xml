@@ -3,6 +3,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<properties>
+		<main.basedir>${basedir}/../..</main.basedir>
+		<java.version>1.8</java.version>
+		<depencency.scope>compile</depencency.scope>
+		<springfox.version>2.2.2</springfox.version>
+		<spring-boot.version>1.2.6.RELEASE</spring-boot.version>
+		<spring-security-oauth2.version>2.0.3.RELEASE</spring-security-oauth2.version>
+	</properties>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -16,14 +25,6 @@
 	<version>1.0.0</version>
 	<url>http://projects.spring.io/spring-boot/</url>
 
-	<properties>
-		<main.basedir>${basedir}/../..</main.basedir>
-		<java.version>1.8</java.version>
-		<depencency.scope>compile</depencency.scope>
-		<springfox.version>2.2.2</springfox.version>
-		<spring-boot.version>1.2.6.RELEASE</spring-boot.version>
-		<spring-security-oauth2.version>2.0.3.RELEASE</spring-security-oauth2.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -45,12 +46,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-	<!--<dependency>
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+			<version>2.0.3.RELEASE</version>
+		</dependency>
+		<!--<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
 			<version>${spring-security-oauth2.version}</version>
 		</dependency>-->
-
 		<!-- End Security -->
 
 		<!-- Swagger-->
@@ -67,13 +72,14 @@
 			<version>${springfox.version}</version>
 			<scope>${depencency.scope}</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-			<version>2.0.3.RELEASE</version>
-		</dependency>
-
 		<!-- FIN Swagger-->
+
+		<!-- AOP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<!-- Fin AOP -->
 
 	</dependencies>
 	<build>
@@ -82,6 +88,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
 		</plugins>
 	</build>
 
