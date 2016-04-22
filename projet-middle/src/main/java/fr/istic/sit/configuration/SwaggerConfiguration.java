@@ -50,7 +50,7 @@ public class SwaggerConfiguration {
                 .build();
     }
 
-    private Predicate<String> paths() {
+ /*   private Predicate<String> paths() {
         return or(
                 regex("/business.*"),
                 regex("/some.*"),
@@ -58,5 +58,5 @@ public class SwaggerConfiguration {
                 regex("/pet.*"),
                 regex("/springsRestController.*"),
                 regex("/test.*"));
-    }
+    }*/
 }
