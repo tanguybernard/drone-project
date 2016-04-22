@@ -17,12 +17,27 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.w3c.dom.Document;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.MoyenListAdapter;
+import projet.istic.fr.firedrone.model.CoordinateItem;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
 import retrofit.Callback;
@@ -34,6 +49,7 @@ import retrofit.client.Response;
 public class CreateInterventionFragment extends Fragment {
 
     public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
+    public static final String GEO_API="http://maps.googleapis.com/maps/api/geocode/xml?address=";
 
     private static FicheFragment INSTANCE;
 
@@ -275,6 +291,63 @@ public class CreateInterventionFragment extends Fragment {
         // Add some more dummy data for testing
 
         return results;
+    }
+
+    /**
+     * Get latitude et Longitude
+     *
+     * @param adress
+     * @return
+     * @throws Exception
+     */
+    public CoordinateItem getCoordinatesByAdress(String adress) throws Exception {
+        CoordinateItem coordonne=new CoordinateItem();
+
+        int responseCode = 0;
+        String api = GEO_API + URLEncoder.encode(adress, "UTF-8") + "&sensor=true";
+        URL url = null;
+        try {
+            url = new URL(api);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        HttpURLConnection httpConnection = (HttpURLConnection)url.openConnection();
+        try {
+            httpConnection.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            responseCode = httpConnection.getResponseCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(responseCode == 200)
+        {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();;
+            Document document = builder.parse(httpConnection.getInputStream());
+            XPathFactory xPathfactory = XPathFactory.newInstance();
+            XPath xpath = xPathfactory.newXPath();
+            XPathExpression expr = xpath.compile("/GeocodeResponse/status");
+            String status = (String)expr.evaluate(document, XPathConstants.STRING);
+            if(status.equals("OK"))
+            {
+                expr = xpath.compile("//geometry/location/lat");
+                String latitude = (String)expr.evaluate(document, XPathConstants.STRING);
+                System.out.print("============Coordonnes=============="+"\n");
+                coordonne.setLatitude(latitude);
+                expr = xpath.compile("//geometry/location/lng");
+                String longitude = (String)expr.evaluate(document, XPathConstants.STRING);
+                coordonne.setLongitude(longitude);
+
+            }
+            else
+            {
+                throw new Exception("Error from the API - response status: "+status);
+            }
+        }
+        return  coordonne;
+
     }
 
 }
