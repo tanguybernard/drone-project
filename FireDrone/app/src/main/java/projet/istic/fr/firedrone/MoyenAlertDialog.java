@@ -3,47 +3,124 @@ package projet.istic.fr.firedrone;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by christophe on 20/04/16.
  */
 public class MoyenAlertDialog extends DialogFragment {
 
-    private int miLine = 0;
-    private int miType = 0;
+    private static final String NO_ERROR = "";
+    private static final String ERROR_BAD_LENGTH = "L'heure doit être composée de 4 chiffres";
+    private static final String ERROR_BAD_HOUR = "L'heure doit être comprise entre 00 et 23";
+    private static final String ERROR_BAD_MIN = "Les minutes doivent être comprises entre 00 et 59";
+    private static final String ERROR_BAD_ORDER = "L'heure doit être supérieure aux heures précédentes";
+    private static final String ERROR_NAN = "L'heure ne doit être composée que de chiffres";
 
-    public void setDialogType(int piType, View poView) {
-        TextView oLblTitle = ((TextView) poView.findViewById(R.id.lblPopupMeans));
-        TextView oLblHour = ((TextView) poView.findViewById(R.id.lblTxtHour));
-        if (piType == 0) {
+    private int miLine = -1;
+    private int miType = 0;
+    private String msCode = "";
+    private TableLayout moTable;
+
+    private View dialView;
+
+    public void setMiLine(int piLine, TableLayout poTable) {
+        this.miLine = piLine;
+        this.moTable = poTable;
+    }
+
+    private String getTime() {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        Date hDate = c.getTime();
+        SimpleDateFormat hFormat = new SimpleDateFormat("HHmm");
+        return hFormat.format(hDate);
+    }
+
+    private String checkTime(String psTime) {
+        String error = NO_ERROR;
+        try {
+            Integer.parseInt(psTime);
+        } catch (NumberFormatException e) {
+            error = ERROR_NAN;
+        }
+        if (error.equals(NO_ERROR) && psTime.length() == 4) {
+            String sHour = psTime.substring(0, 2);
+            String sMinute = psTime.substring(2, 4);
+            if (Integer.parseInt(sHour) < 0 || Integer.parseInt(sHour) > 23) {
+                error = ERROR_BAD_HOUR;
+            }
+            if (Integer.parseInt(sMinute) < 0 || Integer.parseInt(sMinute) > 59) {
+                error = ERROR_BAD_MIN;
+            }
+            TableRow element = (TableRow) this.moTable.getChildAt(this.miLine);
+            for (int colIdx = 1; colIdx < this.miType; colIdx++) {
+                TextView oColValue = (TextView) element.getChildAt(colIdx);
+                if (!oColValue.getText().equals("")) {
+                    if (Integer.parseInt(oColValue.getText().toString()) > Integer.parseInt(psTime)) {
+                        error = ERROR_BAD_ORDER;
+                    }
+                }
+            }
+        } else {
+            error = ERROR_BAD_LENGTH;
+        }
+        return error;
+    }
+
+    public void setDialogType() {
+        if (miLine > -1) {
+            TableRow element = (TableRow) this.moTable.getChildAt(this.miLine);
+            this.msCode = ((TextView) element.getChildAt(0)).getText().toString();
+            for (int colIdx = 0; colIdx < element.getChildCount(); colIdx++) {
+                TextView oColValue = (TextView) element.getChildAt(colIdx);
+                if (oColValue.getText() == "") {
+                    this.miType = colIdx;
+                    colIdx = element.getChildCount() + 1;
+                }
+            }
+        }
+        TextView oLblTitle = ((TextView) this.dialView.findViewById(R.id.lblPopupMeans));
+        TextView oLblHour = ((TextView) this.dialView.findViewById(R.id.lblTxtHour));
+        TextView oTxtHour = ((TextView) this.dialView.findViewById(R.id.txtEditHour));
+        oTxtHour.setText(getTime());
+        if (this.miType == getResources().getInteger(R.integer.IDX_CODE)) {
             oLblTitle.setText(getResources().getText(R.string.lbl_add_mean));
         } else {
             oLblTitle.setText(getResources().getText(R.string.lbl_edit_mean));
-            switch (piType) {
-                case 1:
-                    oLblHour.setText(getResources().getText(R.string.lbl_hour_call));
-                    break;
-                case 2:
-                    oLblHour.setText(getResources().getText(R.string.lbl_hour_arriv));
-                    break;
-                case 3:
-                    oLblHour.setText(getResources().getText(R.string.lbl_hour_engaged));
-                    break;
-                case 4:
-                    oLblHour.setText(getResources().getText(R.string.lbl_hour_free));
-                    break;
+            Spinner lstMeans = (Spinner) this.dialView.findViewById(R.id.lstMeans);
+            int iIdxSlc = 0;
+            for (int spIdx = 0; spIdx < lstMeans.getCount(); spIdx++) {
+                String sTmpValue = lstMeans.getItemAtPosition(spIdx).toString();
+                if (this.msCode.equals(sTmpValue)) {
+                    iIdxSlc = spIdx;
+                }
+            }
+            lstMeans.setSelection(iIdxSlc);
+            lstMeans.setEnabled(false);
+            if (this.miType == getResources().getInteger(R.integer.IDX_H_CALL)) {
+                oLblHour.setText(getResources().getText(R.string.lbl_hour_call));
+            } else if (this.miType == getResources().getInteger(R.integer.IDX_H_ARRIV)) {
+                oLblHour.setText(getResources().getText(R.string.lbl_hour_arriv));
+            } else if (this.miType == getResources().getInteger(R.integer.IDX_H_ENGAGED)) {
+                oLblHour.setText(getResources().getText(R.string.lbl_hour_engaged));
+            } else if (this.miType == getResources().getInteger(R.integer.IDX_H_FREE)) {
+                oLblHour.setText(getResources().getText(R.string.lbl_hour_free));
             }
         }
     }
@@ -52,26 +129,52 @@ public class MoyenAlertDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        final View dialogView = inflater.inflate(R.layout.means_popup, null);
+        this.dialView = inflater.inflate(R.layout.means_popup, null);
+        setDialogType();
 
-//getResources().getStringArray(R.array.moyen_array);
+        final Button validMean = (Button) this.dialView.findViewById(R.id.btnValid);
+        validMean.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Spinner lstMeans = (Spinner) dialView.findViewById(R.id.lstMeans);
+                String sNewMean = lstMeans.getSelectedItem().toString();
+                String sNewHour = ((EditText) dialView.findViewById(R.id.txtEditHour)).getText().toString();
+                TextView txtErr = (TextView) dialView.findViewById(R.id.lblHourError);
+                String sError = checkTime(sNewHour);
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(System.currentTimeMillis());
+                Date hDate = c.getTime();
+                SimpleDateFormat dFormat = new SimpleDateFormat("yyyyMMdd");
+                sNewHour = dFormat.format(hDate) + " " + sNewHour;
+                if (sError.equals(NO_ERROR)) {
+                    MoyenFragment moyen = MoyenFragment.getInstance();
+                    String[] tsHours = new String[5];
+                    tsHours[0] = sNewMean;
+                    if (miLine == -1) {
+                        miType = getResources().getInteger(R.integer.IDX_H_CALL);
+                    }
+                    tsHours[miType] = sNewHour;
+                    if (miLine == -1) {
+                        moyen.addMean(tsHours, true);
+                    } else {
+                        moyen.editMean(sNewHour, miLine);
+                    }
+                    txtErr.setText("");
+                    dismiss();
+                } else {
+                    txtErr.setText("Erreur : " + sError);
+                    txtErr.setTextColor(Color.RED);
+                }
+            }
+        });
 
-        builder.setView(dialogView)
-                .setPositiveButton(R.string.btn_valid, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        MoyenFragment moyen = MoyenFragment.getInstance();
-                        Spinner lstMeans = (Spinner) dialogView.findViewById(R.id.lstMeans);
-                        String sNewMean = lstMeans.getSelectedItem().toString();
-                        String sNewHour = ((EditText) dialogView.findViewById(R.id.txtEditHour)).getText().toString();
-                        moyen.addMean(miType, sNewMean, sNewHour, miLine);
-                    }
-                })
-                .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Nothing to do
-                    }
-                });
+        final Button cancelMean = (Button) this.dialView.findViewById(R.id.btnCancel);
+        cancelMean.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
+        builder.setView(this.dialView);
         return builder.create();
 
     }

@@ -1,32 +1,41 @@
 package projet.istic.fr.firedrone.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by christophe on 19/04/16.
  */
 public class MeansItem {
-    long mlMeanId = -1;
-    long mlInterventionId = -1;
-    String msMeanCode = "";
-    String msMeanLib = "";
-    String msMeanHCall = "";
-    String msMeanHArriv = "";
-    String msMeanHEngaged = "";
-    String msMeanHFree = "";
+    @SerializedName("id")
+    private String msMeanId = "";
+    @SerializedName("code")
+    private String msMeanCode = "";
+    @SerializedName("name")
+    private String msMeanLib = "";
+    @SerializedName("request_time")
+    private String msMeanHCall = "";
+    @SerializedName("arriving_time")
+    private String msMeanHArriv = "";
+    @SerializedName("engaged_time")
+    private String msMeanHEngaged = "";
+    @SerializedName("release_time")
+    private String msMeanHFree = "";
+    @SerializedName("longitude")
+    private String msLongitude = "";
+    @SerializedName("latitude")
+    private String msLatitude = "";
+    @SerializedName("color")
+    private String msColor = "";
+    @SerializedName("groupId")
+    private String msGroupeId = "";
 
-    public long getMlMeanId() {
-        return mlMeanId;
+
+    public String getMsMeanId() {
+        return msMeanId;
     }
 
-    public void setMlMeanId(long mlMeanId) {
-        this.mlMeanId = mlMeanId;
-    }
-
-    public long getMlInterventionId() {
-        return mlInterventionId;
-    }
-
-    public void setMlInterventionId(long mlInterventionId) {
-        this.mlInterventionId = mlInterventionId;
+    public void setMsMeanId(String msMeanId) {
+        this.msMeanId = msMeanId;
     }
 
     public String getMsMeanCode() {
@@ -75,5 +84,37 @@ public class MeansItem {
 
     public void setMsMeanHFree(String msMeanHFree) {
         this.msMeanHFree = msMeanHFree;
+    }
+
+    public String getMsLongitude() {
+        return msLongitude;
+    }
+
+    public void setMsLongitude(String msLongitude) {
+        this.msLongitude = msLongitude;
+    }
+
+    public String getMsLatitude() {
+        return msLatitude;
+    }
+
+    public void setMsLatitude(String msLatitude) {
+        this.msLatitude = msLatitude;
+    }
+
+    public String getMsColor() {
+        return msColor;
+    }
+
+    public void setMsColor(String msColor) {
+        this.msColor = msColor;
+    }
+
+    public String getMsGroupeId() {
+        return msGroupeId;
+    }
+
+    public void setMsGroupeId(String msGroupeId) {
+        this.msGroupeId = msGroupeId;
     }
 }
