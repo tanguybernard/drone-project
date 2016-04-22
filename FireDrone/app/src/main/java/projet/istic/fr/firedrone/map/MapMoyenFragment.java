@@ -38,7 +38,7 @@ import projet.istic.fr.firedrone.model.MeansItem;
  */
 public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener,GoogleMap.OnMarkerClickListener,GoogleMap.OnCameraChangeListener,
-        View.OnClickListener{
+        View.OnClickListener,MethodCallWhenDrag{
 
     private static MapMoyenFragment INSTANCE;
     private MeansItem moyenItemSelected;
@@ -143,7 +143,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap =googleMap;
         googleMap.setOnMapClickListener(this);
-        googleMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker,googleMap,null));
+        googleMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker,googleMap,null,this));
         googleMap.setOnMarkerClickListener(this);
     }
 
@@ -198,6 +198,11 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         handler = new Handler(Looper.getMainLooper());
         positionUpdaterRunnable = new PositionUpdaterRunnable();
         handler.post(positionUpdaterRunnable);
+    }
+
+    @Override
+    public void dragStart() {
+        containerMap.bringToFront();
     }
 
     private class PositionUpdaterRunnable implements Runnable {

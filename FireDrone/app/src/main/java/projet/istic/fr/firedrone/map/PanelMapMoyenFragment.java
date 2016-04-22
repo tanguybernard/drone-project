@@ -52,7 +52,7 @@ public class PanelMapMoyenFragment extends Fragment {
         MeansItem moyenItem = new MeansItem();
         moyenItem.setMsMeanCode("TEST");
         MeansItem moyenItem2 = new MeansItem();
-        moyenItem2.setMlMeanId(1);
+        moyenItem2.setMsMeanId("1");
         moyenItem2.setMsMeanCode("VLC");
 
         listMoyens = new ArrayList<>( Arrays.asList(moyenItem, moyenItem2));

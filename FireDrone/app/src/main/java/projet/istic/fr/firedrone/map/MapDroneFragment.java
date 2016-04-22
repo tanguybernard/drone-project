@@ -136,7 +136,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         if(myMap != null){
             //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
-            myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this));
+            myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this,null));
         }
         return mapView;
     }
@@ -167,7 +167,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         initPolylineDrone();
 
         //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
-        myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this));
+        myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this, null));
     }
 
 

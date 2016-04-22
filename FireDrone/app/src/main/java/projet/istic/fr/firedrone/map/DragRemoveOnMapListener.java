@@ -20,16 +20,21 @@ public class DragRemoveOnMapListener implements GoogleMap.OnMarkerDragListener {
     private ImageButton suppressionMarker;
     private GoogleMap myMap;
     private ManagePolyline polylineManager;
+    private MethodCallWhenDrag callMethodeDrag;
 
-    public DragRemoveOnMapListener(ImageButton pSuppressionMarker, GoogleMap pMap, ManagePolyline polylinesOption){
+    public DragRemoveOnMapListener(ImageButton pSuppressionMarker, GoogleMap pMap, ManagePolyline polylinesOption,MethodCallWhenDrag pCallMethodeDrag){
         suppressionMarker=pSuppressionMarker;
         myMap=pMap;
         polylineManager=polylinesOption;
+        callMethodeDrag = pCallMethodeDrag;
     }
 
     @Override
     public void onMarkerDragStart(Marker marker) {
         suppressionMarker.setVisibility(View.VISIBLE);
+        if(callMethodeDrag != null){
+            callMethodeDrag.dragStart();
+        }
     }
 
     @Override
