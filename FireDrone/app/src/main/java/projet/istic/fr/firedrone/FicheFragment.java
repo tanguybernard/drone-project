@@ -172,8 +172,6 @@ public class FicheFragment extends Fragment {
                     }
                 }
 
-
-
             }
 
             @Override
@@ -182,7 +180,6 @@ public class FicheFragment extends Fragment {
 
             }
         });
-
 
 
         return results;

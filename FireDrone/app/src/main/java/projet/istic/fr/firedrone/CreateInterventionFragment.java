@@ -4,6 +4,8 @@ package projet.istic.fr.firedrone;
  * Created by tbernard on 19/04/16.
  */
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,6 +19,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.vision.barcode.Barcode;
+
 import org.w3c.dom.Document;
 
 import java.io.IOException;
@@ -27,6 +31,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -104,8 +109,6 @@ public class CreateInterventionFragment extends Fragment {
 
 
 
-
-
         /*ArrayList image_details = getListData();
         final ListView lv1 = (ListView) view.findViewById(R.id.moyenList);
 
@@ -171,7 +174,6 @@ public class CreateInterventionFragment extends Fragment {
                 }
 
                 else if(text.equals("Feu de foret")){
-                    System.out.println("MOIUAOAAO333");
                     ArrayList image_details = getListData();
                     final ListView lv1 = (ListView) view.findViewById(R.id.moyenListView);
 
@@ -197,8 +199,6 @@ public class CreateInterventionFragment extends Fragment {
             }
 
         });
-
-
 
         return view;
     }
@@ -235,7 +235,21 @@ public class CreateInterventionFragment extends Fragment {
         String currentDateandTime = sdf.format(new Date());
 
         //"263 Avenue Général Leclerc, 35000 Rennes"
-        final Intervention intervention = new Intervention(sinisterCode,currentDateandTime,addressInter.getText().toString(),"IN_PROGRESS");
+        final Intervention intervention = new Intervention();
+        intervention.setSinisterCode(sinisterCode);
+        intervention.setDate(currentDateandTime);
+        intervention.setAddress(addressInter.getText().toString());
+        intervention.setStatus("IN_PROGRESS");
+        try {
+            CoordinateItem coordinateItem = getLocationFromAddress(addressInter.getText().toString());
+
+            System.out.println("try adressSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS:"+coordinateItem.getLongitude());
+            intervention.setLatitude(coordinateItem.getLatitude());
+            intervention.setLongitude(coordinateItem.getLongitude());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(END_POINT)
@@ -280,7 +294,6 @@ public class CreateInterventionFragment extends Fragment {
              ) {
             newsData = new MoyenInterventionItem();
 
-            System.out.println(value);
             newsData.setName(value);
             newsData.setQuantity(2);
             results.add(newsData);
@@ -293,62 +306,42 @@ public class CreateInterventionFragment extends Fragment {
         return results;
     }
 
-    /**
-     * Get latitude et Longitude
-     *
-     * @param adress
-     * @return
-     * @throws Exception
-     */
-    public CoordinateItem getCoordinatesByAdress(String adress) throws Exception {
-        CoordinateItem coordonne=new CoordinateItem();
 
-        int responseCode = 0;
-        String api = GEO_API + URLEncoder.encode(adress, "UTF-8") + "&sensor=true";
-        URL url = null;
+
+
+    public CoordinateItem getLocationFromAddress(String strAddress){
+
+        Geocoder coder = new Geocoder(getContext());
+        List<Address> address;
+        Barcode.GeoPoint p1 = null;
+
         try {
-            url = new URL(api);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        HttpURLConnection httpConnection = (HttpURLConnection)url.openConnection();
-        try {
-            httpConnection.connect();
+            address = coder.getFromLocationName(strAddress,5);
+            if (address==null) {
+                return null;
+            }
+            Address location=address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            CoordinateItem coordinateItem = new CoordinateItem();
+            coordinateItem.setLatitude(String.valueOf(location.getLatitude()));
+            coordinateItem.setLongitude(String.valueOf(location.getLongitude()));
+
+            return coordinateItem;
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            responseCode = httpConnection.getResponseCode();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(responseCode == 200)
-        {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();;
-            Document document = builder.parse(httpConnection.getInputStream());
-            XPathFactory xPathfactory = XPathFactory.newInstance();
-            XPath xpath = xPathfactory.newXPath();
-            XPathExpression expr = xpath.compile("/GeocodeResponse/status");
-            String status = (String)expr.evaluate(document, XPathConstants.STRING);
-            if(status.equals("OK"))
-            {
-                expr = xpath.compile("//geometry/location/lat");
-                String latitude = (String)expr.evaluate(document, XPathConstants.STRING);
-                System.out.print("============Coordonnes=============="+"\n");
-                coordonne.setLatitude(latitude);
-                expr = xpath.compile("//geometry/location/lng");
-                String longitude = (String)expr.evaluate(document, XPathConstants.STRING);
-                coordonne.setLongitude(longitude);
 
-            }
-            else
-            {
-                throw new Exception("Error from the API - response status: "+status);
-            }
-        }
-        return  coordonne;
-
+        return null;
     }
+
+
+
+
 
 }
 

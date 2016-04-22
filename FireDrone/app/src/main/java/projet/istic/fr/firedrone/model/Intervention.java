@@ -1,5 +1,6 @@
 package projet.istic.fr.firedrone.model;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.Streams;
 
 import java.util.List;
 
@@ -54,6 +55,24 @@ public class Intervention {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public void setDate(String date){this.date = date;}
+
+    public String getDate(){return date;}
+
+    public void setStatus(String status){this.status = status;}
+
+    public String getStatus(){return status;}
+
+    public void setLatitude(String latitude){this.latitude = latitude;}
+
+    public String getLatitude(){return latitude;}
+
+    public void setLongitude(String longitude){this.longitude = longitude;}
+
+    public String getLongitude(){return longitude;}
+
+
 
 
 
