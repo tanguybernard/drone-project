@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import projet.istic.fr.firedrone.R;
-import projet.istic.fr.firedrone.model.InterventionItem;
+import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
 
 /**
  * Created by tbernard on 18/04/16.
  */
 public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
-    private ArrayList<InterventionItem> listData;
+    private ArrayList<Intervention> listData;
     private LayoutInflater layoutInflater;
 
     public MoyenListAdapter(Context aContext, List<MoyenInterventionItem> listData) {

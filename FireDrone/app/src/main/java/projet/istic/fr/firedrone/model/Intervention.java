@@ -31,8 +31,35 @@ public class Intervention {
 
     //private List<Way> ways;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String myId) {
+        this.id = myId;
+    }
+
+    public String getSinisterCode() {
+        return sinisterCode;
+    }
+
+    public void setSinisterCode(String codeSinistre) {
+        this.sinisterCode = codeSinistre;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
 
+
+    public Intervention(){
+
+    }
 
     public Intervention(String sinisterCode, String date, String address, String status ) {
 
@@ -43,11 +70,7 @@ public class Intervention {
 
     }
 
-    /*public void setWays(){
-        new Way(nom, quantité)
-        new Way(nom, quantité)
 
-    }*/
 
 
 }
