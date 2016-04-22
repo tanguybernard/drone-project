@@ -20,7 +20,6 @@ import java.util.List;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
 import projet.istic.fr.firedrone.model.Intervention;
-import projet.istic.fr.firedrone.model.InterventionItem;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -99,7 +98,7 @@ public class FicheFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                 Object o = lv1.getItemAtPosition(position);
-                InterventionItem newsData = (InterventionItem) o;
+                Intervention newsData = (Intervention) o;
             }
         });
 
@@ -133,7 +132,7 @@ public class FicheFragment extends Fragment {
 
         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
 
-        final ArrayList<InterventionItem> results = new ArrayList<InterventionItem>();
+        final ArrayList<Intervention> results = new ArrayList<Intervention>();
 
         interventionAPI.getIntervention("IN_PROGRESS", new Callback<List<Intervention>>() {
 
@@ -152,18 +151,18 @@ public class FicheFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                InterventionItem newsData;
+                Intervention newsData;
                 for (int i = 0; i < reader.length(); i++) {
                     try {
                         JSONObject elt = (JSONObject) reader.get(i);
 
-                        newsData = new InterventionItem();
+                        newsData = new Intervention();
                         String id = (elt.get("id")!=null) ? elt.get("id").toString() : "";
-                        newsData.setMyId(id);
+                        newsData.setId(id);
                         String sinisterCode = (elt.get("sinisterCode")!=null) ? elt.get("sinisterCode").toString() : "";
-                        newsData.setCodeSinistre(sinisterCode);
+                        newsData.setSinisterCode(sinisterCode);
                         String address = (elt.get("address")!=null) ? elt.get("address").toString() : "";
-                        newsData.setAdress(address);
+                        newsData.setAddress(address);
 
                         results.add(newsData);
 

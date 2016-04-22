@@ -13,23 +13,23 @@ import java.util.List;
 
 import projet.istic.fr.firedrone.FicheFragment;
 import projet.istic.fr.firedrone.R;
-import projet.istic.fr.firedrone.model.InterventionItem;
+import projet.istic.fr.firedrone.model.Intervention;
 
 /**
  * Created by tbernard on 18/04/16.
  */
-public class CustomListAdapter extends ArrayAdapter<InterventionItem> {
-    private ArrayList<InterventionItem> listData;
+public class CustomListAdapter extends ArrayAdapter<Intervention> {
+    private ArrayList<Intervention> listData;
     private LayoutInflater layoutInflater;
 
-    public CustomListAdapter(Context aContext, List<InterventionItem> listData) {
+    public CustomListAdapter(Context aContext, List<Intervention> listData) {
         super(aContext,0,listData);
         //layoutInflater = LayoutInflater.from(aContext);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        InterventionItem item = getItem(position);
+        Intervention item = getItem(position);
         System.out.println("toto");System.out.println(position);
         ViewHolder holder;
         if (convertView == null) {
@@ -44,11 +44,11 @@ public class CustomListAdapter extends ArrayAdapter<InterventionItem> {
         }
 
 
-        System.out.println(item.getCodeSinistre());
-        holder.myId.setText(item.getMyId());
+        System.out.println(item.getSinisterCode());
+        holder.myId.setText(item.getId());
         //holder.codeSinistre.setText("By, " + listData.get(position).getCodeSinistre());
-        holder.codeSinistre.setText(item.getCodeSinistre());
-        holder.adress.setText(item.getAdress());
+        holder.codeSinistre.setText(item.getSinisterCode());
+        holder.adress.setText(item.getAddress());
         return convertView;
     }
 

@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
         final User user;
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(END_POINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
                 .build();
 
 
