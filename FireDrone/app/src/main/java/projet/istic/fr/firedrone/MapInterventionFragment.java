@@ -52,24 +52,34 @@ public class MapInterventionFragment extends SupportMapFragment implements
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             myMap = googleMap;
 
-
+            //Sert à définir les limites de l'ensemble des marqueurs
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+            //Parcours de la liste des interventions
             for(int i = 0; i < listInter.size(); i++) {
+                //Si on a bien une latitude et une longitude, on met le marqueur
                 if((listInter.get(i).getLatitude() != null) && (listInter.get(i).getLongitude() != null)) {
+                    //Cast de la latitude et de la longitude
                     Double latitude = Double.parseDouble(listInter.get(i).getLatitude());
                     Double longitude = Double.parseDouble(listInter.get(i).getLongitude());
 
+                    //Nouvel objet LatLng
                     LatLng coordonnees = new LatLng(latitude, longitude);
 
+                    //On récupère la référence pour l'afficher dans l'infobulle du marqueur
                     String refInter = listInter.get(i).getId();
 
+                    //Définition du marqueur
                     MarkerOptions marker = new MarkerOptions().position(coordonnees).title(refInter);
 
+                    //Ajout du marqueur
                     myMap.addMarker(marker);
 
+                    //Récupération de sa position pour déterminer le zoom sur les interventions
                     builder.include(marker.getPosition());
                 }
+
+                //A supprimer après, le temps d'avoir des valeurs de latitude et longitude en base
                 else{
                     MarkerOptions marker1 = new MarkerOptions().position(new LatLng(48.122834, -1.655931)).title("intervention 1 Chat dans l'arbre");
                     myMap.addMarker(marker1);
@@ -87,8 +97,11 @@ public class MapInterventionFragment extends SupportMapFragment implements
                 }
             }
 
+            //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
             LatLngBounds bounds = builder.build();
-            int padding = 10; // offset from edges of the map in pixels
+            //Définition du padding autour des marqueurs
+            int padding = 100;
+            //Zoom sur la zone des marqueurs
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             googleMap.moveCamera(cu);
         }
