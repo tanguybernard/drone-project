@@ -2,17 +2,22 @@ package projet.istic.fr.firedrone;
 
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import projet.istic.fr.firedrone.model.Intervention;
 
 /**
  * Created by nduquesne on 20/04/16.
@@ -20,12 +25,15 @@ import java.util.Map;
 public class MapInterventionFragment extends SupportMapFragment implements
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback {
 
-
         private GoogleMap myMap;
+
+
         //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
         private Map<String, Marker> listMarkers = null;
 
-        private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
+        private ArrayList<Intervention> listInter = new ArrayList<Intervention>();
+
+        //private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
 
 
         @Override
@@ -44,15 +52,58 @@ public class MapInterventionFragment extends SupportMapFragment implements
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             myMap = googleMap;
 
-            MarkerOptions marker = new MarkerOptions();
+            //Sert à définir les limites de l'ensemble des marqueurs
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-            marker.position(rennes_istic);
+            //Parcours de la liste des interventions
+            for(int i = 0; i < listInter.size(); i++) {
+                //Si on a bien une latitude et une longitude, on met le marqueur
+                if((listInter.get(i).getLatitude() != null) && (listInter.get(i).getLongitude() != null)) {
+                    //Cast de la latitude et de la longitude
+                    Double latitude = Double.parseDouble(listInter.get(i).getLatitude());
+                    Double longitude = Double.parseDouble(listInter.get(i).getLongitude());
 
-            myMap.addMarker(marker);
+                    //Nouvel objet LatLng
+                    LatLng coordonnees = new LatLng(latitude, longitude);
 
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
+                    //On récupère la référence pour l'afficher dans l'infobulle du marqueur
+                    String refInter = listInter.get(i).getId();
 
+                    //Définition du marqueur
+                    MarkerOptions marker = new MarkerOptions().position(coordonnees).title(refInter);
 
+                    //Ajout du marqueur
+                    myMap.addMarker(marker);
+
+                    //Récupération de sa position pour déterminer le zoom sur les interventions
+                    builder.include(marker.getPosition());
+                }
+
+                //A supprimer après, le temps d'avoir des valeurs de latitude et longitude en base
+                else{
+                    MarkerOptions marker1 = new MarkerOptions().position(new LatLng(48.122834, -1.655931)).title("intervention 1 Chat dans l'arbre");
+                    myMap.addMarker(marker1);
+
+                    MarkerOptions marker2 = new MarkerOptions().position(new LatLng(48.134597 , -1.647305)).title("intervention 2 Parc des gayeulles");
+                    myMap.addMarker(marker2);
+
+                    MarkerOptions marker3 = new MarkerOptions().position(new LatLng(48.115434, -1.638722)).title("intervention 3 ISTIC");
+                    myMap.addMarker(marker3);
+
+                    builder.include(marker1.getPosition());
+                    builder.include(marker2.getPosition());
+                    builder.include(marker3.getPosition());
+
+                }
+            }
+
+            //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
+            LatLngBounds bounds = builder.build();
+            //Définition du padding autour des marqueurs
+            int padding = 100;
+            //Zoom sur la zone des marqueurs
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            googleMap.moveCamera(cu);
         }
 
 
@@ -61,4 +112,11 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
     }
 
+    public ArrayList<Intervention> getListInter() {
+        return listInter;
+    }
+
+    public void setListInter(ArrayList<Intervention> listInter) {
+        this.listInter = listInter;
+    }
 }
