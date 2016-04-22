@@ -1,5 +1,6 @@
 package projet.istic.fr.firedrone;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,22 +15,21 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
+import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.model.MeansItem;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by nduquesne on 18/03/16.
  */
 public class MoyenFragment extends Fragment {
 
-    private static final int IDX_CODE = 0;
-    private static final int IDX_H_CALL = 1;
-    private static final int IDX_H_ARRIV = 2;
-    private static final int IDX_H_ENGAGED = 3;
-    private static final int IDX_H_FREE = 4;
+    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
 
     //Instance
     private static MoyenFragment INSTANCE;
@@ -63,11 +63,13 @@ public class MoyenFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getMeans();
+
         final Button addMeans = (Button) view.findViewById(R.id.btnAddMean);
         addMeans.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 MoyenAlertDialog popUp = new MoyenAlertDialog();
-                popUp.setDialogType(IDX_H_CALL, view);
+                popUp.setMiLine(-1, (TableLayout) mView.findViewById(R.id.tableMeans));
                 popUp.show(getFragmentManager(), "");
             }
         });
@@ -79,7 +81,7 @@ public class MoyenFragment extends Fragment {
         TextView tvMeans, tvCalls, tvArrivs, tvEngaged, tvFree;
 
         tvMeans = new TextView(getContext());
-        tvMeans.setText(plsValues[IDX_CODE]);
+        tvMeans.setText(plsValues[getResources().getInteger(R.integer.IDX_CODE)]);
         tvMeans.setGravity(Gravity.CENTER);
         tvMeans.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         if (pbHeader) {
@@ -91,7 +93,7 @@ public class MoyenFragment extends Fragment {
         }
 
         tvCalls = new TextView(getContext());
-        tvCalls.setText(plsValues[IDX_H_CALL]);
+        tvCalls.setText(plsValues[getResources().getInteger(R.integer.IDX_H_CALL)]);
         tvCalls.setGravity(Gravity.CENTER);
         tvCalls.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         if (pbHeader) {
@@ -103,7 +105,7 @@ public class MoyenFragment extends Fragment {
         }
 
         tvArrivs = new TextView(getContext());
-        tvArrivs.setText(plsValues[IDX_H_ARRIV]);
+        tvArrivs.setText(plsValues[getResources().getInteger(R.integer.IDX_H_ARRIV)]);
         tvArrivs.setGravity(Gravity.CENTER);
         tvArrivs.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         if (pbHeader) {
@@ -115,7 +117,7 @@ public class MoyenFragment extends Fragment {
         }
 
         tvEngaged = new TextView(getContext());
-        tvEngaged.setText(plsValues[IDX_H_ENGAGED]);
+        tvEngaged.setText(plsValues[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
         tvEngaged.setGravity(Gravity.CENTER);
         tvEngaged.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         if (pbHeader) {
@@ -127,7 +129,7 @@ public class MoyenFragment extends Fragment {
         }
 
         tvFree = new TextView(getContext());
-        tvFree.setText(plsValues[IDX_H_FREE]);
+        tvFree.setText(plsValues[getResources().getInteger(R.integer.IDX_H_FREE)]);
         tvFree.setGravity(Gravity.CENTER);
         tvFree.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         if (pbHeader) {
@@ -156,44 +158,96 @@ public class MoyenFragment extends Fragment {
         table.addView(element);
     }
 
-    public void addMean(int piType, final String psCode, String psHCall, final int piLine) {
-        if (piType > IDX_CODE) {
-            editMean(piType, psCode, psHCall, piLine);
-        } else {
-            final String[] columnMean = {psCode, psHCall, "", "", ""};
-            final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
-            TableRow element = addRow(columnMean, false);
-            final int rowIdx = table.getChildCount();
-            element.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MoyenAlertDialog popUp = new MoyenAlertDialog();
-                    popUp.setDialogType(IDX_H_ARRIV, v);
-                    popUp.show(getFragmentManager(), "");
-                    editMean(IDX_H_ARRIV, psCode, "", piLine);
-                }
-            });
-            table.addView(element);
-            // send to server
+    public void addMean(String[] psHours, boolean pbSend) {
+        final String[] columnMean = {psHours[getResources().getInteger(R.integer.IDX_CODE)],
+                psHours[getResources().getInteger(R.integer.IDX_H_CALL)],
+                psHours[getResources().getInteger(R.integer.IDX_H_ARRIV)],
+                psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)],
+                psHours[getResources().getInteger(R.integer.IDX_H_FREE)]};
+        for (int idxTime = 1; idxTime < columnMean.length; idxTime++) {
+            if (columnMean[idxTime] != null && !columnMean[idxTime].isEmpty()) {
+                columnMean[idxTime] = columnMean[idxTime].split(" ")[1];
+            }
+        }
+        final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
+        TableRow element = addRow(columnMean, false);
+        final int rowIdx = table.getChildCount();
+        element.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MoyenAlertDialog popUp = new MoyenAlertDialog();
+                popUp.setMiLine(rowIdx, (TableLayout) mView.findViewById(R.id.tableMeans));
+                popUp.show(getFragmentManager(), "");
+            }
+        });
+        table.addView(element);
+        // send to server
+        if (pbSend) {
             MeansItem oNewMean = new MeansItem();
-            oNewMean.setMsMeanCode(psCode);
-            oNewMean.setMsMeanHCall(psHCall);
+            oNewMean.setMsMeanCode(psHours[getResources().getInteger(R.integer.IDX_CODE)]);
+            oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_CALL)]);
+            oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_ARRIV)]);
+            oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
+            oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_FREE)]);
         }
     }
 
-    public void editMean(int piType, String psCode, String psHCall, int piLineIndex) {
+    public void editMean(String psHour, int piLineIndex) {
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
         TableRow element = (TableRow) table.getChildAt(piLineIndex);
         for (int colIdx = 0; colIdx < element.getChildCount(); colIdx++) {
             TextView oColValue = (TextView) element.getChildAt(colIdx);
-            if (oColValue.getText() == "") {
-                Calendar c = Calendar.getInstance();
-                c.setTimeInMillis(System.currentTimeMillis());
-                Date hDate = c.getTime();
-                SimpleDateFormat hFormat = new SimpleDateFormat("HHmm");
-                oColValue.setText(hFormat.format(hDate));
+            if (oColValue.getText().equals("")) {
+                oColValue.setText(psHour);
                 colIdx = element.getChildCount() + 1;
             }
         }
     }
+
+    public void getMeans() {
+        final String sIntervId = "14";
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).build();
+        final View oView = this.mView;
+        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
+        meansApi.GetMeans(sIntervId, new Callback<List<MeansItem>>() {
+            @Override
+            public void success(List<MeansItem> loMeans, Response response) {
+                final TableLayout table = (TableLayout) oView.findViewById(R.id.tableMeans);
+                if (loMeans != null && loMeans.size() > 0) {
+                    table.removeAllViews();
+                    for (MeansItem oMean : loMeans) {
+                        String sCode = oMean.getMsMeanCode();
+                        String[] sHours = {sCode, oMean.getMsMeanHCall(), oMean.getMsMeanHArriv(), oMean.getMsMeanHEngaged(), oMean.getMsMeanHFree()};
+                        addMean(sHours, false);
+                    }
+                } else {
+                    Log.d("LIST ERROR", "Empty List");
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("CONNEXION ERROR", error.getMessage());
+            }
+        });
+    }
+
+    public void sendMean(MeansItem poMean) {
+        final String sIntervId = "14";
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).build();
+        final View oView = this.mView;
+        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
+        meansApi.AddMean(sIntervId, poMean, new Callback<MeansItem>() {
+            @Override
+            public void success(MeansItem poMean, Response response) {
+                Log.d("CONNEXION SUCCESS", "Connection OK");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("CONNEXION ERROR", error.getMessage());
+            }
+        });
+    }
+
 }

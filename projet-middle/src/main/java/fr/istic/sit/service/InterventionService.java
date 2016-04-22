@@ -2,6 +2,7 @@ package fr.istic.sit.service;
 
 import java.util.List;
 
+import fr.istic.sit.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +19,17 @@ public class InterventionService {
 		return repository.findOne(id);
 	}
 
-	public List<Intervention> getAll() {
-		return repository.findAll();
+	public List<Intervention> getInterventions(String status) {
+		try {
+			if (!Validator.isEmpty(status))
+				return repository.findByStatus(status);
+
+			return repository.findAll();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return  null;
 	}
 
 	public void insert(Intervention intervention) {

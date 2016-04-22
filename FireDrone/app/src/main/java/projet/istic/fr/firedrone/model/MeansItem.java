@@ -3,21 +3,35 @@ package projet.istic.fr.firedrone.model;
 import com.google.android.gms.maps.model.LatLng;
 
 import projet.istic.fr.firedrone.R;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by christophe on 19/04/16.
  */
 public class MeansItem {
-    long mlMeanId = -1;
-    long mlInterventionId = -1;
-    String msMeanCode = "";
-    String msMeanLib = "";
-    String msMeanHCall = null;
-    String msMeanHArriv = null;
-    String msMeanHEngaged = null;
-    String msMeanHFree = "";
-    CouleurMoyen color;
-    LatLng position;
+
+    @SerializedName("id")
+    private String msMeanId = "";
+    @SerializedName("code")
+    private String msMeanCode = "";
+    @SerializedName("name")
+    private String msMeanLib = "";
+    @SerializedName("request_time")
+    private String msMeanHCall = null;
+    @SerializedName("arriving_time")
+    private String msMeanHArriv = null;
+    @SerializedName("engaged_time")
+    private String msMeanHEngaged = null;
+    @SerializedName("release_time")
+    private String msMeanHFree = null;
+    @SerializedName("longitude")
+    private String msLongitude = "";
+    @SerializedName("latitude")
+    private String msLatitude = "";
+    @SerializedName("color")
+    private String msColor = "";
+    @SerializedName("groupId")
+    private String msGroupeId = "";
 
     @Override
     public boolean equals(Object o) {
@@ -26,8 +40,8 @@ public class MeansItem {
 
         MeansItem meansItem = (MeansItem) o;
 
-        if (mlMeanId != meansItem.mlMeanId) return false;
-        if (mlInterventionId != meansItem.mlInterventionId) return false;
+        if (msMeanId != null ? !msMeanId.equals(meansItem.msMeanId) : meansItem.msMeanId != null)
+            return false;
         if (msMeanCode != null ? !msMeanCode.equals(meansItem.msMeanCode) : meansItem.msMeanCode != null)
             return false;
         if (msMeanLib != null ? !msMeanLib.equals(meansItem.msMeanLib) : meansItem.msMeanLib != null)
@@ -40,30 +54,24 @@ public class MeansItem {
             return false;
         if (msMeanHFree != null ? !msMeanHFree.equals(meansItem.msMeanHFree) : meansItem.msMeanHFree != null)
             return false;
-        if (color != meansItem.color) return false;
-        return !(position != null ? !position.equals(meansItem.position) : meansItem.position != null);
+        if (msLongitude != null ? !msLongitude.equals(meansItem.msLongitude) : meansItem.msLongitude != null)
+            return false;
+        if (msLatitude != null ? !msLatitude.equals(meansItem.msLatitude) : meansItem.msLatitude != null)
+            return false;
+        if (msColor != null ? !msColor.equals(meansItem.msColor) : meansItem.msColor != null)
+            return false;
+        return !(msGroupeId != null ? !msGroupeId.equals(meansItem.msGroupeId) : meansItem.msGroupeId != null);
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (mlMeanId ^ (mlMeanId >>> 32));
+        return msMeanId != null ? msMeanId.hashCode() : 0;
     }
 
-    public long getMlMeanId() {
-        return mlMeanId;
-    }
+    public void setMsMeanId(String msMeanId) {
+        this.msMeanId = msMeanId;
 
-    public void setMlMeanId(long mlMeanId) {
-        this.mlMeanId = mlMeanId;
-    }
-
-    public long getMlInterventionId() {
-        return mlInterventionId;
-    }
-
-    public void setMlInterventionId(long mlInterventionId) {
-        this.mlInterventionId = mlInterventionId;
     }
 
     public String getMsMeanCode() {
@@ -114,10 +122,46 @@ public class MeansItem {
         this.msMeanHFree = msMeanHFree;
     }
 
-    public Integer getResource(){
-        if(mlMeanId ==1){
+    public Integer getResource() {
+        if (msMeanId.equals("1")) {
             return R.drawable.delete_24dp_rouge;
         }
         return R.drawable.drone_36_36;
+    }
+    public String getMsLongitude() {
+        return msLongitude;
+    }
+
+    public void setMsLongitude(String msLongitude) {
+        this.msLongitude = msLongitude;
+    }
+
+    public String getMsLatitude() {
+        return msLatitude;
+    }
+
+    public void setMsLatitude(String msLatitude) {
+        this.msLatitude = msLatitude;
+    }
+
+    public String getMsColor() {
+        return msColor;
+    }
+
+    public void setMsColor(String msColor) {
+        this.msColor = msColor;
+    }
+
+    public String getMsGroupeId() {
+        return msGroupeId;
+    }
+
+    public void setMsGroupeId(String msGroupeId) {
+        this.msGroupeId = msGroupeId;
+    }
+
+
+    public String getMsMeanId() {
+        return msMeanId;
     }
 }

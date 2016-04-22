@@ -3,11 +3,7 @@ package fr.istic.sit.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import fr.istic.sit.domain.Intervention;
 import fr.istic.sit.domain.Way;
@@ -23,20 +19,20 @@ public class InterventionController {
 
     @Autowired
     private InterventionService service;
-    
+
+    @RequestMapping("/{id}/way")
+    public List<Way> searchWaysOfIntervention(@PathVariable String id) {
+        return service.getId(id).getWays();
+    }
+
     @RequestMapping("/{id}")
     public Intervention searchIntervention(@PathVariable String id) {
     	return service.getId(id);
     }
-    
-    @RequestMapping("/{id}/way")
-    public List<Way> searchWaysOfIntervention(@PathVariable String id) {
-    	return service.getId(id).getWays();
-    }
-    
+
     @RequestMapping("")
-    public List<Intervention> interventions() {
-    	return service.getAll();
+    public List<Intervention> interventions(@RequestParam (value = "status" , required = false) String status) {
+        return service.getInterventions(status);
     }
     
     @RequestMapping(method = RequestMethod.POST)
