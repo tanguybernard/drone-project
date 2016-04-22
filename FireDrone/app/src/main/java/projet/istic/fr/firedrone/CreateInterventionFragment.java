@@ -243,7 +243,6 @@ public class CreateInterventionFragment extends Fragment {
         try {
             CoordinateItem coordinateItem = getLocationFromAddress(addressInter.getText().toString());
 
-            System.out.println("try adressSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS:"+coordinateItem.getLongitude());
             intervention.setLatitude(coordinateItem.getLatitude());
             intervention.setLongitude(coordinateItem.getLongitude());
 
