@@ -1,4 +1,4 @@
-package fr.istic.sit;
+package fr.istic.sit.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +41,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         web
                 .ignoring()
-                .antMatchers("/intervention");
+                .antMatchers("/intervention**")
+                .antMatchers("/sinister**");
 
     }
 

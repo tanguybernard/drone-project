@@ -1,4 +1,4 @@
-package fr.istic.sit;
+package fr.istic.sit.configuration;
 
 
 import fr.istic.sit.security.Authorities;
@@ -58,7 +58,8 @@ public class OAuth2Configuration {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/intervention").permitAll()
+                    .antMatchers("/intervention**").permitAll()
+                    .antMatchers("/sinister**").permitAll()
                     .antMatchers("/user/**").authenticated();
 
         }

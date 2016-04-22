@@ -41,7 +41,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
         @Override
         public void onMapReady(GoogleMap googleMap) {
             //passage en mode Earth (avec les routes)
-            googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             myMap = googleMap;
 
             MarkerOptions marker = new MarkerOptions();

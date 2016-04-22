@@ -137,8 +137,9 @@ public class CreateInterventionFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         codeSinistreList.setAdapter(adapter);
 
-
-
+        /**
+         * Select a code sinister => get default ways
+         */
         codeSinistreList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -185,13 +186,6 @@ public class CreateInterventionFragment extends Fragment {
                     });
                 }
 
-                // your code here
-                //if (spinner1x.equals("poison")){
-                    //spinner2.setVisibility(View.VISIBLE);
-                    //spinner3.setVisibility(View.GONE);
-                //}
-
-                System.out.println("dfdsfsdfsdfsdfsd");
                 view.findViewById(R.id.moyenListView).setVisibility(View.VISIBLE);
 
 
@@ -206,11 +200,14 @@ public class CreateInterventionFragment extends Fragment {
 
 
 
-
         return view;
     }
 
 
+    /**
+     * Put a new intervention in database
+     * @param view
+     */
     public void sendNewIntervention(View view){
 
         EditText addressInter = (EditText) getView().findViewById(R.id.addressIntervention);
@@ -219,15 +216,9 @@ public class CreateInterventionFragment extends Fragment {
 
         String sinisterCode = spinner.getSelectedItem().toString();
 
-        System.out.println("CODE SINISTRE");
-        System.out.println(sinisterCode);
-
-
 
         ListView listView = (ListView) getView().findViewById(R.id.moyenListView);
-       // ListView listView = (ListView) view.findViewById(R.id.moyenListView);
 
-        //int first = listView.getFirstVisiblePosition();
         int count = listView.getChildCount();
         for (int i=0; i<count; i++) {
 
@@ -240,9 +231,8 @@ public class CreateInterventionFragment extends Fragment {
 
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");//format de la date
         String currentDateandTime = sdf.format(new Date());
-
 
         //"263 Avenue Général Leclerc, 35000 Rennes"
         final Intervention intervention = new Intervention(sinisterCode,currentDateandTime,addressInter.getText().toString(),"IN_PROGRESS");
@@ -251,6 +241,7 @@ public class CreateInterventionFragment extends Fragment {
                 .setEndpoint(END_POINT)
                 .build();
 
+        //POST a new intervention
         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
         interventionAPI.createIntervention(intervention, new Callback<Intervention>() {
 
@@ -279,7 +270,6 @@ public class CreateInterventionFragment extends Fragment {
      * @return list data of an interventions
      */
     private ArrayList getListData() {
-        System.out.println("LOL");
         ArrayList<MoyenInterventionItem> results = new ArrayList<MoyenInterventionItem>();
 
         String[] values = getResources().getStringArray(R.array.moyens);
