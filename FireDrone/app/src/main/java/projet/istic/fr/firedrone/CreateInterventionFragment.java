@@ -303,6 +303,13 @@ public class CreateInterventionFragment extends Fragment {
         return results;
     }
 
+    /**
+     * Get latitude et Longitude
+     *
+     * @param adress
+     * @return
+     * @throws Exception
+     */
     public CoordinateItem getCoordinatesByAdress(String adress) throws Exception {
         CoordinateItem coordonne=new CoordinateItem();
 
