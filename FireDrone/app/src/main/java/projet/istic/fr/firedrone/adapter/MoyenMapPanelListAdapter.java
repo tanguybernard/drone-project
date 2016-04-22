@@ -11,7 +11,6 @@ import java.util.List;
 
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.MeansItem;
-import projet.istic.fr.firedrone.model.MoyenItem;
 
 /**
  * Created by ramage on 20/04/16.

@@ -32,7 +32,6 @@ import java.util.Map;
 
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.MeansItem;
-import projet.istic.fr.firedrone.model.MoyenItem;
 
 /**
  * Created by ramage on 20/04/16.
@@ -59,10 +58,8 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     private int popupXOffset;
     private int popupYOffset;
 
-    //Handler, запускающий обновление окна с заданным интервалом
     private Handler handler;
 
-    //Runnable, который обновляет положение окна
     private Runnable positionUpdaterRunnable;
 
 
@@ -83,7 +80,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_moyen,null);
-         containerMap = (FrameLayout) rootView.findViewById(R.id.container_map);
+        containerMap = (FrameLayout) rootView.findViewById(R.id.container_map);
         FrameLayout mapView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
         containerMap.addView(mapView, new FrameLayout.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -198,7 +195,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //очистка
         handler = new Handler(Looper.getMainLooper());
         positionUpdaterRunnable = new PositionUpdaterRunnable();
         handler.post(positionUpdaterRunnable);
@@ -210,21 +206,17 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
         @Override
         public void run() {
-            //помещаем в очередь следующий цикл обновления
             handler.postDelayed(this, 16);
 
-            //если всплывающее окно скрыто, ничего не делаем
             if (trackedPosition != null && infoWindowContainer.getVisibility() == View.VISIBLE) {
                 Point targetPosition = getMap().getProjection().toScreenLocation(trackedPosition);
 
-                //если положение окна не изменилось, ничего не делаем
                 if (lastXPosition != targetPosition.x || lastYPosition != targetPosition.y) {
-                    //обновляем положение
+
                     overlayLayoutParams.x = targetPosition.x - popupXOffset;
                     overlayLayoutParams.y = targetPosition.y - popupYOffset -70  -30;
                     infoWindowContainer.setLayoutParams(overlayLayoutParams);
 
-                    //запоминаем текущие координаты
                     lastXPosition = targetPosition.x;
                     lastYPosition = targetPosition.y;
                 }

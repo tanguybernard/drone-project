@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,6 @@ public class PanelMapMoyenFragment extends Fragment {
     private ListView listViewMoyen;
     private ArrayAdapter adapter;
     private List<MeansItem> listMoyens;
-    private AdapterView<?> parentAdapterView;
 
     private static PanelMapMoyenFragment INSTANCE;
 
@@ -43,10 +43,10 @@ public class PanelMapMoyenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_map_panel_moyen, container, false);
-        if(getChildFragmentManager().findFragmentByTag("mapMoyenFragment") == null) {
-            getChildFragmentManager().beginTransaction().add(R.id.content_map_moyen, MapMoyenFragment.getInstance(), "mapMoyenFragment").commit();
-        }
-        listViewMoyen = (ListView) view.findViewById(R.id.panel_moyen_to_engaged);
+
+        getChildFragmentManager().beginTransaction().replace(R.id.content_map_moyen, MapMoyenFragment.getInstance()).commit();
+
+        listViewMoyen = (ListView) view.findViewById(R.id.panel_moyen_to_add);
 
         //BOUCHON
         MeansItem moyenItem = new MeansItem();
@@ -73,15 +73,10 @@ public class PanelMapMoyenFragment extends Fragment {
         return view;
     }
 
-    public LinearLayout getPanel(){
-        return (LinearLayout) getView().findViewById(R.id.panel_map_moyen);
-    }
 
     private void removeSelectionListView(AdapterView<?> parent){
-
         for (int j = 0; j < parent.getChildCount(); j++)
             parent.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
-        parentAdapterView = parent;
     }
 
 }
