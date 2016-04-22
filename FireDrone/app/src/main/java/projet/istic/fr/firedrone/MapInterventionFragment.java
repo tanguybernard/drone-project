@@ -1,7 +1,6 @@
 package projet.istic.fr.firedrone;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -57,25 +56,39 @@ public class MapInterventionFragment extends SupportMapFragment implements
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             for(int i = 0; i < listInter.size(); i++) {
+                if((listInter.get(i).getLatitude() != null) && (listInter.get(i).getLongitude() != null)) {
+                    Double latitude = Double.parseDouble(listInter.get(i).getLatitude());
+                    Double longitude = Double.parseDouble(listInter.get(i).getLongitude());
 
-                Log.d("TAG", i + " ");
-                Double latitude = Double.parseDouble(listInter.get(i).getLatitude());
-                Double longitude = Double.parseDouble(listInter.get(i).getLongitude());
+                    LatLng coordonnees = new LatLng(latitude, longitude);
 
-                LatLng coordonnees = new LatLng(latitude, longitude);
+                    String refInter = listInter.get(i).getId();
 
-                String refInter = listInter.get(i).getId();
+                    MarkerOptions marker = new MarkerOptions().position(coordonnees).title(refInter);
 
-                MarkerOptions marker = new MarkerOptions().position(coordonnees).title(refInter);
+                    myMap.addMarker(marker);
 
-                myMap.addMarker(marker);
+                    builder.include(marker.getPosition());
+                }
+                else{
+                    MarkerOptions marker1 = new MarkerOptions().position(new LatLng(48.122834, -1.655931)).title("intervention 1 Chat dans l'arbre");
+                    myMap.addMarker(marker1);
 
-                builder.include(marker.getPosition());
+                    MarkerOptions marker2 = new MarkerOptions().position(new LatLng(48.134597 , -1.647305)).title("intervention 2 Parc des gayeulles");
+                    myMap.addMarker(marker2);
 
+                    MarkerOptions marker3 = new MarkerOptions().position(new LatLng(48.115434, -1.638722)).title("intervention 3 ISTIC");
+                    myMap.addMarker(marker3);
+
+                    builder.include(marker1.getPosition());
+                    builder.include(marker2.getPosition());
+                    builder.include(marker3.getPosition());
+
+                }
             }
 
             LatLngBounds bounds = builder.build();
-            int padding = 0; // offset from edges of the map in pixels
+            int padding = 10; // offset from edges of the map in pixels
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             googleMap.moveCamera(cu);
         }
