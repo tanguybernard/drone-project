@@ -89,6 +89,9 @@ public class FicheFragment extends Fragment {
         //Faire le replace de la frame par google map avec en attribut de méthode les adresses des interventions
         MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
 
+        //On envoi la liste des interventions que l'on a récupérée de la base
+        mapInterventionFragment.setListInter(image_details);
+
         FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
         transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
 

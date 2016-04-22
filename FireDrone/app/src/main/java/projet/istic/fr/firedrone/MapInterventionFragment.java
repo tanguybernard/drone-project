@@ -1,18 +1,24 @@
 package projet.istic.fr.firedrone;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import projet.istic.fr.firedrone.model.Intervention;
 
 /**
  * Created by nduquesne on 20/04/16.
@@ -20,12 +26,15 @@ import java.util.Map;
 public class MapInterventionFragment extends SupportMapFragment implements
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback {
 
-
         private GoogleMap myMap;
+
+
         //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
         private Map<String, Marker> listMarkers = null;
 
-        private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
+        private ArrayList<Intervention> listInter = new ArrayList<Intervention>();
+
+        //private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
 
 
         @Override
@@ -44,15 +53,31 @@ public class MapInterventionFragment extends SupportMapFragment implements
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             myMap = googleMap;
 
-            MarkerOptions marker = new MarkerOptions();
 
-            marker.position(rennes_istic);
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-            myMap.addMarker(marker);
+            for(int i = 0; i < listInter.size(); i++) {
 
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
+                Log.d("TAG", i + " ");
+                Double latitude = Double.parseDouble(listInter.get(i).getLatitude());
+                Double longitude = Double.parseDouble(listInter.get(i).getLongitude());
 
+                LatLng coordonnees = new LatLng(latitude, longitude);
 
+                String refInter = listInter.get(i).getId();
+
+                MarkerOptions marker = new MarkerOptions().position(coordonnees).title(refInter);
+
+                myMap.addMarker(marker);
+
+                builder.include(marker.getPosition());
+
+            }
+
+            LatLngBounds bounds = builder.build();
+            int padding = 0; // offset from edges of the map in pixels
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            googleMap.moveCamera(cu);
         }
 
 
@@ -61,4 +86,11 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
     }
 
+    public ArrayList<Intervention> getListInter() {
+        return listInter;
+    }
+
+    public void setListInter(ArrayList<Intervention> listInter) {
+        this.listInter = listInter;
+    }
 }
