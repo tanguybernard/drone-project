@@ -2,6 +2,8 @@ package projet.istic.fr.firedrone.model;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.Streams;
 
+import java.util.List;
+
 /**
  * Created by mamadian on 21/03/16.
  */
@@ -27,6 +29,9 @@ public class Intervention {
 
     @SerializedName("longitude")
     private String longitude;
+
+    @SerializedName("ways")
+    private List<MeansItem> ways;
 
     //private List<Way> ways;
 
@@ -70,9 +75,10 @@ public class Intervention {
 
     public String getLongitude(){return longitude;}
 
+    public void setWays(List<MeansItem> ways){
+        this.ways = ways;
 
-
-
+    }
 
     public Intervention(){
 

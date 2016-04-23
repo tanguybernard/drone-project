@@ -98,9 +98,10 @@ public class FicheFragment extends Fragment {
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                Object o = lv1.getItemAtPosition(position);
+            public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
+                Object o = listView.getItemAtPosition(position);
                 Intervention newsData = (Intervention) o;
+                System.out.println(newsData.getDate());
             }
         });
 
@@ -165,7 +166,14 @@ public class FicheFragment extends Fragment {
                         newsData.setSinisterCode(sinisterCode);
                         String address = (elt.get("address")!=null) ? elt.get("address").toString() : "";
                         newsData.setAddress(address);
-
+                        String date = (elt.get("date")!=null) ? elt.get("date").toString() : "";
+                        newsData.setDate(date);
+                        String latitude = (elt.get("latitude")!=null) ? elt.get("latitude").toString() : "";
+                        newsData.setLatitude(date);
+                        String longitude = (elt.get("longitude")!=null) ? elt.get("longitude").toString() : "";
+                        newsData.setLongitude(longitude);
+                        String status = (elt.get("status")!=null) ? elt.get("status").toString() : "";
+                        newsData.setStatus(status);
                         results.add(newsData);
 
 

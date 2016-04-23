@@ -56,7 +56,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             //Parcours de la liste des interventions
-            for(int i = 0; i < listInter.size(); i++) {
+            /*for(int i = 0; i < listInter.size(); i++) {
                 //Si on a bien une latitude et une longitude, on met le marqueur
                 if((listInter.get(i).getLatitude() != null) && (listInter.get(i).getLongitude() != null)) {
                     //Cast de la latitude et de la longitude
@@ -95,15 +95,17 @@ public class MapInterventionFragment extends SupportMapFragment implements
                     builder.include(marker3.getPosition());
 
                 }
-            }
+            }*/
 
             //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
+            /*
             LatLngBounds bounds = builder.build();
             //Définition du padding autour des marqueurs
             int padding = 100;
             //Zoom sur la zone des marqueurs
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             googleMap.moveCamera(cu);
+            */
         }
 
 

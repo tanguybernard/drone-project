@@ -44,6 +44,7 @@ import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.MoyenListAdapter;
 import projet.istic.fr.firedrone.model.CoordinateItem;
 import projet.istic.fr.firedrone.model.Intervention;
+import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -70,58 +71,7 @@ public class CreateInterventionFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
 
 
-
-        /**final View view = inflater.inflate(R.layout.fragment_fiche,container,false);
-
-         final Intervention intervention =new Intervention();
-
-         RestAdapter restAdapter = new RestAdapter.Builder()
-         .setEndpoint(END_POINT)
-         .build();
-         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
-         interventionAPI.GetIntervention("56eff377b760a2df933ccd61", new Callback<Intervention>() {
-        @Override
-        public void success(Intervention intervention, Response response) {
-
-        TextView id= (TextView)view.findViewById(R.id.textView);
-        TextView content =(TextView)view.findViewById(R.id.textView2);
-        TextView date = (TextView)view.findViewById(R.id.textView3);
-        TextView type=(TextView)view.findViewById(R.id.textView4);
-        TextView author =(TextView)view.findViewById(R.id.textView5);
-
-        id.setText(intervention.id);
-        content.setText(intervention.content);
-        date.setText(intervention.date);
-        type.setText(intervention.type);
-        author.setText(intervention.author);
-
-        }
-
-        @Override
-        public void failure(RetrofitError error) {
-        Log.d("==retrofit==", error.toString());
-        }
-        });*/
-
-
-
         final View view = inflater.inflate(R.layout.intervention_creation,container,false);
-
-
-
-        /*ArrayList image_details = getListData();
-        final ListView lv1 = (ListView) view.findViewById(R.id.moyenList);
-
-        lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
-        lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                Object o = lv1.getItemAtPosition(position);
-                InterventionItem newsData = (InterventionItem) o;
-            }
-        });*/
-
 
         final Button btnSaveIntervention = (Button) view.findViewById(R.id.btnSaveIntervention);
 
@@ -219,23 +169,29 @@ public class CreateInterventionFragment extends Fragment {
 
         ListView listView = (ListView) getView().findViewById(R.id.moyenListView);
 
+        final Intervention intervention = new Intervention();
+
+        List<MeansItem> meansItemList = new ArrayList<MeansItem>();
         int count = listView.getChildCount();
         for (int i=0; i<count; i++) {
 
             TextView t = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_name);
-            TextView t1 = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_quantity);
+            TextView quantityStr = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_quantity);
 
-            System.out.println(t.getText());
-            System.out.println(t1.getText());
+            int quantity = Integer.parseInt(quantityStr.getText().toString());
 
+            for(int q=0;q<quantity;q++){
+                MeansItem meansItem = new MeansItem();
+                meansItem.setName((String) t.getText()+q);
+                meansItemList.add(meansItem);
+            }
 
         }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");//format de la date
+        intervention.setWays(meansItemList);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");//format de la date
         String currentDateandTime = sdf.format(new Date());
 
-        //"263 Avenue Général Leclerc, 35000 Rennes"
-        final Intervention intervention = new Intervention();
+
         intervention.setSinisterCode(sinisterCode);
         intervention.setDate(currentDateandTime);
         intervention.setAddress(addressInter.getText().toString());
@@ -337,7 +293,6 @@ public class CreateInterventionFragment extends Fragment {
 
         return null;
     }
-
 
 
 
