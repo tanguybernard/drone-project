@@ -48,35 +48,6 @@ public class FicheFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
 
 
-
-        /**final View view = inflater.inflate(R.layout.fragment_fiche,container,false);
-
-        final Intervention intervention =new Intervention();
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(END_POINT)
-                .build();
-        InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
-        interventionAPI.GetIntervention("56eff377b760a2df933ccd61", new Callback<Intervention>() {
-            @Override
-            public void success(Intervention intervention, Response response) {
-
-                TextView id= (TextView)view.findViewById(R.id.textView);
-                TextView content =(TextView)view.findViewById(R.id.textView2);
-                TextView date = (TextView)view.findViewById(R.id.textView3);
-                TextView type=(TextView)view.findViewById(R.id.textView4);
-                TextView author =(TextView)view.findViewById(R.id.textView5);
-
-                id.setText(intervention.id);
-
-           }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d("==retrofit==", error.toString());
-            }
-        });*/
-
         final View view = inflater.inflate(R.layout.intervention_main,container,false);
 
         //Création de la liste et affichage dans la listview
@@ -103,6 +74,11 @@ public class FicheFragment extends Fragment {
                 Object o = listView.getItemAtPosition(position);
                 Intervention newsData = (Intervention) o;
                 InterventionSingleton.getInstance().setIntervention(newsData);
+                DetailsInterventionFragment detailsInterventionFragment = new DetailsInterventionFragment();
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, detailsInterventionFragment).commit();
+
             }
         });
 
