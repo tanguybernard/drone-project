@@ -46,6 +46,7 @@ import projet.istic.fr.firedrone.model.CoordinateItem;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -69,6 +70,7 @@ public class CreateInterventionFragment extends Fragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
+
 
 
         final View view = inflater.inflate(R.layout.intervention_creation,container,false);
@@ -159,6 +161,8 @@ public class CreateInterventionFragment extends Fragment {
      * @param view
      */
     public void sendNewIntervention(View view){
+
+
 
         EditText addressInter = (EditText) getView().findViewById(R.id.addressIntervention);
 

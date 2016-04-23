@@ -20,6 +20,7 @@ import java.util.List;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
 import projet.istic.fr.firedrone.model.Intervention;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -101,7 +102,7 @@ public class FicheFragment extends Fragment {
             public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
                 Object o = listView.getItemAtPosition(position);
                 Intervention newsData = (Intervention) o;
-                System.out.println(newsData.getDate());
+                InterventionSingleton.getInstance().setIntervention(newsData);
             }
         });
 
