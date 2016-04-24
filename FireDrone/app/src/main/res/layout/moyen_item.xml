@@ -7,14 +7,23 @@
 
     <TextView
         android:id="@+id/moyen_name"
-        android:layout_width="199dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:textColor="#000000"
         android:layout_alignBottom="@+id/btn_q_sub"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-         />
+        android:layout_toLeftOf="@+id/colorMeanSpinner"
+        android:layout_toStartOf="@+id/colorMeanSpinner" />
+
+    <Spinner
+        android:id="@+id/colorMeanSpinner"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btn_q_sub"
+        android:layout_toLeftOf="@+id/btn_q_sub"
+        android:layout_toStartOf="@+id/btn_q_sub" />
 
 
     <Button
@@ -50,6 +59,7 @@
         android:layout_toEndOf="@+id/btn_q_sub"
         android:layout_marginLeft="55dp"
         android:layout_marginStart="55dp"
-        android:text="0" />
+        android:text="0"
+        android:gravity="center_horizontal" />
 
 </RelativeLayout>

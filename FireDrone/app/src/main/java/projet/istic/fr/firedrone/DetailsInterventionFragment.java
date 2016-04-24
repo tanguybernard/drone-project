@@ -51,10 +51,12 @@ public class DetailsInterventionFragment extends Fragment {
         TextView address = (TextView) view.findViewById(R.id.address);
         TextView date = (TextView) view.findViewById(R.id.date);
         TextView sinisterCode = (TextView) view.findViewById(R.id.sinisterCodeText);
-        id.setText(intervention.getId());
-        address.setText(intervention.getAddress());
-        date.setText(intervention.getDate());
-        sinisterCode.setText(intervention.getSinisterCode());
+        if(intervention!=null) {
+            id.setText(intervention.getId());
+            address.setText(intervention.getAddress());
+            date.setText(intervention.getDate());
+            sinisterCode.setText(intervention.getSinisterCode());
+        }
 
     }
 
