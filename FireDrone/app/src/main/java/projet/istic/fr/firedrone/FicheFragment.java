@@ -74,8 +74,8 @@ public class FicheFragment extends Fragment {
                 Object o = listView.getItemAtPosition(position);
                 Intervention newsData = (Intervention) o;
                 InterventionSingleton.getInstance().setIntervention(newsData);
-                DetailsInterventionFragment detailsInterventionFragment = new DetailsInterventionFragment();
 
+                DetailsInterventionFragment detailsInterventionFragment = new DetailsInterventionFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.content_frame, detailsInterventionFragment).commit();
 

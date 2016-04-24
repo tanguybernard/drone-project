@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -162,14 +163,11 @@ public class CreateInterventionFragment extends Fragment {
      */
     public void sendNewIntervention(View view){
 
-
-
         EditText addressInter = (EditText) getView().findViewById(R.id.addressIntervention);
 
         Spinner spinner = (Spinner) getView().findViewById(R.id.codeSinistreList);
 
         String sinisterCode = spinner.getSelectedItem().toString();
-
 
         ListView listView = (ListView) getView().findViewById(R.id.moyenListView);
 
@@ -210,6 +208,18 @@ public class CreateInterventionFragment extends Fragment {
             e.printStackTrace();
         }
 
+        requestNewIntervention(intervention);
+
+
+
+    }
+
+    /**
+     * Request new intervention with Retrofit
+     * @param intervention
+     */
+    public void requestNewIntervention(Intervention intervention){
+
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(END_POINT)
                 .build();
@@ -221,6 +231,12 @@ public class CreateInterventionFragment extends Fragment {
             @Override
             public void success(Intervention intervention, Response response) {
                 System.out.println("ca fonctionne");
+
+                InterventionSingleton.getInstance().setIntervention(intervention);
+
+                DetailsInterventionFragment detailsInterventionFragment = new DetailsInterventionFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, detailsInterventionFragment).commit();
             }
 
             @Override
@@ -229,8 +245,6 @@ public class CreateInterventionFragment extends Fragment {
 
             }
         });
-
-
 
     }
 
