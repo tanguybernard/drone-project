@@ -15,8 +15,14 @@
     <integer-array name="androidcolors">
         <item>@color/darkred</item>
         <item>@color/darkgreen</item>
-        <item>@color/darkblue</item>
+        <item>@color/blue</item>
     </integer-array>
+
+    <string-array name="androidDescription">
+        <item>INCENDIE</item>
+        <item>SAP</item>
+        <item>EAU</item>
+    </string-array>
 
 
 </resources>

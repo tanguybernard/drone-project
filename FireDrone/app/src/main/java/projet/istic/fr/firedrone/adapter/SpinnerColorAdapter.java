@@ -17,16 +17,24 @@ import projet.istic.fr.firedrone.R;
 class SpinnerColorAdapter extends BaseAdapter
 {
     ArrayList<Integer> colors;
+    ArrayList<String> names;
     Context context;
 
     public SpinnerColorAdapter(Context context)
     {
         this.context=context;
         colors=new ArrayList<Integer>();
+        names=new ArrayList<String>();
+
         int retrieve []=context.getResources().getIntArray(R.array.androidcolors);
         for(int re:retrieve)
         {
             colors.add(re);
+        }
+        String retrieve2 []=context.getResources().getStringArray(R.array.androidDescription);
+        for(String re:retrieve2)
+        {
+            names.add(re);
         }
     }
     @Override
@@ -47,12 +55,14 @@ class SpinnerColorAdapter extends BaseAdapter
     @Override
     public View getView(int pos, View view, ViewGroup parent)
     {
+
         LayoutInflater inflater=LayoutInflater.from(context);
         view=inflater.inflate(android.R.layout.simple_spinner_dropdown_item, null);
         TextView txv=(TextView)view.findViewById(android.R.id.text1);
         txv.setBackgroundColor(colors.get(pos));
         txv.setTextSize(20f);
-        txv.setText(" ");
+
+        txv.setText(names.get(pos));
         return view;
     }
 
