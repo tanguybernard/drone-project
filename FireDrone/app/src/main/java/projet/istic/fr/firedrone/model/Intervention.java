@@ -55,8 +55,6 @@ public class Intervention {
         this.address = address;
     }
 
-
-
     public Intervention(){
 
     }
@@ -69,8 +67,4 @@ public class Intervention {
         this.status = status;
 
     }
-
-
-
-
 }

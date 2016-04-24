@@ -27,11 +27,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.sql.SQLOutput;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import projet.istic.fr.firedrone.FiredroneConstante;
+import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
+import projet.istic.fr.firedrone.ModelAPI.UserApi;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.MeansItem;
+import projet.istic.fr.firedrone.model.SIG;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by ramage on 20/04/16.
@@ -41,13 +51,19 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         View.OnClickListener,MethodCallWhenDrag{
 
     private static MapMoyenFragment INSTANCE;
+
+    //item sélectionné dans le panel
     private MeansItem moyenItemSelected;
+    //l'item sélectionné est a supprimé du panel une fois placé
+    private boolean itemToRemove;
+
     private GoogleMap googleMap;
     private ImageButton suppressionMarker;
     private AbsoluteLayout.LayoutParams overlayLayoutParams;
 
     private Map<Marker,MeansItem> mapMeansItem = new HashMap<>();
     private ViewTreeObserver.OnGlobalLayoutListener infoWindowLayoutListener;
+    private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
 
     private View infoWindowContainer;
     private TextView textView;
@@ -62,6 +78,8 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
     private Runnable positionUpdaterRunnable;
 
+    //liste des SIG sur la carte
+    private List<SIG> listSIG;
 
     public static MapMoyenFragment getInstance() {
         if (INSTANCE == null) {
@@ -74,12 +92,34 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getMapAsync(this);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
+                .build();
+
+        final SIGAPI sigApi = restAdapter.create(SIGAPI.class);
+
+        //récupération des SIG en base de données
+        sigApi.getSIGs(new Callback<List<SIG>>() {
+                           @Override
+                           public void success(List<SIG> sigs, Response response) {
+
+                               listSIG = sigs;
+                           }
+
+                           @Override
+                           public void failure(RetrofitError error) {
+                           }
+                       });
+
+
     }
 
     FrameLayout containerMap;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map_moyen,null);
+        View rootView = inflater.inflate(R.layout.fragment_map_moyen, null);
         containerMap = (FrameLayout) rootView.findViewById(R.id.container_map);
         FrameLayout mapView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
         containerMap.addView(mapView, new FrameLayout.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -127,6 +167,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         textView.setText(meansItem.getMsMeanCode());
         infoWindowContainer.bringToFront();
         markerSelected = marker;
+
         if(meansItem.getMsMeanHArriv()==null) {
             button.setText("Arrivé");
         }else{
@@ -143,12 +184,26 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap =googleMap;
         googleMap.setOnMapClickListener(this);
-        googleMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker,googleMap,null,this));
+        googleMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, googleMap, null, this));
         googleMap.setOnMarkerClickListener(this);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
+
+        if(listSIG != null) {
+            //création des points SIG
+            for (SIG sig : listSIG) {
+                System.out.println(sig.getId() + " " + sig.getType());
+            }
+        }
     }
 
     public void setMoyenItemSelected(MeansItem pMoyenItemSelected) {
         moyenItemSelected =  pMoyenItemSelected;
+        itemToRemove = false;
+    }
+
+    public void setMoyenItemAddSelected(MeansItem pMoyenItemSelected) {
+        moyenItemSelected =  pMoyenItemSelected;
+        itemToRemove = true;
     }
 
     @Override
@@ -159,6 +214,13 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                             .position(latLng).draggable(true)
                             .icon(BitmapDescriptorFactory.fromResource(moyenItemSelected.getResource())));
             mapMeansItem.put(marker, moyenItemSelected);
+
+            //on supprime l'item du panel après l'avoir ajouté
+            if(itemToRemove){
+                PanelMapMoyenFragment.getInstance().removeItem(moyenItemSelected);
+                //on le met à nulle
+                moyenItemSelected = null;
+            }
         }
         containerMap.bringToFront();
     }
@@ -205,9 +267,11 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         containerMap.bringToFront();
     }
 
+    //thread qui va déplacé la fenêtre d'information du marqueur
     private class PositionUpdaterRunnable implements Runnable {
         private int lastXPosition = Integer.MIN_VALUE;
         private int lastYPosition = Integer.MIN_VALUE;
+
 
         @Override
         public void run() {
@@ -219,7 +283,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 if (lastXPosition != targetPosition.x || lastYPosition != targetPosition.y) {
 
                     overlayLayoutParams.x = targetPosition.x - popupXOffset;
-                    overlayLayoutParams.y = targetPosition.y - popupYOffset -70  -30;
+                    overlayLayoutParams.y = targetPosition.y - popupYOffset -30  -30;
                     infoWindowContainer.setLayoutParams(overlayLayoutParams);
 
                     lastXPosition = targetPosition.x;

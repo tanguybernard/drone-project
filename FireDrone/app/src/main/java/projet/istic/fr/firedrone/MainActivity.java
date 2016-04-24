@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
     }
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity
                         return true;
                     }
                 });
+
+
     }
 
     public void selectDrawerItem(MenuItem item) {
