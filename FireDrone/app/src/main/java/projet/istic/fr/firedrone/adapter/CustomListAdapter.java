@@ -30,7 +30,6 @@ public class CustomListAdapter extends ArrayAdapter<Intervention> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         Intervention item = getItem(position);
-        System.out.println("toto");System.out.println(position);
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.intervention_infos, null);
@@ -43,8 +42,6 @@ public class CustomListAdapter extends ArrayAdapter<Intervention> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-
-        System.out.println(item.getSinisterCode());
         holder.myId.setText(item.getId());
         //holder.codeSinistre.setText("By, " + listData.get(position).getCodeSinistre());
         holder.codeSinistre.setText(item.getSinisterCode());

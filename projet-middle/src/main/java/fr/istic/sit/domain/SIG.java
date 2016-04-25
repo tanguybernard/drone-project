@@ -23,6 +23,7 @@ public class SIG {
     private String type;
     private String latitude;
     private String longitude;
+    private String name;
 
     public SIG() {}
 
@@ -64,6 +65,14 @@ public class SIG {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

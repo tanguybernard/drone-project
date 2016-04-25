@@ -1,0 +1,19 @@
+language: java
+
+sudo: required
+
+jdk:
+  - oraclejdk8
+
+install: true
+
+before_script: cd projet-middle/
+
+script:
+  - sudo apt-get update && sudo apt-get install oracle-java8-installer
+  - java -version
+script: mvn package
+
+#script: scp projet-middle-1.0.0.jar root@m2gla-drone.istic.univ-rennes1.fr:/root/Projet
+
+#script: ssh root@m2gla-drone.istic.univ-rennes1.fr "cd Projet/;java -jar projet-middle-1.0.0.jar &"

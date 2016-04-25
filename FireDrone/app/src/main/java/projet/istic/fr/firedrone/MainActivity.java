@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     private TabMapFragment fragmentDrawPath;
     private FicheFragment fragmentFiche;
+    private DetailsInterventionFragment detailsFragment;
 
     private MoyenFragment fragmentMoyen;
 
@@ -60,6 +61,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fragmentFiche = FicheFragment.getInstance();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche).addToBackStack("detailFragment").commit();
+
+
 
         //instanciation du fragment de contrôle du drône
         droneControlFragment = ControleFragment.getInstance();
@@ -97,8 +103,8 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_fiche:
-                fragmentFiche = FicheFragment.getInstance();
-                fragment = fragmentFiche;
+                detailsFragment = DetailsInterventionFragment.getInstance();
+                fragment = detailsFragment;
                 break;
             case R.id.nav_moyen:
                 fragmentMoyen = MoyenFragment.getInstance();

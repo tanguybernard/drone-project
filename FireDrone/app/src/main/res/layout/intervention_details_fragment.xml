@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:padding="6dip"
+    android:descendantFocusability="blocksDescendants"
+    >
+
+
+    <TextView android:id="@+id/idLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="ID: "
+        android:textColor="#0041c4"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+    <TextView android:id="@+id/idText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/idLabel"
+        android:text=" "
+        android:textColor="#0041c4"
+        android:textStyle="bold|italic"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView android:id="@+id/sinisterCodeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/idLabel"
+        android:text="Code sinistre: "
+        android:textColor="#0041c4"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView android:id="@+id/sinisterCodeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/sinisterCodeLabel"
+        android:layout_alignBottom="@+id/sinisterCodeLabel"
+        android:layout_toRightOf="@+id/sinisterCodeLabel"
+        android:text=" "
+        android:textStyle="bold"
+        android:textColor="#b30707"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+    <TextView android:id="@+id/addressLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/sinisterCodeLabel"
+        android:text="Adresse: "
+        android:textColor="#0041c4"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/addressLabel"
+        android:layout_alignBottom="@+id/addressLabel"
+        android:layout_toRightOf="@+id/addressLabel"
+        android:text=" "
+        android:textStyle="bold"
+        android:textColor="#b30707"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView android:id="@+id/dateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/addressLabel"
+        android:text="Date: "
+        android:textColor="#0041c4"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/dateLabel"
+        android:layout_alignBottom="@+id/dateLabel"
+        android:layout_toRightOf="@+id/dateLabel"
+        android:text=" "
+        android:textStyle="bold"
+        android:textColor="#b30707"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+</RelativeLayout>

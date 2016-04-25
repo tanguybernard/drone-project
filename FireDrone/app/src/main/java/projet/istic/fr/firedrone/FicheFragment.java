@@ -20,6 +20,7 @@ import java.util.List;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
 import projet.istic.fr.firedrone.model.Intervention;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -47,47 +48,20 @@ public class FicheFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
 
 
-
-        /**final View view = inflater.inflate(R.layout.fragment_fiche,container,false);
-
-        final Intervention intervention =new Intervention();
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(END_POINT)
-                .build();
-        InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
-        interventionAPI.GetIntervention("56eff377b760a2df933ccd61", new Callback<Intervention>() {
-            @Override
-            public void success(Intervention intervention, Response response) {
-
-                TextView id= (TextView)view.findViewById(R.id.textView);
-                TextView content =(TextView)view.findViewById(R.id.textView2);
-                TextView date = (TextView)view.findViewById(R.id.textView3);
-                TextView type=(TextView)view.findViewById(R.id.textView4);
-                TextView author =(TextView)view.findViewById(R.id.textView5);
-
-                id.setText(intervention.id);
-
-           }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d("==retrofit==", error.toString());
-            }
-        });*/
-
         final View view = inflater.inflate(R.layout.intervention_main,container,false);
 
         //Création de la liste et affichage dans la listview
         ArrayList image_details = getListData();
-        //A remplacer par un appel à la base de données pour obtenir les interventions actives
 
         final ListView lv1 = (ListView) view.findViewById(R.id.interventionList);
 
         lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
 
-        //Faire le replace de la frame par google map avec en attribut de méthode les adresses des interventions
+        //Replace de la frame par google map
         MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
+
+        //On envoi la liste des interventions que l'on a récupérée de la base
+        mapInterventionFragment.setListInter(image_details);
 
         FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
         transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
@@ -96,9 +70,15 @@ public class FicheFragment extends Fragment {
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                Object o = lv1.getItemAtPosition(position);
+            public void onItemClick(AdapterView<?> listView, View v, int position, long id) {
+                Object o = listView.getItemAtPosition(position);
                 Intervention newsData = (Intervention) o;
+                InterventionSingleton.getInstance().setIntervention(newsData);
+
+                DetailsInterventionFragment detailsInterventionFragment = new DetailsInterventionFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, detailsInterventionFragment).commit();
+
             }
         });
 
@@ -163,7 +143,14 @@ public class FicheFragment extends Fragment {
                         newsData.setSinisterCode(sinisterCode);
                         String address = (elt.get("address")!=null) ? elt.get("address").toString() : "";
                         newsData.setAddress(address);
-
+                        String date = (elt.get("date")!=null) ? elt.get("date").toString() : "";
+                        newsData.setDate(date);
+                        String latitude = (elt.get("latitude")!=null) ? elt.get("latitude").toString() : "";
+                        newsData.setLatitude(date);
+                        String longitude = (elt.get("longitude")!=null) ? elt.get("longitude").toString() : "";
+                        newsData.setLongitude(longitude);
+                        String status = (elt.get("status")!=null) ? elt.get("status").toString() : "";
+                        newsData.setStatus(status);
                         results.add(newsData);
 
 
@@ -171,8 +158,6 @@ public class FicheFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-
-
 
             }
 
@@ -182,7 +167,6 @@ public class FicheFragment extends Fragment {
 
             }
         });
-
 
 
         return results;

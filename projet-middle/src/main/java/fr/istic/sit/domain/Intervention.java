@@ -2,6 +2,7 @@ package fr.istic.sit.domain;
 
 import java.util.List;
 
+import fr.istic.sit.util.Validator;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -107,5 +108,43 @@ public class Intervention {
                 ", longitude='" + longitude + '\'' +
                 ", status='" + status + '\'' +
                 '}';
+    }
+
+    public void update(Intervention newData){
+        if (!Validator.isEmpty(newData.getAddress()))
+            this.address = newData.getAddress();
+
+        if(!Validator.isEmpty(newData.getDate()))
+            this.date = newData.getDate();
+
+        if(!Validator.isEmpty(newData.getLatitude()))
+            this.latitude = newData.getLatitude();
+
+        if(!Validator.isEmpty(newData.getLongitude()))
+            this.longitude = newData.getLongitude();
+
+        if(!Validator.isEmpty(newData.getSinisterCode()))
+            this.sinisterCode = newData.getSinisterCode();
+
+        if(!Validator.isEmpty(newData.getStatus()))
+            this.status = newData.getStatus();
+
+        if(!newData.getWays().isEmpty()){
+            for(Way way : newData.getWays()){
+                //If is a new way
+                if(Validator.isEmpty(way.getId())){
+                    way.setId(Integer.toString(this.getWays().size()+1));
+                    this.getWays().add(way);
+                }else{
+                    for(Way wayIntervention : this.getWays()){
+                        if(wayIntervention.getId().equalsIgnoreCase(way.getId())){
+                            wayIntervention.update(way);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
     }
 }
