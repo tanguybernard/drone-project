@@ -1,4 +1,4 @@
 language: java
 sudo: false
-before_script: cd project-middle/
+before_script: cd projet-middle/
 script: mvn package
