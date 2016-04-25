@@ -54,7 +54,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
             //Sert à définir les limites de l'ensemble des marqueurs
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
+/**
             //Parcours de la liste des interventions
             for(int i = 0; i < listInter.size(); i++) {
                 //Si on a bien une latitude et une longitude, on met le marqueur
@@ -106,7 +106,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
             int padding = 100;
             //Zoom sur la zone des marqueurs
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-            googleMap.moveCamera(cu);
+            googleMap.moveCamera(cu);*/
         }
 
 

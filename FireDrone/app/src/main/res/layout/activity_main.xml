@@ -8,11 +8,16 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+    />
+    <!-- Transparent view => SOLVE BUG MAP ABOVE MENU -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
     <android.support.design.widget.NavigationView
