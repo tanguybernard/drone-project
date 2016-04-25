@@ -13,9 +13,8 @@ import retrofit.http.Query;
 public interface UserApi {
 
     /**
-     *
+     * cette fonction permet de recuperer  le token de l'utilisateur
      * @param authorization
-
      * @param response
      */
     @GET("/oauth/token")
@@ -28,7 +27,6 @@ public interface UserApi {
 
     @GET("/user/{username}")
     public void getUser(
-            @Header("Authorization") String authorization,
             @Path("username") String username,
             Callback<User> callback);
 }
