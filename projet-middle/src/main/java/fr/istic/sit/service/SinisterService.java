@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 import fr.istic.sit.dao.SinisterRepository;
 import fr.istic.sit.domain.Sinister;
 
+/**
+ * @author FireDroneTeam
+ */
+
 @Component
 public class SinisterService {
 

@@ -1,5 +1,7 @@
 package fr.istic.sit.security;
 
+
+
 public enum Authorities {
 
     ROLE_ANONYMOUS,

@@ -1,12 +1,12 @@
 package fr.istic.sit.dao;
 
-import fr.istic.sit.domain.SIG;
+import fr.istic.sit.domain.Sig;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 
-/** * * * * * * * * * * * * *
- * Created by FireDroneTeam *
- * * * * * * * * * * * * * **/
-public interface SIGRepository extends MongoRepository<SIG, String> {
-	SIG findById(String id);
+/**
+ * @author FireDroneTeam
+ */
+public interface SIGRepository extends MongoRepository<Sig, String> {
+	Sig findById(String id);
 }

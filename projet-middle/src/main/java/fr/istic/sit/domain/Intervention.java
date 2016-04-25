@@ -6,7 +6,7 @@ import fr.istic.sit.util.Validator;
 import org.springframework.data.annotation.Id;
 
 /**
- * Created by fracma on 3/14/16.
+ * @author FireDroneTeam
  */
 public class Intervention {
     @Id
@@ -97,19 +97,6 @@ public class Intervention {
 		this.ways = ways;
 	}
 
-	@Override
-    public String toString() {
-        return "Intervention{" +
-                "id='" + id + '\'' +
-                ", sinisterCode='" + sinisterCode + '\'' +
-                ", date='" + date + '\'' +
-                ", address='" + address + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
-
     public void update(Intervention newData){
         if (!Validator.isEmpty(newData.getAddress()))
             this.address = newData.getAddress();
@@ -146,5 +133,19 @@ public class Intervention {
 
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Intervention{" +
+                "id='" + id + '\'' +
+                ", sinisterCode='" + sinisterCode + '\'' +
+                ", date='" + date + '\'' +
+                ", address='" + address + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", status='" + status + '\'' +
+                ", ways=" + ways +
+                '}';
     }
 }

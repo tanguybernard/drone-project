@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
- * Created by fracma on 3/18/16.
+ * @author FireDroneTeam
  */
 public interface InterventionRepository extends MongoRepository<Intervention, String> {
 	Intervention findById(String id);

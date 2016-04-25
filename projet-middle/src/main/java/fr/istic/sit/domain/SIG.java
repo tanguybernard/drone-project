@@ -2,16 +2,12 @@ package fr.istic.sit.domain;
 
 import org.springframework.data.annotation.Id;
 
-import java.util.List;
-
-/** * * * * * * * * * * * * *
- * Created by FireDroneTeam *
- * * * * * * * * * * * * * **/
-
 /**
+ * @author FireDroneTeam
  * Geographical Information System
  */
-public class SIG {
+
+public class Sig {
 
     //** **//
     private static final String WATER="WATER";
@@ -25,9 +21,9 @@ public class SIG {
     private String longitude;
     private String name;
 
-    public SIG() {}
+    public Sig() {}
 
-    public SIG(String id, String type, String latitude, String longitude) {
+    public Sig(String id, String type, String latitude, String longitude) {
         this.id = id;
         this.type = type;
         this.latitude = latitude;
@@ -77,7 +73,7 @@ public class SIG {
 
     @Override
     public String toString() {
-        return "SIG{" +
+        return "Sig{" +
                 "id='" + id + '\'' +
                 ", type='" + type + '\'' +
                 ", latitude='" + latitude + '\'' +

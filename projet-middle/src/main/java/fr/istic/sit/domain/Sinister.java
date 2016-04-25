@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 
 /**
- * Created by fracma on 3/14/16.
+ * @author FireDroneTeam
  */
 public class Sinister {
     @Id

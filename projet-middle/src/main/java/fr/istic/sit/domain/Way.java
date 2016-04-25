@@ -1,10 +1,12 @@
 package fr.istic.sit.domain;
 
 import fr.istic.sit.util.Validator;
-import org.springframework.data.annotation.Id;
+
+/**
+ * @author FireDroneTeam
+ */
 
 public class Way {
-	@Id
 	private String id;
 	private String code;
 	private String name;
@@ -154,5 +156,22 @@ public class Way {
 		if( !Validator.isEmpty(newWay.getRequest_time()))
 			this.request_time = newWay.getRequest_time();
 
+	}
+
+	@Override
+	public String toString() {
+		return "Way{" +
+				"id='" + id + '\'' +
+				", code='" + code + '\'' +
+				", name='" + name + '\'' +
+				", color='" + color + '\'' +
+				", longitude='" + longitude + '\'' +
+				", latitude='" + latitude + '\'' +
+				", request_time='" + request_time + '\'' +
+				", arriving_time='" + arriving_time + '\'' +
+				", engaged_time='" + engaged_time + '\'' +
+				", release_time='" + release_time + '\'' +
+				", groupId='" + groupId + '\'' +
+				'}';
 	}
 }

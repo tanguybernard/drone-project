@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by fracma on 3/14/16.
+ * @author FireDroneTeam
  */
 public interface UserRepository extends MongoRepository<User, String> {
     User findByFirstname(String firstName);

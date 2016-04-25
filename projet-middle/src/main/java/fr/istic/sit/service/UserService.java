@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 import fr.istic.sit.dao.UserRepository;
 import fr.istic.sit.domain.User;
 
+/**
+ * @author FireDroneTeam
+ */
+
 @Component
 public class UserService {
 
