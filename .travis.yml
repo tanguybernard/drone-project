@@ -14,6 +14,6 @@ script:
   - java -version
 script: mvn package
 
-script: scp projet-middle-1.0.0.jar root@m2gla-drone.istic.univ-rennes1.fr:/root/Projet
+#script: scp projet-middle-1.0.0.jar root@m2gla-drone.istic.univ-rennes1.fr:/root/Projet
 
-script: ssh root@m2gla-drone.istic.univ-rennes1.fr "cd Projet/;java -jar projet-middle-1.0.0.jar &"
+#script: ssh root@m2gla-drone.istic.univ-rennes1.fr "cd Projet/;java -jar projet-middle-1.0.0.jar &"
