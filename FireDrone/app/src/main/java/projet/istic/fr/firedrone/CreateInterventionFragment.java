@@ -187,7 +187,7 @@ public class CreateInterventionFragment extends Fragment {
 
             for(int q=0;q<quantity;q++){
                 MeansItem meansItem = new MeansItem();
-                meansItem.setName((String) t.getText()+q);
+                meansItem.setMsMeanName((String) t.getText()+q);
                 meansItemList.add(meansItem);
             }
 

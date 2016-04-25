@@ -15,7 +15,7 @@ public class MeansItem {
     @SerializedName("code")
     private String msMeanCode = "";
     @SerializedName("name")
-    private String name = "";
+    private String msMeanName = "";
     @SerializedName("request_time")
     private String msMeanHCall = null;
     @SerializedName("arriving_time")
@@ -44,7 +44,7 @@ public class MeansItem {
             return false;
         if (msMeanCode != null ? !msMeanCode.equals(meansItem.msMeanCode) : meansItem.msMeanCode != null)
             return false;
-        if (name != null ? !name.equals(meansItem.name) : meansItem.name != null)
+        if (msMeanName != null ? !msMeanName.equals(meansItem.msMeanName) : meansItem.msMeanName != null)
             return false;
         if (msMeanHCall != null ? !msMeanHCall.equals(meansItem.msMeanHCall) : meansItem.msMeanHCall != null)
             return false;
@@ -82,12 +82,12 @@ public class MeansItem {
         this.msMeanCode = msMeanCode;
     }
 
-    public String getName() {
-        return name;
+    public String getMsMeanName() {
+        return msMeanName;
     }
 
-    public void setName(String msMeanLib) {
-        this.name = msMeanLib;
+    public void setMsMeanName(String msMeanName) {
+        this.msMeanName = msMeanName;
     }
 
     public String getMsMeanHCall() {
