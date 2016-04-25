@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd /root/myrepo/drone-project/projet-middle;
+mvn package;
+java -jar projet-middle-1.0.0.jar &
