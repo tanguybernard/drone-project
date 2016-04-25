@@ -80,6 +80,10 @@ public class Intervention {
 
     }
 
+    public List<MeansItem> getWays() {
+        return ways;
+    }
+
     public Intervention(){
 
     }

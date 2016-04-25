@@ -54,9 +54,11 @@
     <string name="btn_cancel">Annuler</string>
     <string name="lbl_add_mean">Ajouter un moyen</string>
     <string name="lbl_edit_mean">Modifier un moyen</string>
-    <integer name="IDX_CODE">0</integer>
-    <integer name="IDX_H_CALL">1</integer>
-    <integer name="IDX_H_ARRIV">2</integer>
-    <integer name="IDX_H_ENGAGED">3</integer>
-    <integer name="IDX_H_FREE">4</integer>
+    <integer name="IDX_ID">0</integer>
+    <integer name="IDX_CODE">1</integer>
+    <integer name="IDX_NAME">2</integer>
+    <integer name="IDX_H_CALL">3</integer>
+    <integer name="IDX_H_ARRIV">4</integer>
+    <integer name="IDX_H_ENGAGED">5</integer>
+    <integer name="IDX_H_FREE">6</integer>
 </resources>
