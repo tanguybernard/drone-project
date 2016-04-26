@@ -87,4 +87,45 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
+    <TextView android:id="@+id/cosLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dateLabel"
+        android:text="Cos: "
+        android:textColor="#0041c4"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView android:id="@+id/cos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/cosLabel"
+        android:layout_alignBottom="@+id/cosLabel"
+        android:layout_toRightOf="@+id/cosLabel"
+        android:text=""
+        android:textStyle="bold"
+        android:textColor="#b30707"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dévenir COS"
+        android:id="@+id/btndevenirCos"
+        android:layout_below="@+id/cosLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Libérer COS"
+        android:id="@+id/btnlibererCos"
+        android:layout_below="@+id/cosLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
 </RelativeLayout>
