@@ -65,8 +65,8 @@ public class MeanGRAPHICALGen implements BITMAPGen {
         Canvas canvas = new Canvas();
         /**   Draw Text  **/
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        //textPaint.setColor(color);
-        textPaint.setColor(Color.BLUE);
+        textPaint.setColor(Color.parseColor(color));
+        //textPaint.setColor(Color.BLUE);
         textPaint.setFakeBoldText(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(30);
@@ -92,8 +92,8 @@ public class MeanGRAPHICALGen implements BITMAPGen {
 
         /**   Draw Border  **/
         Paint dashPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        //dashPaint.setColor(color);
-        dashPaint.setColor(Color.BLACK);
+        dashPaint.setColor(Color.parseColor(color));
+        //dashPaint.setColor(Color.BLACK);
         dashPaint.setStyle(Paint.Style.STROKE);
         dashPaint.setStrokeWidth(8);
         if(dashed) {
