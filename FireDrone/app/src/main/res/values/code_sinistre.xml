@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="code_sinistre">
-        <item>Feu de foret</item>
-        <item>Incident</item>
-        <item>Malaise</item>
-        <item>Accident Gaz</item>
+        <item>FDF</item>
+        <item>INC</item>
+        <item>SAP</item>
     </string-array>
 </resources>
