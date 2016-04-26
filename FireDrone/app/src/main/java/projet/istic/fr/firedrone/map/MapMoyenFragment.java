@@ -108,6 +108,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             public void success(List<Sig> sigs, Response response) {
 
                 listSIG = sigs;
+                //si google map existe déjà on place les sig
                 if(googleMap != null){
                     createSIG();
                 }

@@ -2,10 +2,12 @@ package projet.istic.fr.firedrone.service;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
+import projet.istic.fr.firedrone.model.DefaultWay;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
@@ -18,6 +20,8 @@ import retrofit.client.Response;
  * Created by ramage on 26/04/16.
  */
 public class MeansItemService {
+
+    private static List<DefaultWay> listDefaultWays ;
 
     public static List<MeansItem> addMean(MeansItem meansItem) {
         final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
@@ -55,5 +59,36 @@ public class MeansItemService {
             }
         });
         return oIntervention.getWays();
+    }
+
+    public static void createListDefaultWay(){
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
+                .build();
+
+        final MeansAPI meansAPI = restAdapter.create(MeansAPI.class);
+
+        meansAPI.getWay(new Callback<List<DefaultWay>>() {
+            @Override
+            public void success(List<DefaultWay> meansItems, Response response) {
+                listDefaultWays = meansItems;
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
+    }
+
+    public static List<MeansItem> getListDefaultMeansItem(){
+        List<MeansItem> listMeansItem = new ArrayList<>();
+        for( DefaultWay defautWay : listDefaultWays){
+            MeansItem meansItem = new MeansItem();
+            meansItem.setMsMeanName(defautWay.getAcronyme());
+            meansItem.setMsColor(defautWay.getColor());
+            listMeansItem.add(meansItem);
+        }
+        return listMeansItem;
     }
 }

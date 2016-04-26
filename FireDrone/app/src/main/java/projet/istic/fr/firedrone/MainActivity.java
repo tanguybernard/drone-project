@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
+import projet.istic.fr.firedrone.service.MeansItemService;
 
 public class MainActivity extends AppCompatActivity
         implements TowerListener{
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MeansItemService.createListDefaultWay();
 
         fragmentFiche = FicheFragment.getInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche).addToBackStack("detailFragment").commit();

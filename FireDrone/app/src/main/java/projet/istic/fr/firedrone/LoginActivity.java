@@ -19,9 +19,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 import projet.istic.fr.firedrone.Interceptor.Interceptor;
+import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.ModelAPI.UserApi;
+import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.User;
+import projet.istic.fr.firedrone.service.MeansItemService;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -116,8 +121,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         String basicAuth = "Basic " + Base64.encodeToString(String.format("%s:%s", "drone_android", "4ndr01d").getBytes(), Base64.NO_WRAP);
-
-
 
         final UserApi userApi = restAdapter.create(UserApi.class);
         userApi.connectUser(basicAuth, login, password, "password", new Callback<User>() {
