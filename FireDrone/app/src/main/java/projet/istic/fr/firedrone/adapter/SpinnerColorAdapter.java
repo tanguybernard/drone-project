@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.model.MoyenInterventionItem;
 
 /**
  * Created by tbernard on 24/04/16.
@@ -21,8 +22,9 @@ class SpinnerColorAdapter extends BaseAdapter
     List<Integer> colors;
     List<String> names;
     Context context;
+    List<MoyenInterventionItem> listData;
 
-    public SpinnerColorAdapter(Context context)
+    public SpinnerColorAdapter(Context context, List<MoyenInterventionItem> listData)
     {
         this.context=context;
         colors=new ArrayList<Integer>();

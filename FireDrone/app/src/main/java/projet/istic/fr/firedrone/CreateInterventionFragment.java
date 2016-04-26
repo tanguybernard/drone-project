@@ -41,9 +41,12 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
+import projet.istic.fr.firedrone.ModelAPI.DefaultWaysSinisterApi;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.MoyenListAdapter;
 import projet.istic.fr.firedrone.model.CoordinateItem;
+import projet.istic.fr.firedrone.model.DefaultSinister;
+import projet.istic.fr.firedrone.model.DefaultSinisterGroupWays;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
@@ -104,52 +107,14 @@ public class CreateInterventionFragment extends Fragment {
 
                 Spinner spinner = (Spinner)view.findViewById(R.id.codeSinistreList);
                 String text = spinner.getSelectedItem().toString();
-                System.out.println(text);
 
-                if(text.equals("Incident")){
-                    System.out.println("Incident ");
-                    ArrayList image_details = getListData();
-                    final ListView lv1 = (ListView) view.findViewById(R.id.moyenListView);
-
-
-                    MoyenListAdapter moyenListAdapter = new MoyenListAdapter(getContext(), image_details);
-
-                    lv1.setAdapter(moyenListAdapter);
-
-
-                    lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                        @Override
-                        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                            Object o = lv1.getItemAtPosition(position);
-                            MoyenInterventionItem newsData = (MoyenInterventionItem) o;
-                        }
-                    });
-                }
-
-                else if(text.equals("Feu de foret")){
-                    ArrayList image_details = getListData();
-                    final ListView lv1 = (ListView) view.findViewById(R.id.moyenListView);
-
-                    lv1.setAdapter(new MoyenListAdapter(getContext(), image_details));
-                    lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                        @Override
-                        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                            Object o = lv1.getItemAtPosition(position);
-                            MoyenInterventionItem newsData = (MoyenInterventionItem) o;
-                        }
-                    });
-                }
-
-                view.findViewById(R.id.moyenListView).setVisibility(View.VISIBLE);
-
+                getListData(view,text);
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
+                System.out.println("nothing selected");
             }
 
         });
@@ -263,22 +228,67 @@ public class CreateInterventionFragment extends Fragment {
      *
      * @return list data of an interventions
      */
-    private ArrayList getListData() {
-        ArrayList<MoyenInterventionItem> results = new ArrayList<MoyenInterventionItem>();
+    private ArrayList<MoyenInterventionItem> getListData(final View view, final String sinisterCode) {
 
-        String[] values = getResources().getStringArray(R.array.moyens);
+        final ArrayList<MoyenInterventionItem> results = new ArrayList<MoyenInterventionItem>();
 
-        MoyenInterventionItem newsData;
 
-        for (String value :values
-             ) {
-            newsData = new MoyenInterventionItem();
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
 
-            newsData.setName(value);
-            newsData.setQuantity(2);
-            results.add(newsData);
+        DefaultWaysSinisterApi sinisterApi = restAdapter.create(DefaultWaysSinisterApi.class);
 
-        }
+
+        sinisterApi.getSinisters(new Callback<List<DefaultSinister>>() {
+
+            @Override
+            public void success(List<DefaultSinister> sinisters, Response response) {
+
+                MoyenInterventionItem newsData;
+                for (DefaultSinister sinister :sinisters
+                     ) {
+                    if (sinisterCode.equals(sinister.getCode())){
+                        for (DefaultSinisterGroupWays sinisterGroup: sinister.getGroupWays()) {
+
+                            newsData = new MoyenInterventionItem();
+
+                            newsData.setName(sinisterGroup.getAcronym());
+                            newsData.setQuantity(sinisterGroup.getCount());
+                            newsData.setColor(sinisterGroup.getColor());
+                            results.add(newsData);
+
+
+
+                        }
+                    }
+
+                }
+                final ListView lv1 = (ListView) view.findViewById(R.id.moyenListView);
+
+
+                MoyenListAdapter moyenListAdapter = new MoyenListAdapter(getContext(), results);
+
+                lv1.setAdapter(moyenListAdapter);
+                lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                        Object o = lv1.getItemAtPosition(position);
+                        MoyenInterventionItem newsData = (MoyenInterventionItem) o;
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                System.out.println(error.getMessage());
+            }
+        });
+
 
 
         // Add some more dummy data for testing

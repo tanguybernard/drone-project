@@ -1,5 +1,8 @@
 package projet.istic.fr.firedrone.ModelAPI;
 
+import java.util.List;
+
+import projet.istic.fr.firedrone.model.DefaultSinister;
 import projet.istic.fr.firedrone.model.DefaultWay;
 import projet.istic.fr.firedrone.model.Intervention;
 import retrofit.http.GET;
@@ -12,7 +15,7 @@ public interface DefaultWaysSinisterApi {
 
 
     @GET("/sinister")
-    public void getDefaultWays(@Path("queryId") String queryParam, retrofit.Callback<DefaultWay> response);
+    public void getSinisters(retrofit.Callback<List<DefaultSinister>> response);
 
 
 }

@@ -21,11 +21,12 @@ import projet.istic.fr.firedrone.model.MoyenInterventionItem;
  * Created by tbernard on 18/04/16.
  */
 public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
-    private ArrayList<Intervention> listData;
+    private List<MoyenInterventionItem> listData;
     private LayoutInflater layoutInflater;
 
     public MoyenListAdapter(Context aContext, List<MoyenInterventionItem> listData) {
         super(aContext,0,listData);
+        this.listData =listData;
         //layoutInflater = LayoutInflater.from(aContext);
     }
 
@@ -49,7 +50,7 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
 
         final Spinner spinner = (Spinner) convertView.findViewById(R.id.colorMeanSpinner);
 
-        spinner.setAdapter(new SpinnerColorAdapter(this.getContext()));
+        spinner.setAdapter(new SpinnerColorAdapter(this.getContext(), listData));
 
 
         subQuantity.setOnClickListener(new View.OnClickListener() {
