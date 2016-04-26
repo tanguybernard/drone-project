@@ -19,10 +19,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import projet.istic.fr.firedrone.FiredroneConstante;
+import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
+import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.adapter.MoyenMapPanelListAdapter;
 import projet.istic.fr.firedrone.adapter.PointListAdapter;
+import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
+import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by ramage on 20/04/16.
@@ -38,7 +48,7 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
     private PointListAdapter pointListAdapter;
 
     private List<MeansItem> listMoyens;
-    private List<MeansItem> listMoyensNonPlacer;
+    private List<MeansItem> listMoyensNonPlacer = new ArrayList<>();
 
     private MeansItem itemSelected;
     private EnumPointType pointTypeSelected;
@@ -58,7 +68,7 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
         mapMoyenFragment = new MapMoyenFragment();
 
         Bundle args = new Bundle();
-        args.putSerializable("panel",this);
+        args.putSerializable("panel", this);
         mapMoyenFragment.setArguments(args);
 
         getChildFragmentManager().beginTransaction().replace(R.id.content_map_moyen, mapMoyenFragment).commit();
@@ -69,15 +79,17 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
         listViewMoyen = (ListView) view.findViewById(R.id.panel_moyen_to_add);
         listViewPoint = (ListView) view.findViewById(R.id.panel_point_to_add);
 
-        //BOUCHON
-        MeansItem moyenItem = new MeansItem();
-        moyenItem.setMsMeanCode("TEST");
-        MeansItem moyenItem2 = new MeansItem();
-        moyenItem2.setMsMeanId("1");
-        moyenItem2.setMsMeanCode("VLC");
 
-        listMoyens = new ArrayList<>( Arrays.asList(moyenItem, moyenItem2));
-        listMoyensNonPlacer = new ArrayList<>( Arrays.asList(moyenItem, moyenItem2));
+        //BOUCHON
+        Intervention intervention = InterventionSingleton.getInstance().getIntervention();
+
+        listMoyens = MeansItemService.getListDefaultMeansItem();
+        //parcours de toutes les moyens de l'intervention pour trouver ceux qui ne sont pas encore placés et pas encore libéré
+        for(MeansItem moyenInter :intervention.getWays()) {
+            if((moyenInter.getMsLongitude() == null ||moyenInter.getMsLatitude() == null || moyenInter.getMsLatitude().equals("") || moyenInter.getMsLongitude().equals("") )&& moyenInter.getMsMeanHFree()==null){
+                listMoyensNonPlacer.add(moyenInter);
+            }
+        }
 
         refreshLayoutDemdande();
 
@@ -161,8 +173,10 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
     private void refreshLayoutDemdande(){
         if(listMoyensNonPlacer != null && listMoyensNonPlacer.size() > 0){
             layoutDemande.setVisibility(View.VISIBLE);
+            layoutDemande.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,6));
         }else{
             layoutDemande.setVisibility(View.INVISIBLE);
+            layoutDemande.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
     }
 

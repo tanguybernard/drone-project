@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
@@ -19,6 +17,7 @@ import java.util.Collection;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
+import projet.istic.fr.firedrone.service.MeansItemService;
 
 public class MainActivity extends AppCompatActivity
         implements TowerListener{
@@ -64,6 +63,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        MeansItemService.createListDefaultWay();
+
         fragmentFiche = FicheFragment.getInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche).addToBackStack("detailFragment").commit();
 
@@ -106,6 +107,10 @@ public class MainActivity extends AppCompatActivity
         boolean usingControlDrone = false;
         Fragment fragment = null;
         switch (item.getItemId()) {
+            case R.id.nav_liste:
+                fragmentFiche = FicheFragment.getInstance();
+                fragment = fragmentFiche;
+                break;
             case R.id.nav_details:
                 detailsFragment = DetailsInterventionFragment.getInstance();
                 fragment = detailsFragment;

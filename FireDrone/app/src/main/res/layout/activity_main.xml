@@ -14,13 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
     />
-<<<<<<< HEAD
-=======
+
     <!-- Transparent view => SOLVE BUG MAP ABOVE MENU -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
->>>>>>> ca73baf750e525fd687d8245e76886f9faf48a90
 
 
     <android.support.design.widget.NavigationView

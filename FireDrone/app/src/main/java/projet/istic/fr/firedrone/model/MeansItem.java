@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class MeansItem {
 
-    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
-
     @SerializedName("id")
     private String msMeanId = "";
     @SerializedName("code")
@@ -44,7 +42,7 @@ public class MeansItem {
     @SerializedName("latitude")
     private String msLatitude = "";
     @SerializedName("color")
-    private String msColor = "";
+    private String msColor;
     @SerializedName("groupId")
     private String msGroupeId = "";
 
@@ -73,7 +71,7 @@ public class MeansItem {
             return false;
         if (msLatitude != null ? !msLatitude.equals(meansItem.msLatitude) : meansItem.msLatitude != null)
             return false;
-        if (msColor != null ? !msColor.equals(meansItem.msColor) : meansItem.msColor != null)
+        if (msColor == meansItem.msColor)
             return false;
         return !(msGroupeId != null ? !msGroupeId.equals(meansItem.msGroupeId) : meansItem.msGroupeId != null);
 
@@ -180,9 +178,9 @@ public class MeansItem {
         return msMeanId;
     }
 
-
     public MeansItem clone() {
         MeansItem clone = new MeansItem();
+        clone.setMsMeanId(this.msMeanId);
         clone.setMsMeanCode(this.msMeanCode);
         clone.setMsMeanHEngaged(this.msMeanHEngaged);
         clone.setMsMeanHArriv(this.msMeanHArriv);
@@ -191,43 +189,5 @@ public class MeansItem {
         clone.setMsMeanHFree(this.msMeanHFree);
         clone.setMsMeanName(this.msMeanName);
         return clone;
-    }
-
-    public List<MeansItem> addMean() {
-        final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
-        String sIntervId = oIntervention.getId();
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
-        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
-        meansApi.AddMean(sIntervId, this, new Callback<List<MeansItem>>() {
-            @Override
-            public void success(List<MeansItem> ploMeans, Response response) {
-                oIntervention.setWays(ploMeans);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("CONNEXION ERROR", error.getMessage());
-            }
-        });
-        return oIntervention.getWays();
-    }
-
-    public List<MeansItem> editMean() {
-        final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
-        String sIntervId = oIntervention.getId();
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
-        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
-        meansApi.EditMean(sIntervId, this, new Callback<List<MeansItem>>() {
-            @Override
-            public void success(List<MeansItem> ploMeans, Response response) {
-                oIntervention.setWays(ploMeans);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("CONNEXION ERROR", error.getMessage());
-            }
-        });
-        return oIntervention.getWays();
     }
 }

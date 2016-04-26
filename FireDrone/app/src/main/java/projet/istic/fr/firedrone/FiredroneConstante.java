@@ -7,5 +7,5 @@ import java.text.SimpleDateFormat;
  */
 public class FiredroneConstante {
     public static final String END_POINT= "http://m2gla-drone.istic.univ-rennes1.fr:8080";
-    public static final SimpleDateFormat DATE_FORMAT= new SimpleDateFormat("yyyyMMddHH mm");
+    public static final SimpleDateFormat DATE_FORMAT= new SimpleDateFormat("yyyyMMdd HHmm");
 }

@@ -35,6 +35,8 @@ import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.Sig;
+import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -107,6 +109,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             public void success(List<Sig> sigs, Response response) {
 
                 listSIG = sigs;
+                //si google map existe déjà on place les sig
                 if(googleMap != null){
                     createSIG();
                 }
@@ -209,6 +212,18 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         if(listSIG != null) {
             createSIG();
         }
+
+        //placement des moyens qui sont sur la carte
+        List<MeansItem> moyens = InterventionSingleton.getInstance().getIntervention().getWays();
+        if(moyens != null) {
+            //parcours de tous les moyens pour trouvés ceux déjà positionné sur la carte
+            for (MeansItem moyen : moyens) {
+                if (moyen.getMsLatitude() != null && !moyen.getMsLatitude().equals("") && moyen.getMsLongitude() != null && !moyen.getMsLongitude().equals("")) {
+                    //on ajoute le moyen à la carte
+                    addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
+                }
+            }
+        }
     }
 
     private void createSIG(){
@@ -248,14 +263,18 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         moyenItemSelected = null;
     }
 
+    private Marker addMeansOnMap(MeansItem meansItem,LatLng latLng){
+        return googleMap.addMarker(new MarkerOptions()
+                .position(latLng).draggable(true)
+                .icon(BitmapDescriptorFactory.fromResource(meansItem.getResource())));
+    }
+
     @Override
     public void onMapClick(LatLng latLng) {
         //si un moyen a été sélectionné
         if(moyenItemSelected != null) {
-            Marker marker = googleMap.addMarker(new MarkerOptions()
-                            .position(latLng).draggable(true)
-                            .icon(BitmapDescriptorFactory.fromResource(moyenItemSelected.getResource())));
             MeansItem meansItemCloned = moyenItemSelected.clone();
+            Marker marker =addMeansOnMap(meansItemCloned,latLng );
             mapMeansItem.put(marker, meansItemCloned);
             meansItemCloned.setMsLatitude(String.valueOf(latLng.latitude));
             meansItemCloned.setMsLongitude(String.valueOf(latLng.longitude));
@@ -265,11 +284,15 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 meansItemCloned.setMsMeanHCall(FiredroneConstante.DATE_FORMAT.format(newDate));
             }
 
+
             //on supprime l'item du panel après l'avoir ajouté
             if(itemToRemove){
                panelMapMoyenFragment.removeItem(moyenItemSelected);
+                MeansItemService.editMean(meansItemCloned);
                 //on le met à nulle
-                moyenItemSelected = null;
+                moyenItemSelected = null;;
+            }else{
+                MeansItemService.addMean(meansItemCloned);
             }
         }else if(enumPointTypeSelected != null){
             googleMap.addMarker(new MarkerOptions().position(latLng).draggable(true).icon(BitmapDescriptorFactory.fromResource(enumPointTypeSelected.getResource())));
@@ -300,14 +323,17 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         Date newDate = new Date();
         if(moyenItem.getMsMeanHArriv() == null){
             moyenItem.setMsMeanHArriv(FiredroneConstante.DATE_FORMAT.format(newDate));
+            MeansItemService.editMean(moyenItem);
             setFrontMap(true);
         }else{
             if(moyenItem.getMsMeanHEngaged() == null){
                 moyenItem.setMsMeanHEngaged(FiredroneConstante.DATE_FORMAT.format(newDate));
+                MeansItemService.editMean(moyenItem);
                 setFrontMap(true);
             }else{
                 if(moyenItem.getMsMeanHFree() == null){
                     moyenItem.setMsMeanHFree(FiredroneConstante.DATE_FORMAT.format(newDate));
+                    MeansItemService.editMean(moyenItem);
                     setFrontMap(true);
                     markerSelected.remove();
                     mapMeansItem.remove(moyenItem);

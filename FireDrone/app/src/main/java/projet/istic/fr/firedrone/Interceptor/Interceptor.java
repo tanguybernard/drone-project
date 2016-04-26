@@ -1,5 +1,6 @@
 package projet.istic.fr.firedrone.Interceptor;
 
+import projet.istic.fr.firedrone.FiredroneConstante;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
@@ -24,7 +25,7 @@ public class Interceptor {
 
     /**Un adapter */
     private RestAdapter restAdapter = new RestAdapter.Builder()
-            .setEndpoint(END_POINT)
+            .setEndpoint(FiredroneConstante.END_POINT)
             .setRequestInterceptor(requestInterceptor)
             .build();
 

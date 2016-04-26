@@ -2,7 +2,6 @@ package projet.istic.fr.firedrone;
 
 import android.os.Bundle;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -15,6 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import projet.istic.fr.firedrone.model.Intervention;
@@ -28,13 +28,10 @@ public class MapInterventionFragment extends SupportMapFragment implements
         private GoogleMap myMap;
 
 
-        //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
+        //ensemble des marqueurs, clé : identifiant du marqueur, valeur : marqueur
         private Map<String, Marker> listMarkers = null;
 
-        private ArrayList<Intervention> listInter = new ArrayList<Intervention>();
-
-        //private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
-
+        private List<Intervention> listInter = new ArrayList<Intervention>();
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -47,79 +44,106 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
 
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady(final GoogleMap googleMap) {
             //passage en mode Earth (avec les routes)
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             myMap = googleMap;
 
             //Sert à définir les limites de l'ensemble des marqueurs
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-/**
-            //Parcours de la liste des interventions
-            for(int i = 0; i < listInter.size(); i++) {
-                //Si on a bien une latitude et une longitude, on met le marqueur
-                if((listInter.get(i).getLatitude() != null) && (listInter.get(i).getLongitude() != null)) {
-                    //Cast de la latitude et de la longitude
-                    Double latitude = Double.parseDouble(listInter.get(i).getLatitude());
-                    Double longitude = Double.parseDouble(listInter.get(i).getLongitude());
 
-                    //Nouvel objet LatLng
-                    LatLng coordonnees = new LatLng(latitude, longitude);
+            //Boolean pour vérifier si on a au moins une intervention avec des coordonnées correctes
+            //pour ne pas faire planter le builder au moment du build
+            boolean verifInter = false;
 
-                    //On récupère la référence pour l'afficher dans l'infobulle du marqueur
-                    String refInter = listInter.get(i).getId();
+            //Si la liste est vide, on met les coordonnées de l'Ille-et-Vilaine
+            if(listInter.isEmpty()) {
 
-                    // TODO : Récupérer d'autres infos à mettre dans l'infobulle (voir tuto google)
-                    // TODO : Gérer la sélection d'un marqueur et mettre en évidence dans la liste (et inversement)
+                final LatLng coordIlle = new LatLng(48.2292016, -1.5300694999999678);
+                //Zoom sur la zone des marqueurs
+                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                    @Override
+                    public void onMapLoaded() {
+                        myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordIlle, 8));
+                    }
+                });
 
-                    //Définition du marqueur
-                    MarkerOptions marker = new MarkerOptions().position(coordonnees).title(refInter);
+            }
+            else {
+                //Parcours de la liste des interventions
+                for (int i = 0; i < listInter.size(); i++) {
+                    //Si on a bien une latitude et une longitude, on met le marqueur
+                    if ((listInter.get(i).getLatitude() != null) && (listInter.get(i).getLongitude() != null)) {
+                        //Cast de la latitude et de la longitude
+                        try {
+                            Double latitude = Double.parseDouble(listInter.get(i).getLatitude());
+                            Double longitude = Double.parseDouble(listInter.get(i).getLongitude());
 
-                    //Ajout du marqueur
-                    myMap.addMarker(marker);
+                            //Nouvel objet LatLng
+                            LatLng coordonnees = new LatLng(latitude, longitude);
 
-                    //Récupération de sa position pour déterminer le zoom sur les interventions
-                    builder.include(marker.getPosition());
+                            //On récupère la référence pour l'afficher dans l'infobulle du marqueur
+                            String refInter = listInter.get(i).getId();
+
+                            // TODO : Récupérer d'autres infos à mettre dans l'infobulle (voir tuto google)
+                            // TODO : Gérer la sélection d'un marqueur et mettre en évidence dans la liste (et inversement)
+
+                            //Définition du marqueur
+                            MarkerOptions marker = new MarkerOptions().position(coordonnees).title(refInter);
+
+                            //Ajout du marqueur
+                            myMap.addMarker(marker);
+
+                            //Récupération de sa position pour déterminer le zoom sur les interventions
+                            builder.include(coordonnees);
+
+                            //J'ai au moins une intervention avec de bonnes coordonnées
+                            verifInter = true;
+
+                        } catch (NumberFormatException e) {
+                            System.out.println("Coordonnées fausses");
+                        }
+                    }
                 }
 
-                //A supprimer après, le temps d'avoir des valeurs de latitude et longitude en base
-                else{
-                    MarkerOptions marker1 = new MarkerOptions().position(new LatLng(48.122834, -1.655931)).title("intervention 1 Chat dans l'arbre");
-                    myMap.addMarker(marker1);
-
-                    MarkerOptions marker2 = new MarkerOptions().position(new LatLng(48.134597 , -1.647305)).title("intervention 2 Parc des gayeulles");
-                    myMap.addMarker(marker2);
-
-                    MarkerOptions marker3 = new MarkerOptions().position(new LatLng(48.115434, -1.638722)).title("intervention 3 ISTIC");
-                    myMap.addMarker(marker3);
-
-                    builder.include(marker1.getPosition());
-                    builder.include(marker2.getPosition());
-                    builder.include(marker3.getPosition());
-
+                //Si la vérification de l'existence d'une coordonnée est bonne
+                if(verifInter = true) {
+                    //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
+                    final LatLngBounds bounds = builder.build();
+                    //Définition du padding autour des marqueurs
+                    final int padding = 30;
+                    //Zoom sur la zone des marqueurs
+                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
+                            myMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+                        }
+                    });
+                }
+                //Sinon on met l'Ille-et-Vilaine si pas d'adresse valide
+                else {
+                    final LatLng coordIlle = new LatLng(48.2292016, -1.5300694999999678);
+                    //Zoom sur la zone des marqueurs
+                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
+                            myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordIlle, 8));
+                        }
+                    });
                 }
             }
-
-            //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
-            LatLngBounds bounds = builder.build();
-            //Définition du padding autour des marqueurs
-            int padding = 100;
-            //Zoom sur la zone des marqueurs
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-            googleMap.moveCamera(cu);*/
         }
 
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-
     }
 
-    public ArrayList<Intervention> getListInter() {
+    public List<Intervention> getListInter() {
         return listInter;
     }
 
-    public void setListInter(ArrayList<Intervention> listInter) {
+    public void setListInter(List<Intervention> listInter) {
         this.listInter = listInter;
     }
 }
