@@ -65,4 +65,6 @@
     <integer name="IDX_H_ENGAGED">5</integer>
     <integer name="IDX_H_FREE">6</integer>
     <string name="END_POINT">"http://m2gla-drone.istic.univ-rennes1.fr:8080"</string>
+    <string name="home">Home</string>
+    <string name="liste">liste des interventions</string>
 </resources>
