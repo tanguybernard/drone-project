@@ -77,6 +77,7 @@ public class MeansItemService {
 
             @Override
             public void failure(RetrofitError error) {
+
             }
         });
     }
