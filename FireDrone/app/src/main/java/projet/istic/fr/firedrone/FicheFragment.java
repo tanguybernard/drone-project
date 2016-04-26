@@ -105,6 +105,8 @@ public class FicheFragment extends Fragment {
         });
 
 
+
+
         return view;
     }
 
@@ -128,6 +130,7 @@ public class FicheFragment extends Fragment {
             @Override
             public void success(List<Intervention> interventions, Response response) {
                 results.addAll(interventions);
+
             }
 
             @Override
