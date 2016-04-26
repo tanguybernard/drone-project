@@ -183,7 +183,9 @@ public class CreateInterventionFragment extends Fragment {
             TextView quantityStr = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_quantity);
 
             Spinner spinner1=(Spinner)listView.getChildAt(i).findViewById(R.id.colorMeanSpinner);
-            System.out.println(spinner1.getSelectedItem().toString());
+            String text = spinner1.getSelectedItem().toString();
+            System.out.println("JOJO");
+            System.out.println(text);
 
             int quantity = Integer.parseInt(quantityStr.getText().toString());
 
