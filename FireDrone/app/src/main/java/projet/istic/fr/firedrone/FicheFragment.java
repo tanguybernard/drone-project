@@ -15,10 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +26,6 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 /**
  * Created by nduquesne on 18/03/16.
@@ -55,7 +50,7 @@ public class FicheFragment extends Fragment {
         FrameLayout frame = (FrameLayout) view.findViewById(R.id.interventionMapAddress);
 
         //Création de la liste et affichage dans la listview
-        List image_details = getListData();
+        List<Intervention> image_details = getListData();
 
         final ListView lv1 = (ListView) view.findViewById(R.id.interventionList);
 
@@ -144,6 +139,7 @@ public class FicheFragment extends Fragment {
         return results;
     }
 
+    //Méthode de vérification de la connexion wifi
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
