@@ -229,7 +229,7 @@ public class CreateInterventionFragment extends Fragment {
     public void requestNewIntervention(Intervention intervention){
 
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(END_POINT)
+                .setEndpoint(FiredroneConstante.END_POINT)
                 .build();
 
         //POST a new intervention
