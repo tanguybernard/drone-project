@@ -47,6 +47,7 @@ import projet.istic.fr.firedrone.model.CoordinateItem;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
+import projet.istic.fr.firedrone.service.ColorNameService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -175,6 +176,7 @@ public class CreateInterventionFragment extends Fragment {
 
         List<MeansItem> meansItemList = new ArrayList<MeansItem>();
         int count = listView.getChildCount();
+
         for (int i=0; i<count; i++) {
 
             TextView t = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_name);
@@ -188,6 +190,7 @@ public class CreateInterventionFragment extends Fragment {
             for(int q=0;q<quantity;q++){
                 MeansItem meansItem = new MeansItem();
                 meansItem.setMsMeanName((String) t.getText()+q);
+                meansItem.setMsColor(ColorNameService.getColor(spinner1.getSelectedItem().toString()));
                 meansItemList.add(meansItem);
             }
 
