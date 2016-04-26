@@ -83,6 +83,7 @@ public class FicheFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
@@ -112,7 +113,7 @@ public class FicheFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-
+                System.out.println(error.getMessage());
             }
         });
 

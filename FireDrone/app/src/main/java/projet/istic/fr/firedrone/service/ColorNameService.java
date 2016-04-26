@@ -7,21 +7,21 @@ public class ColorNameService {
 
 
 
-    public static int getColor(String name){
+    public static String getColor(String name){
 
-        int hexaColor;
+        String hexaColor;
         switch (name){
 
             case "INCENDIE":
-                hexaColor = 0XFFCC0000;
+                hexaColor = "#FFCC0000";
                 break;
             case "SAP":
-                hexaColor = 0XFF669900;
+                hexaColor = "#FF669900";
                 break;
             case "EAU":
-                hexaColor = 0XFF33B5E5;
+                hexaColor = "#FF33B5E5";
                 break;
-            default: hexaColor = 0XFFFFFF;
+            default: hexaColor = "#FFFFFF";
                 break;
 
         }

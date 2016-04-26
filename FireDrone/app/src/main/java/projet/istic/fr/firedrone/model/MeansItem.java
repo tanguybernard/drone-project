@@ -42,7 +42,7 @@ public class MeansItem {
     @SerializedName("latitude")
     private String msLatitude = "";
     @SerializedName("color")
-    private int msColor;
+    private String msColor;
     @SerializedName("groupId")
     private String msGroupeId = "";
 
@@ -157,11 +157,11 @@ public class MeansItem {
         this.msLatitude = msLatitude;
     }
 
-    public int getMsColor() {
+    public String getMsColor() {
         return msColor;
     }
 
-    public void setMsColor(int msColor) {
+    public void setMsColor(String msColor) {
         this.msColor = msColor;
     }
 
@@ -180,6 +180,7 @@ public class MeansItem {
 
     public MeansItem clone() {
         MeansItem clone = new MeansItem();
+        clone.setMsMeanId(this.msMeanId);
         clone.setMsMeanCode(this.msMeanCode);
         clone.setMsMeanHEngaged(this.msMeanHEngaged);
         clone.setMsMeanHArriv(this.msMeanHArriv);

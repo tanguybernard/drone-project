@@ -1,7 +1,6 @@
 package projet.istic.fr.firedrone.map;
 
 import projet.istic.fr.firedrone.R;
-import projet.istic.fr.firedrone.model.CouleurMoyen;
 
 /**
  * Created by ramage on 25/04/16.
