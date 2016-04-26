@@ -5,13 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import projet.istic.fr.firedrone.FicheFragment;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.Intervention;
 
@@ -35,8 +33,9 @@ public class CustomListAdapter extends ArrayAdapter<Intervention> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.intervention_infos, null);
             holder = new ViewHolder();
             holder.myId = (TextView) convertView.findViewById(R.id.myId);
-            holder.codeSinistre = (TextView) convertView.findViewById(R.id.codeSinistre);
-            holder.adress = (TextView) convertView.findViewById(R.id.adress);
+            holder.sinisterCode = (TextView) convertView.findViewById(R.id.codeSinistre);
+            holder.address = (TextView) convertView.findViewById(R.id.address);
+            holder.date = (TextView) convertView.findViewById(R.id.dateText);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -44,14 +43,16 @@ public class CustomListAdapter extends ArrayAdapter<Intervention> {
 
         holder.myId.setText(item.getId());
         //holder.codeSinistre.setText("By, " + listData.get(position).getCodeSinistre());
-        holder.codeSinistre.setText(item.getSinisterCode());
-        holder.adress.setText(item.getAddress());
+        holder.sinisterCode.setText(item.getSinisterCode());
+        holder.address.setText(item.getAddress());
+        holder.date.setText(item.getDate());
         return convertView;
     }
 
     static class ViewHolder {
         TextView myId;
-        TextView codeSinistre;
-        TextView adress;
+        TextView sinisterCode;
+        TextView address;
+        TextView date;
     }
 }

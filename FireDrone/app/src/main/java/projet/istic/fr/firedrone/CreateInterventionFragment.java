@@ -22,24 +22,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.vision.barcode.Barcode;
 
-import org.w3c.dom.Document;
-
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
 
 import projet.istic.fr.firedrone.ModelAPI.DefaultWaysSinisterApi;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
@@ -63,11 +50,11 @@ public class CreateInterventionFragment extends Fragment {
     public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
     public static final String GEO_API="http://maps.googleapis.com/maps/api/geocode/xml?address=";
 
-    private static FicheFragment INSTANCE;
+    private static InterventionsListFragment INSTANCE;
 
-    public static FicheFragment getInstance() {
+    public static InterventionsListFragment getInstance() {
         if(INSTANCE == null){
-            INSTANCE = new FicheFragment();
+            INSTANCE = new InterventionsListFragment();
         }
         return INSTANCE;
     }

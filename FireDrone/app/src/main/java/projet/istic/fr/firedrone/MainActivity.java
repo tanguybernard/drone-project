@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     private DroneListenerEvent droneListenerEvent;
 
     private TabMapFragment fragmentDrawPath;
-    private FicheFragment fragmentFiche;
+    private InterventionsListFragment fragmentFiche;
     private DetailsInterventionFragment detailsFragment;
 
     private MoyenFragment fragmentMoyen;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
 
         MeansItemService.createListDefaultWay();
 
-        fragmentFiche = FicheFragment.getInstance();
+        fragmentFiche = InterventionsListFragment.getInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche).addToBackStack("detailFragment").commit();
 
 
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_liste:
-                fragmentFiche = FicheFragment.getInstance();
+                fragmentFiche = InterventionsListFragment.getInstance();
                 fragment = fragmentFiche;
                 break;
             case R.id.nav_details:
