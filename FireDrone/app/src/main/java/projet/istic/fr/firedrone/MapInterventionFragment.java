@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import projet.istic.fr.firedrone.model.Intervention;
@@ -31,7 +32,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
         //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
         private Map<String, Marker> listMarkers = null;
 
-        private ArrayList<Intervention> listInter = new ArrayList<Intervention>();
+        private List<Intervention> listInter = new ArrayList<Intervention>();
 
         //private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
 
@@ -115,11 +116,11 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
     }
 
-    public ArrayList<Intervention> getListInter() {
+    public List<Intervention> getListInter() {
         return listInter;
     }
 
-    public void setListInter(ArrayList<Intervention> listInter) {
+    public void setListInter(List<Intervention> listInter) {
         this.listInter = listInter;
     }
 }
