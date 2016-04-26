@@ -114,14 +114,30 @@ public class MoyenFragment extends Fragment {
         table.setColumnCollapsed(1, true);
     }
 
+    public int getCodeIndex(TableLayout poTable, String psCode) {
+        int iResult = 0;
+        if (poTable.getChildCount() > 0) {
+            for (int iRow = 0; iRow < poTable.getChildCount(); iRow++) {
+                TableRow oRow = (TableRow) poTable.getChildAt(iRow);
+                String sCode = ((TextView) oRow.getChildAt(getResources().getInteger(R.integer.IDX_CODE))).getText().toString();
+                if (psCode.equals(sCode)) {
+                    iResult++;
+                }
+            }
+        }
+        return iResult;
+    }
+
     public void addMean(String[] psHours, boolean pbSend) {
-        // TODO Add final code number
         for (int idxTime = getResources().getInteger(R.integer.IDX_H_CALL); idxTime < psHours.length; idxTime++) {
             if (psHours[idxTime] != null && !psHours[idxTime].isEmpty()) {
                 psHours[idxTime] = psHours[idxTime].split(" ")[1];
             }
         }
+
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
+        int iCodeIndex = getCodeIndex(table, psHours[getResources().getInteger(R.integer.IDX_NAME)]);
+        psHours[getResources().getInteger(R.integer.IDX_NAME)] = psHours[getResources().getInteger(R.integer.IDX_NAME)] + String.valueOf(iCodeIndex);
         TableRow element = addRow(psHours, false, Color.BLACK); // TODO Get Mean Color
         final int rowIdx = table.getChildCount();
         element.setOnClickListener(new View.OnClickListener() {
