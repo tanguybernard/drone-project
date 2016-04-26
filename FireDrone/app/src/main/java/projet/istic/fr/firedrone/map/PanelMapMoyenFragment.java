@@ -19,10 +19,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import projet.istic.fr.firedrone.FiredroneConstante;
+import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
+import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.adapter.MoyenMapPanelListAdapter;
 import projet.istic.fr.firedrone.adapter.PointListAdapter;
+import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
+import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by ramage on 20/04/16.
@@ -58,7 +68,7 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
         mapMoyenFragment = new MapMoyenFragment();
 
         Bundle args = new Bundle();
-        args.putSerializable("panel",this);
+        args.putSerializable("panel", this);
         mapMoyenFragment.setArguments(args);
 
         getChildFragmentManager().beginTransaction().replace(R.id.content_map_moyen, mapMoyenFragment).commit();
@@ -70,14 +80,10 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
         listViewPoint = (ListView) view.findViewById(R.id.panel_point_to_add);
 
         //BOUCHON
-        MeansItem moyenItem = new MeansItem();
-        moyenItem.setMsMeanCode("TEST");
-        MeansItem moyenItem2 = new MeansItem();
-        moyenItem2.setMsMeanId("1");
-        moyenItem2.setMsMeanCode("VLC");
+        Intervention intervention = InterventionSingleton.getInstance().getIntervention();
 
-        listMoyens = new ArrayList<>( Arrays.asList(moyenItem, moyenItem2));
-        listMoyensNonPlacer = new ArrayList<>( Arrays.asList(moyenItem, moyenItem2));
+        listMoyens = MeansItemService.getListDefaultMeansItem();
+        listMoyensNonPlacer = intervention.getWays();
 
         refreshLayoutDemdande();
 

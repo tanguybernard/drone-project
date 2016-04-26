@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import projet.istic.fr.firedrone.model.Intervention;
@@ -28,7 +29,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
         //ensemble des marqueurs, clé : identifiant du marqueur, valeur : marqueur
         private Map<String, Marker> listMarkers = null;
 
-        private ArrayList<Intervention> listInter = new ArrayList<Intervention>();
+        private List<Intervention> listInter = new ArrayList<Intervention>();
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -103,11 +104,11 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
     }
 
-    public ArrayList<Intervention> getListInter() {
+    public List<Intervention> getListInter() {
         return listInter;
     }
 
-    public void setListInter(ArrayList<Intervention> listInter) {
+    public void setListInter(List<Intervention> listInter) {
         this.listInter = listInter;
     }
 }
