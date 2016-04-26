@@ -180,6 +180,7 @@ public class MeansItem {
 
     public MeansItem clone() {
         MeansItem clone = new MeansItem();
+        clone.setMsMeanId(this.msMeanId);
         clone.setMsMeanCode(this.msMeanCode);
         clone.setMsMeanHEngaged(this.msMeanHEngaged);
         clone.setMsMeanHArriv(this.msMeanHArriv);

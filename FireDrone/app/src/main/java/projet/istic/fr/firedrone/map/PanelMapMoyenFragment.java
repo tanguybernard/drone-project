@@ -48,7 +48,7 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
     private PointListAdapter pointListAdapter;
 
     private List<MeansItem> listMoyens;
-    private List<MeansItem> listMoyensNonPlacer;
+    private List<MeansItem> listMoyensNonPlacer = new ArrayList<>();
 
     private MeansItem itemSelected;
     private EnumPointType pointTypeSelected;
@@ -79,11 +79,17 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
         listViewMoyen = (ListView) view.findViewById(R.id.panel_moyen_to_add);
         listViewPoint = (ListView) view.findViewById(R.id.panel_point_to_add);
 
+
         //BOUCHON
         Intervention intervention = InterventionSingleton.getInstance().getIntervention();
 
         listMoyens = MeansItemService.getListDefaultMeansItem();
-        listMoyensNonPlacer = intervention.getWays();
+        //parcours de toutes les moyens de l'intervention pour trouver ceux qui ne sont pas encore placés et pas encore libéré
+        for(MeansItem moyenInter :intervention.getWays()) {
+            if((moyenInter.getMsLongitude() == null ||moyenInter.getMsLatitude() == null || moyenInter.getMsLatitude().equals("") || moyenInter.getMsLongitude().equals("") )&& moyenInter.getMsMeanHFree()==null){
+                listMoyensNonPlacer.add(moyenInter);
+            }
+        }
 
         refreshLayoutDemdande();
 
@@ -167,8 +173,10 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
     private void refreshLayoutDemdande(){
         if(listMoyensNonPlacer != null && listMoyensNonPlacer.size() > 0){
             layoutDemande.setVisibility(View.VISIBLE);
+            layoutDemande.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,6));
         }else{
             layoutDemande.setVisibility(View.INVISIBLE);
+            layoutDemande.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
     }
 
