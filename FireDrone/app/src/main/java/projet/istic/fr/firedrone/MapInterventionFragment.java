@@ -2,13 +2,11 @@ package projet.istic.fr.firedrone;
 
 import android.os.Bundle;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -32,9 +30,6 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
         private ArrayList<Intervention> listInter = new ArrayList<Intervention>();
 
-        //private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
-
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -52,7 +47,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
             myMap = googleMap;
 
             //Sert à définir les limites de l'ensemble des marqueurs
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            //LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             MarkerOptions marker;
 
@@ -81,37 +76,25 @@ public class MapInterventionFragment extends SupportMapFragment implements
                         myMap.addMarker(marker);
 
                         //Récupération de sa position pour déterminer le zoom sur les interventions
-                        builder.include(coordonnees);
+                        //builder.include(coordonnees);
                     }
                     catch(NumberFormatException e) {
                         System.out.println("Coordonnées fausses");
                     }
                 }
-
-                //A supprimer après, le temps d'avoir des valeurs de latitude et longitude en base
-                else {
-
-                    //Nouvel objet LatLng
-                    LatLng coordIlle = new LatLng(48.2292016, -1.5300694999999678);
-
-                    builder.include(coordIlle);
-
-                }
             }
 
-            //if (builder != null) {
-                //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
-                final LatLngBounds bounds = builder.build();
-                //Définition du padding autour des marqueurs
-                final int padding = 0;
-                //Zoom sur la zone des marqueurs
-                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-                    }
-                });
-            //}
+            //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
+            /*final LatLngBounds bounds = builder.build();
+            //Définition du padding autour des marqueurs
+            final int padding = 0;
+            //Zoom sur la zone des marqueurs
+            googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                @Override
+                public void onMapLoaded() {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+                }
+            });*/
         }
 
 
