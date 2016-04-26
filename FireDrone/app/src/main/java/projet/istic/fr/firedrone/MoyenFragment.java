@@ -18,6 +18,7 @@ import java.util.List;
 
 import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.model.MeansItem;
+import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -143,7 +144,7 @@ public class MoyenFragment extends Fragment {
             oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_ARRIV)]);
             oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
             oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_FREE)]);
-            oNewMean.addMean();
+            MeansItemService.addMean(oNewMean);
         }
     }
 
@@ -178,7 +179,7 @@ public class MoyenFragment extends Fragment {
                 colIdx = element.getChildCount() + 1;
             }
         }
-        oMean.editMean();
+        MeansItemService.editMean(oMean);
     }
 
     public void getMeans() {

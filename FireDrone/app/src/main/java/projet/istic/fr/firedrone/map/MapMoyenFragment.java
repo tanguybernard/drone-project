@@ -35,6 +35,7 @@ import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.Sig;
+import projet.istic.fr.firedrone.service.MeansItemService;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -265,11 +266,15 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 meansItemCloned.setMsMeanHCall(FiredroneConstante.DATE_FORMAT.format(newDate));
             }
 
+
             //on supprime l'item du panel après l'avoir ajouté
             if(itemToRemove){
                panelMapMoyenFragment.removeItem(moyenItemSelected);
+                MeansItemService.editMean(moyenItemSelected);
                 //on le met à nulle
-                moyenItemSelected = null;
+                moyenItemSelected = null;;
+            }else{
+                MeansItemService.addMean(meansItemCloned);
             }
         }else if(enumPointTypeSelected != null){
             googleMap.addMarker(new MarkerOptions().position(latLng).draggable(true).icon(BitmapDescriptorFactory.fromResource(enumPointTypeSelected.getResource())));
