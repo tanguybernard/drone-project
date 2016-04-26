@@ -51,11 +51,11 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
     private transient List<MeansItem> listMoyensNonPlacer = new ArrayList<>();
 
     private transient MeansItem itemSelected;
-    private EnumPointType pointTypeSelected;
+    private transient EnumPointType pointTypeSelected;
 
-    private AdapterView<?> adapterViewDefault;
-    private AdapterView<?> adapterViewAdd;
-    private AdapterView<?> adapterViewPoint;
+    private transient AdapterView<?> adapterViewDefault;
+    private transient AdapterView<?> adapterViewAdd;
+    private transient AdapterView<?> adapterViewPoint;
 
     private transient MapMoyenFragment mapMoyenFragment;
 
