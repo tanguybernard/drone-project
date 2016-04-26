@@ -112,7 +112,7 @@ public class FicheFragment extends Fragment {
      *
      * @return list data of in progress interventions
      */
-    private List getListData() {
+    private List<Intervention> getListData() {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
@@ -121,7 +121,7 @@ public class FicheFragment extends Fragment {
 
         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
 
-        final List<Intervention> results = new ArrayList<>();
+        final List<Intervention> results = new ArrayList<Intervention>();
 
         interventionAPI.getIntervention("IN_PROGRESS", new Callback<List<Intervention>>() {
 
