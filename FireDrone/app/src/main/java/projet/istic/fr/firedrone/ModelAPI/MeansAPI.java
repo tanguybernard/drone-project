@@ -13,6 +13,7 @@ import retrofit.http.Path;
  * Created by christophe on 21/04/16.
  */
 public interface MeansAPI {
+
     @GET("/intervention/{intervId}/way")
     public void GetMeans(@Path("intervId") String psIntervQuery,retrofit.Callback<List<MeansItem>> response);
 

@@ -3,10 +3,10 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_fiche"
+            android:id="@+id/nav_details"
             android:icon="@drawable/ic_menu_camera"
             android:checked="true"
-            android:title="@string/fiche" />
+            android:title="@string/details" />
         <item
             android:id="@+id/nav_moyen"
             android:icon="@drawable/ic_menu_gallery"
@@ -23,10 +23,6 @@
                 android:id="@+id/nav_directive"
                 android:icon="@drawable/ic_menu_share"
                 android:title="@string/directive" />
-            <item
-                android:id="@+id/nav_plan"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/planning" />
             <item
                 android:id="@+id/nav_parcours"
                 android:icon="@drawable/ic_menu_send"
