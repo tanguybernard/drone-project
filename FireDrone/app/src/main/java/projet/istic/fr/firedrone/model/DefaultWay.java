@@ -10,21 +10,21 @@ public class DefaultWay {
     @SerializedName("code")
     private Long code;
 
-    @SerializedName("acronyme")
-    private String acronyme;
+    @SerializedName("acronym")
+    private String acronym;
 
     @SerializedName("name")
     private String name;
 
     @SerializedName("color")
-    private String color;
+    private int color;
 
-    public String getAcronyme() {
-        return acronyme;
+    public String getAcronym() {
+        return acronym;
     }
 
-    public void setAcronyme(String acronyme) {
-        this.acronyme = acronyme;
+    public void setAcronym(String acronyme) {
+        this.acronym = acronyme;
     }
 
     public String getName() {
@@ -35,11 +35,11 @@ public class DefaultWay {
         this.name = name;
     }
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(int color) {
         this.color = color;
     }
 

@@ -42,7 +42,7 @@ public class MeansItem {
     @SerializedName("latitude")
     private String msLatitude = "";
     @SerializedName("color")
-    private String msColor = "";
+    private int msColor;
     @SerializedName("groupId")
     private String msGroupeId = "";
 
@@ -71,7 +71,7 @@ public class MeansItem {
             return false;
         if (msLatitude != null ? !msLatitude.equals(meansItem.msLatitude) : meansItem.msLatitude != null)
             return false;
-        if (msColor != null ? !msColor.equals(meansItem.msColor) : meansItem.msColor != null)
+        if (msColor == meansItem.msColor)
             return false;
         return !(msGroupeId != null ? !msGroupeId.equals(meansItem.msGroupeId) : meansItem.msGroupeId != null);
 
@@ -157,11 +157,11 @@ public class MeansItem {
         this.msLatitude = msLatitude;
     }
 
-    public String getMsColor() {
+    public int getMsColor() {
         return msColor;
     }
 
-    public void setMsColor(String msColor) {
+    public void setMsColor(int msColor) {
         this.msColor = msColor;
     }
 

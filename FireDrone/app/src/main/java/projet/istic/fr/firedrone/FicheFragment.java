@@ -15,10 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +26,6 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 /**
  * Created by nduquesne on 18/03/16.
@@ -38,6 +33,8 @@ import retrofit.mime.TypedByteArray;
 public class FicheFragment extends Fragment {
 
     private static FicheFragment INSTANCE;
+
+    View view = null;
 
     public static FicheFragment getInstance() {
         if(INSTANCE == null){
@@ -48,38 +45,15 @@ public class FicheFragment extends Fragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
-
-
-        final View view = inflater.inflate(R.layout.intervention_main, container, false);
-
-        FrameLayout frame = (FrameLayout) view.findViewById(R.id.interventionMapAddress);
+        
+        view = inflater.inflate(R.layout.intervention_main, container, false);
 
         //Création de la liste et affichage dans la listview
-        List image_details = getListData();
+        List<Intervention> image_details = getListData(view);
 
         final ListView lv1 = (ListView) view.findViewById(R.id.interventionList);
 
         lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
-
-        //Test de la connexion de la tablette au réseau
-        if (isOnline() == true) {
-            //Replace de la frame par google map
-            MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
-
-            //On envoi la liste des interventions que l'on a récupérée de la base
-            mapInterventionFragment.setListInter(image_details);
-
-            FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
-            transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
-        }
-        //Si pas de connexion wifi
-        else {
-            TextView notConnected = new TextView(getActivity());
-            notConnected.setText("Vous n'avez pas de connexion internet, la map ne peut pas s'afficher");
-
-            frame.addView(notConnected);
-        }
-
 
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -117,7 +91,7 @@ public class FicheFragment extends Fragment {
      *
      * @return list data of in progress interventions
      */
-    private List getListData() {
+    private List<Intervention> getListData(final View view) {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
@@ -126,13 +100,15 @@ public class FicheFragment extends Fragment {
 
         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
 
-        final List<Intervention> results = new ArrayList<>();
+        final List<Intervention> results = new ArrayList<Intervention>();
 
         interventionAPI.getIntervention("IN_PROGRESS", new Callback<List<Intervention>>() {
 
             @Override
             public void success(List<Intervention> interventions, Response response) {
                 results.addAll(interventions);
+                //Si success, appel de méthode de génération de la map avec la liste des interventions
+                GenerateMap(results, view);
             }
 
             @Override
@@ -144,6 +120,34 @@ public class FicheFragment extends Fragment {
         return results;
     }
 
+    //Méthode de génération de la google map à la place du FrameLayout de la liste d'intervention
+    public void GenerateMap(List<Intervention> listInter, View view){
+
+        FrameLayout frame = (FrameLayout) view.findViewById(R.id.interventionMapAddress);
+
+        //Test de la connexion de la tablette au réseau
+        if (isOnline() == true) {
+            //Replace de la frame par google map
+            MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
+
+            //On envoi la liste des interventions que l'on a récupérée de la base
+            mapInterventionFragment.setListInter(listInter);
+
+            FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
+            transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
+        }
+        //Si pas de connexion wifi
+        else {
+            TextView notConnected = new TextView(getActivity());
+            notConnected.setText("Vous n'avez pas de connexion internet, la map ne peut pas s'afficher");
+
+            frame.addView(notConnected);
+        }
+    }
+
+
+
+    //Méthode de vérification de la connexion wifi
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
