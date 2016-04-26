@@ -123,6 +123,21 @@ public class MoyenAlertDialog extends DialogFragment {
             }
         }
     }
+
+    public int getCodeIndex(TableLayout poTable, String psCode) {
+        int iResult = 0;
+        if (poTable.getChildCount() > 0) {
+            for (int iRow = 0; iRow < poTable.getChildCount(); iRow++) {
+                TableRow oRow = (TableRow) poTable.getChildAt(iRow);
+                String sCode = ((TextView) oRow.getChildAt(getResources().getInteger(R.integer.IDX_CODE))).getText().toString();
+                if (psCode.equals(sCode)) {
+                    iResult++;
+                }
+            }
+        }
+        return iResult;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -143,6 +158,10 @@ public class MoyenAlertDialog extends DialogFragment {
                 c.setTimeInMillis(System.currentTimeMillis());
                 Date hDate = c.getTime();
                 SimpleDateFormat dFormat = new SimpleDateFormat("yyyyMMdd");
+
+                int iCodeIndex = getCodeIndex(moTable, sNewMean);
+                sNewMean = sNewMean + String.valueOf(iCodeIndex);
+
                 if (sError.equals(NO_ERROR)) {
                     MoyenFragment moyen = MoyenFragment.getInstance();
                     String[] tsHours = new String[getResources().getInteger(R.integer.IDX_H_FREE) + 1];

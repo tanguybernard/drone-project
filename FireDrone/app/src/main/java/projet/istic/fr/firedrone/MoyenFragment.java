@@ -81,10 +81,15 @@ public class MoyenFragment extends Fragment {
     private TableRow addRow(String[] plsValues, boolean pbHeader, int piColor) {
         TableRow element = new TableRow(getContext());
 
+        FormView oColorView = new FormView(getContext(), null);
+
         for (int iView = 0; iView < plsValues.length; iView++) {
             TextView tvColumn = new TextView(getContext());
+            if (iView == getResources().getInteger(R.integer.IDX_CODE)) {
+                tvColumn = oColorView;
+            }
             tvColumn.setText(plsValues[iView]);
-            if (iView < getResources().getInteger(R.integer.IDX_NAME)) {
+            if (iView < getResources().getInteger(R.integer.IDX_CODE)) {
                 tvColumn.setVisibility(View.INVISIBLE);
             }
             tvColumn.setGravity(Gravity.CENTER);
@@ -112,21 +117,7 @@ public class MoyenFragment extends Fragment {
         TableRow element = addRow(columnHeaders, true, -1);
         table.addView(element);
         table.setColumnCollapsed(0, true);
-        table.setColumnCollapsed(1, true);
-    }
-
-    public int getCodeIndex(TableLayout poTable, String psCode) {
-        int iResult = 0;
-        if (poTable.getChildCount() > 0) {
-            for (int iRow = 0; iRow < poTable.getChildCount(); iRow++) {
-                TableRow oRow = (TableRow) poTable.getChildAt(iRow);
-                String sCode = ((TextView) oRow.getChildAt(getResources().getInteger(R.integer.IDX_CODE))).getText().toString();
-                if (psCode.equals(sCode)) {
-                    iResult++;
-                }
-            }
-        }
-        return iResult;
+        //table.setColumnCollapsed(1, true);
     }
 
     public void addMean(String[] psHours, boolean pbSend) {
@@ -137,8 +128,6 @@ public class MoyenFragment extends Fragment {
         }
 
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
-        int iCodeIndex = getCodeIndex(table, psHours[getResources().getInteger(R.integer.IDX_NAME)]);
-        psHours[getResources().getInteger(R.integer.IDX_NAME)] = psHours[getResources().getInteger(R.integer.IDX_NAME)] + String.valueOf(iCodeIndex);
         TableRow element = addRow(psHours, false, Color.BLACK); // TODO Get Mean Color
         final int rowIdx = table.getChildCount();
         element.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +191,11 @@ public class MoyenFragment extends Fragment {
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
         table.removeAllViews();
         loadTable();
+        if (oIntervention.getIntervention().getWays() == null) {
+            Log.d("NOWAY", "Pas de moyen dans l'intervention " + oIntervention.getIntervention().getId());
+        } else {
+            Log.d("WAYS", String.valueOf(oIntervention.getIntervention().getWays().size()));
+        }
         List<MeansItem> loMeans = oIntervention.getIntervention().getWays();
         if (loMeans != null && loMeans.size() > 0) {
             table.removeAllViews();
