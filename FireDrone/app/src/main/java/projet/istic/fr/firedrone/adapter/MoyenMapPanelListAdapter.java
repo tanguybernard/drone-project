@@ -32,7 +32,9 @@ public class MoyenMapPanelListAdapter extends ArrayAdapter<MeansItem> {
         // Lookup view for data population
         ImageView image = (ImageView) convertView.findViewById(R.id.item_map_moyen);
         // Populate the data into the template view using the data object
-        image.setImageResource(moyen.getResource());
+
+        //image.setImageResource(moyen.getResource());
+        image.setImageBitmap(moyen.getDashedBitmap(true));
 
         // Return the completed view to render on screen
         return convertView;

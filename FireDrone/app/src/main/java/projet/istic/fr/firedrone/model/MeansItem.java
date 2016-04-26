@@ -1,5 +1,7 @@
 package projet.istic.fr.firedrone.model;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 
@@ -7,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.graphic.impl.MeanGRAPHICALGen;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -141,6 +144,20 @@ public class MeansItem {
         }
         return R.drawable.drone_36_36;
     }
+
+
+
+    /**
+     * TODO: MICKAEL
+     *
+     * @return
+     */
+    public Bitmap getDashedBitmap(boolean dashed) {
+        MeanGRAPHICALGen generator = new MeanGRAPHICALGen(msMeanCode, msMeanName, msColor);
+        Bitmap bitmap = generator.getDashedBitMap(dashed);
+        return bitmap;
+    }
+
     public String getMsLongitude() {
         return msLongitude;
     }
