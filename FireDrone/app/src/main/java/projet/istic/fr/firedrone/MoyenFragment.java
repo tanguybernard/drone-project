@@ -77,7 +77,7 @@ public class MoyenFragment extends Fragment {
         });
     }
 
-    private TableRow addRow(String[] plsValues, boolean pbHeader) {
+    private TableRow addRow(String[] plsValues, boolean pbHeader, int piColor) {
         TableRow element = new TableRow(getContext());
 
         for (int iView = 0; iView < plsValues.length; iView++) {
@@ -93,7 +93,11 @@ public class MoyenFragment extends Fragment {
                 tvColumn.setTextColor(Color.WHITE);
             } else {
                 tvColumn.setBackgroundColor(Color.LTGRAY);
-                tvColumn.setTextColor(Color.BLACK);
+                if (iView == getResources().getInteger(R.integer.IDX_NAME)) {
+                    tvColumn.setTextColor(piColor);
+                } else {
+                    tvColumn.setTextColor(Color.BLACK);
+                }
             }
             element.addView(tvColumn);
         }
@@ -104,20 +108,21 @@ public class MoyenFragment extends Fragment {
         final String [] columnHeaders = {"", "", "Moyens", "Demandé à", "Arrivé à", "Engagé à", "Libéré à"};
 
         TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
-        TableRow element = addRow(columnHeaders, true);
+        TableRow element = addRow(columnHeaders, true, -1);
         table.addView(element);
         table.setColumnCollapsed(0, true);
         table.setColumnCollapsed(1, true);
     }
 
     public void addMean(String[] psHours, boolean pbSend) {
+        // TODO Add final code number
         for (int idxTime = getResources().getInteger(R.integer.IDX_H_CALL); idxTime < psHours.length; idxTime++) {
             if (psHours[idxTime] != null && !psHours[idxTime].isEmpty()) {
                 psHours[idxTime] = psHours[idxTime].split(" ")[1];
             }
         }
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
-        TableRow element = addRow(psHours, false);
+        TableRow element = addRow(psHours, false, Color.BLACK); // TODO Get Mean Color
         final int rowIdx = table.getChildCount();
         element.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +143,7 @@ public class MoyenFragment extends Fragment {
             oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_ARRIV)]);
             oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
             oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_FREE)]);
-            sendMean(oNewMean, true);
+            oNewMean.addMean();
         }
     }
 
@@ -173,7 +178,7 @@ public class MoyenFragment extends Fragment {
                 colIdx = element.getChildCount() + 1;
             }
         }
-        sendMean(oMean, false);
+        oMean.editMean();
     }
 
     public void getMeans() {
@@ -194,38 +199,6 @@ public class MoyenFragment extends Fragment {
                         oMean.getMsMeanHFree()};
                 addMean(sHours, false);
             }
-        }
-    }
-
-    public void sendMean(MeansItem poMean, boolean pbAdd) {
-        final String sIntervId = oIntervention.getIntervention().getId();
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
-        final View oView = this.mView;
-        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
-        if (pbAdd) {
-            meansApi.AddMean(sIntervId, poMean, new Callback<List<MeansItem>>() {
-                @Override
-                public void success(List<MeansItem> ploMeans, Response response) {
-                    oIntervention.getIntervention().setWays(ploMeans);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e("CONNEXION ERROR", error.getMessage());
-                }
-            });
-        } else {
-            meansApi.EditMean(sIntervId, poMean, new Callback<List<MeansItem>>() {
-                @Override
-                public void success(List<MeansItem> ploMeans, Response response) {
-                    oIntervention.getIntervention().setWays(ploMeans);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e("CONNEXION ERROR", error.getMessage());
-                }
-            });
         }
     }
 }

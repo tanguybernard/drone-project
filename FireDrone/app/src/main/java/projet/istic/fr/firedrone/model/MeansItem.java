@@ -1,14 +1,29 @@
 package projet.istic.fr.firedrone.model;
 
+import android.util.Log;
+import android.view.View;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by christophe on 19/04/16.
  */
 public class MeansItem {
+
+    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
 
     @SerializedName("id")
     private String msMeanId = "";
@@ -163,5 +178,43 @@ public class MeansItem {
 
     public String getMsMeanId() {
         return msMeanId;
+    }
+
+    public List<MeansItem> addMean() {
+        final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
+        String sIntervId = oIntervention.getId();
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
+        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
+        meansApi.AddMean(sIntervId, this, new Callback<List<MeansItem>>() {
+            @Override
+            public void success(List<MeansItem> ploMeans, Response response) {
+                oIntervention.setWays(ploMeans);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("CONNEXION ERROR", error.getMessage());
+            }
+        });
+        return oIntervention.getWays();
+    }
+
+    public List<MeansItem> editMean() {
+        final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
+        String sIntervId = oIntervention.getId();
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
+        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
+        meansApi.EditMean(sIntervId, this, new Callback<List<MeansItem>>() {
+            @Override
+            public void success(List<MeansItem> ploMeans, Response response) {
+                oIntervention.setWays(ploMeans);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("CONNEXION ERROR", error.getMessage());
+            }
+        });
+        return oIntervention.getWays();
     }
 }
