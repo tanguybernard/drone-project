@@ -1,6 +1,7 @@
 package projet.istic.fr.firedrone.adapter;
 
 import android.content.Context;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import projet.istic.fr.firedrone.R;
 
@@ -16,8 +18,8 @@ import projet.istic.fr.firedrone.R;
  */
 class SpinnerColorAdapter extends BaseAdapter
 {
-    ArrayList<Integer> colors;
-    ArrayList<String> names;
+    List<Integer> colors;
+    List<String> names;
     Context context;
 
     public SpinnerColorAdapter(Context context)

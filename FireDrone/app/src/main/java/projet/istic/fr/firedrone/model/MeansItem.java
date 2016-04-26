@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class MeansItem {
 
-    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
-
     @SerializedName("id")
     private String msMeanId = "";
     @SerializedName("code")
@@ -180,41 +178,15 @@ public class MeansItem {
         return msMeanId;
     }
 
-    public List<MeansItem> addMean() {
-        final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
-        String sIntervId = oIntervention.getId();
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
-        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
-        meansApi.AddMean(sIntervId, this, new Callback<List<MeansItem>>() {
-            @Override
-            public void success(List<MeansItem> ploMeans, Response response) {
-                oIntervention.setWays(ploMeans);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("CONNEXION ERROR", error.getMessage());
-            }
-        });
-        return oIntervention.getWays();
-    }
-
-    public List<MeansItem> editMean() {
-        final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
-        String sIntervId = oIntervention.getId();
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
-        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
-        meansApi.EditMean(sIntervId, this, new Callback<List<MeansItem>>() {
-            @Override
-            public void success(List<MeansItem> ploMeans, Response response) {
-                oIntervention.setWays(ploMeans);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("CONNEXION ERROR", error.getMessage());
-            }
-        });
-        return oIntervention.getWays();
+    public MeansItem clone() {
+        MeansItem clone = new MeansItem();
+        clone.setMsMeanCode(this.msMeanCode);
+        clone.setMsMeanHEngaged(this.msMeanHEngaged);
+        clone.setMsMeanHArriv(this.msMeanHArriv);
+        clone.setMsColor(this.msColor);
+        clone.setMsMeanHCall(this.msMeanHCall);
+        clone.setMsMeanHFree(this.msMeanHFree);
+        clone.setMsMeanName(this.msMeanName);
+        return clone;
     }
 }

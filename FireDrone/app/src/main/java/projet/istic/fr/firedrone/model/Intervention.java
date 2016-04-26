@@ -96,5 +96,4 @@ public class Intervention {
         this.status = status;
 
     }
-
 }

@@ -39,7 +39,6 @@ public class TabMapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_map, container, false);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-
         pagerAdapter = new PagerAdapterMap(getChildFragmentManager());
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);

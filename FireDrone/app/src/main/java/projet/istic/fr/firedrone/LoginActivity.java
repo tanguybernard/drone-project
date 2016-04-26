@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passField;
     private Button loginButton;
 
-    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -111,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final User user;
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(END_POINT)
+                .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
                 .build();
 

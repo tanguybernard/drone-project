@@ -66,15 +66,6 @@ public class MapDroneFragment extends SupportMapFragment implements
     //marqueur du drône
     Marker markerDrone;
 
-    private static MapDroneFragment INSTANCE;
-
-    public static MapDroneFragment getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new MapDroneFragment();
-        }
-        return INSTANCE;
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
