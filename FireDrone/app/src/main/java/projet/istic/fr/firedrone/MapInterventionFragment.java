@@ -52,6 +52,10 @@ public class MapInterventionFragment extends SupportMapFragment implements
             //Sert à définir les limites de l'ensemble des marqueurs
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+            //Boolean pour vérifier si on a au moins une intervention avec des coordonnées correctes
+            //pour ne pas faire planter le builder au moment du build
+            boolean verifInter = false;
+
             //Si la liste est vide, on met les coordonnées de l'Ille-et-Vilaine
             if(listInter.isEmpty()) {
 
@@ -92,24 +96,41 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
                             //Récupération de sa position pour déterminer le zoom sur les interventions
                             builder.include(coordonnees);
+
+                            //J'ai au moins une intervention avec de bonnes coordonnées
+                            verifInter = true;
+
                         } catch (NumberFormatException e) {
                             System.out.println("Coordonnées fausses");
                         }
                     }
                 }
 
-                //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
-                final LatLngBounds bounds = builder.build();
-                //Définition du padding autour des marqueurs
-                final int padding = 0;
-                //Zoom sur la zone des marqueurs
-                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-                    }
-                });
-
+                //Si la vérification de l'existence d'une coordonnée est bonne
+                if(verifInter = true) {
+                    //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
+                    final LatLngBounds bounds = builder.build();
+                    //Définition du padding autour des marqueurs
+                    final int padding = 30;
+                    //Zoom sur la zone des marqueurs
+                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+                        }
+                    });
+                }
+                //Sinon on met l'Ille-et-Vilaine si pas d'adresse valide
+                else {
+                    final LatLng coordIlle = new LatLng(48.2292016, -1.5300694999999678);
+                    //Zoom sur la zone des marqueurs
+                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordIlle, 8));
+                        }
+                    });
+                }
             }
         }
 
