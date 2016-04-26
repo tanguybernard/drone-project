@@ -64,7 +64,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
                 googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordIlle, 8));
+                        myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordIlle, 8));
                     }
                 });
 
@@ -116,7 +116,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
                     googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                         @Override
                         public void onMapLoaded() {
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+                            myMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
                         }
                     });
                 }
@@ -127,7 +127,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
                     googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                         @Override
                         public void onMapLoaded() {
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordIlle, 8));
+                            myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordIlle, 8));
                         }
                     });
                 }
@@ -137,7 +137,6 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-
     }
 
     public List<Intervention> getListInter() {
