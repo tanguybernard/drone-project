@@ -170,7 +170,7 @@ public class CreateInterventionFragment extends Fragment {
         intervention.setSinisterCode(sinisterCode);
         intervention.setDate(currentDateandTime);
         intervention.setAddress(addressInter.getText().toString());
-        intervention.setStatus("IN_PROGRESS");
+        intervention.setStatus("IN_PROGRESS");// put status of intervention
         try {
             CoordinateItem coordinateItem = getLocationFromAddress(addressInter.getText().toString());
 
@@ -182,7 +182,6 @@ public class CreateInterventionFragment extends Fragment {
         }
 
         requestNewIntervention(intervention);
-
 
 
     }
@@ -241,6 +240,8 @@ public class CreateInterventionFragment extends Fragment {
         DefaultWaysSinisterApi sinisterApi = restAdapter.create(DefaultWaysSinisterApi.class);
 
 
+
+
         sinisterApi.getSinisters(new Callback<List<DefaultSinister>>() {
 
             @Override
@@ -250,21 +251,46 @@ public class CreateInterventionFragment extends Fragment {
                 for (DefaultSinister sinister :sinisters
                      ) {
                     if (sinisterCode.equals(sinister.getCode())){
-                        for (DefaultSinisterGroupWays sinisterGroup: sinister.getGroupWays()) {
 
-                            newsData = new MoyenInterventionItem();
 
-                            newsData.setName(sinisterGroup.getAcronym());
-                            newsData.setQuantity(sinisterGroup.getCount());
-                            newsData.setColor(sinisterGroup.getColor());
-                            results.add(newsData);
+                        String[] moyens = getResources().getStringArray(R.array.moyens);
+                        for (String a:moyens
+                             ) {
+                            boolean find = false;
+                            for (DefaultSinisterGroupWays sinisterGroup: sinister.getGroupWays()) {
 
+                                System.out.println(a);
+                                if (a.equals(sinisterGroup.getAcronym())) {
+                                    find=true;
+                                    newsData = new MoyenInterventionItem();
+
+                                    newsData.setName(sinisterGroup.getAcronym());
+                                    newsData.setQuantity(sinisterGroup.getCount());
+                                    newsData.setColor(sinisterGroup.getColor());
+                                    results.add(newsData);
+                                }
+
+
+
+                            }
+                            if(!find){
+                                newsData = new MoyenInterventionItem();
+
+                                newsData.setName(a);
+                                newsData.setQuantity(0);
+                                newsData.setColor("#0FFF");
+                                results.add(newsData);
+
+                            }
 
 
                         }
+
+
                     }
 
                 }
+
                 final ListView lv1 = (ListView) view.findViewById(R.id.moyenListView);
 
 
@@ -297,8 +323,11 @@ public class CreateInterventionFragment extends Fragment {
     }
 
 
-
-
+    /**
+     * get location from address
+     * @param strAddress
+     * @return coordinate of location
+     */
     public CoordinateItem getLocationFromAddress(String strAddress){
 
         Geocoder coder = new Geocoder(getContext());

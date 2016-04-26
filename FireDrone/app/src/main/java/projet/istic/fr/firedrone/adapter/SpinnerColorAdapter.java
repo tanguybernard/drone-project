@@ -49,7 +49,7 @@ class SpinnerColorAdapter extends BaseAdapter
     @Override
     public Object getItem(int arg0)
     {
-        return colors.get(arg0);
+        return names.get(arg0);
     }
     @Override
     public long getItemId(int arg0)
