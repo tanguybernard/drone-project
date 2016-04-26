@@ -17,7 +17,7 @@ public class DefaultWay {
     private String name;
 
     @SerializedName("color")
-    private String color;
+    private int color;
 
     public String getAcronym() {
         return acronym;
@@ -35,11 +35,11 @@ public class DefaultWay {
         this.name = name;
     }
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(int color) {
         this.color = color;
     }
 
