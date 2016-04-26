@@ -1,5 +1,8 @@
 package projet.istic.fr.firedrone;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,28 +48,39 @@ public class FicheFragment extends Fragment {
         return INSTANCE;
     }
 
-
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
 
 
-        final View view = inflater.inflate(R.layout.intervention_main,container,false);
+        final View view = inflater.inflate(R.layout.intervention_main, container, false);
+
+        FrameLayout frame = (FrameLayout) view.findViewById(R.id.interventionMapAddress);
 
         //Création de la liste et affichage dans la listview
-        ArrayList image_details = getListData();
+        ArrayList<Intervention> image_details = getListData();
 
         final ListView lv1 = (ListView) view.findViewById(R.id.interventionList);
 
         lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
 
-        //Replace de la frame par google map
-        MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
+        //Test de la connexion de la tablette au réseau
+        if (isOnline() == true) {
+            //Replace de la frame par google map
+            MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
 
-        //On envoi la liste des interventions que l'on a récupérée de la base
-        mapInterventionFragment.setListInter(image_details);
+            //On envoi la liste des interventions que l'on a récupérée de la base
+            mapInterventionFragment.setListInter(image_details);
 
-        FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
-        transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
+            FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
+            transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
+        }
+        //Si pas de connexion wifi
+        else {
+            TextView notConnected = new TextView(getActivity());
+            notConnected.setText("Vous n'avez pas de connexion internet, la map ne peut pas s'afficher");
+
+            frame.addView(notConnected);
+        }
 
 
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -137,19 +153,19 @@ public class FicheFragment extends Fragment {
                         JSONObject elt = (JSONObject) reader.get(i);
 
                         newsData = new Intervention();
-                        String id = (elt.get("id")!=null) ? elt.get("id").toString() : "";
+                        String id = (elt.get("id") != null) ? elt.get("id").toString() : "";
                         newsData.setId(id);
-                        String sinisterCode = (elt.get("sinisterCode")!=null) ? elt.get("sinisterCode").toString() : "";
+                        String sinisterCode = (elt.get("sinisterCode") != null) ? elt.get("sinisterCode").toString() : "";
                         newsData.setSinisterCode(sinisterCode);
-                        String address = (elt.get("address")!=null) ? elt.get("address").toString() : "";
+                        String address = (elt.get("address") != null) ? elt.get("address").toString() : "";
                         newsData.setAddress(address);
-                        String date = (elt.get("date")!=null) ? elt.get("date").toString() : "";
+                        String date = (elt.get("date") != null) ? elt.get("date").toString() : "";
                         newsData.setDate(date);
-                        String latitude = (elt.get("latitude")!=null) ? elt.get("latitude").toString() : "";
-                        newsData.setLatitude(date);
-                        String longitude = (elt.get("longitude")!=null) ? elt.get("longitude").toString() : "";
+                        String latitude = (elt.get("latitude") != null) ? elt.get("latitude").toString() : "";
+                        newsData.setLatitude(latitude);
+                        String longitude = (elt.get("longitude") != null) ? elt.get("longitude").toString() : "";
                         newsData.setLongitude(longitude);
-                        String status = (elt.get("status")!=null) ? elt.get("status").toString() : "";
+                        String status = (elt.get("status") != null) ? elt.get("status").toString() : "";
                         newsData.setStatus(status);
                         results.add(newsData);
 
@@ -172,4 +188,9 @@ public class FicheFragment extends Fragment {
         return results;
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 }
