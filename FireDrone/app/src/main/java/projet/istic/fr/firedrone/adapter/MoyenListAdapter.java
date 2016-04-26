@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         MoyenInterventionItem item = getItem(position);
-        System.out.println("toto");System.out.println(position);
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.moyen_item, null);
@@ -46,6 +46,10 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
         final Button subQuantity = (Button) convertView.findViewById(R.id.btn_q_sub);
         final Button addQuantity = (Button) convertView.findViewById(R.id.btn_q_add);
 
+
+        final Spinner spinner = (Spinner) convertView.findViewById(R.id.colorMeanSpinner);
+
+        spinner.setAdapter(new SpinnerColorAdapter(this.getContext()));
 
 
         subQuantity.setOnClickListener(new View.OnClickListener() {

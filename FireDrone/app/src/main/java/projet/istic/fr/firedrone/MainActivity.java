@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity
 
     private TabMapFragment fragmentDrawPath;
     private FicheFragment fragmentFiche;
+    private DetailsInterventionFragment detailsFragment;
 
     private MoyenFragment fragmentMoyen;
 
@@ -62,6 +64,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        fragmentFiche = FicheFragment.getInstance();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche).addToBackStack("detailFragment").commit();
+
+
+
         //instanciation du fragment de contrôle du drône
         droneControlFragment = ControleFragment.getInstance();
         //on crée le drône içi
@@ -77,8 +84,7 @@ public class MainActivity extends AppCompatActivity
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
     }
 
@@ -101,8 +107,8 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_fiche:
-                fragmentFiche = FicheFragment.getInstance();
-                fragment = fragmentFiche;
+                detailsFragment = DetailsInterventionFragment.getInstance();
+                fragment = detailsFragment;
                 break;
             case R.id.nav_moyen:
                 fragmentMoyen = MoyenFragment.getInstance();

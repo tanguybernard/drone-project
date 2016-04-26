@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by ramage on 22/04/16.
  */
-public class SIG {
+public class Sig {
 
     @SerializedName("id")
     private String id;

@@ -1,5 +1,6 @@
 package fr.istic.sit.domain;
 
+import fr.istic.sit.util.Validator;
 import org.springframework.data.annotation.Id;
 
 public class Way {
@@ -120,5 +121,38 @@ public class Way {
 
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
+	}
+
+	public void update(Way newWay){
+		if( !Validator.isEmpty(newWay.getLatitude()))
+			this.latitude  = newWay.getLatitude();
+
+		if( !Validator.isEmpty(newWay.getLongitude()))
+			this.longitude = newWay.getLongitude();
+
+		if( !Validator.isEmpty(newWay.getArriving_time()))
+			this.arriving_time = newWay.getArriving_time();
+
+		if( !Validator.isEmpty(newWay.getCode()))
+			this.code = newWay.getCode();
+
+		if( !Validator.isEmpty(newWay.getColor()))
+			this.color = newWay.getColor();
+
+		if( !Validator.isEmpty(newWay.getEngaged_time()))
+			this.engaged_time = newWay.getEngaged_time();
+
+		if( !Validator.isEmpty(newWay.getGroupId()))
+			this.groupId = newWay.getGroupId();
+
+		if( !Validator.isEmpty(newWay.getName()))
+			this.name = newWay.getName();
+
+		if( !Validator.isEmpty(newWay.getRelease_time()))
+			this.release_time = newWay.getRelease_time();
+
+		if( !Validator.isEmpty(newWay.getRequest_time()))
+			this.request_time = newWay.getRequest_time();
+
 	}
 }

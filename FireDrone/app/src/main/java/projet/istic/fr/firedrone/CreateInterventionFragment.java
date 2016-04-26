@@ -4,8 +4,11 @@ package projet.istic.fr.firedrone;
  * Created by tbernard on 19/04/16.
  */
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.vision.barcode.Barcode;
+
 import org.w3c.dom.Document;
 
 import java.io.IOException;
@@ -27,6 +32,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,7 +45,9 @@ import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.MoyenListAdapter;
 import projet.istic.fr.firedrone.model.CoordinateItem;
 import projet.istic.fr.firedrone.model.Intervention;
+import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -66,59 +74,7 @@ public class CreateInterventionFragment extends Fragment {
 
 
 
-        /**final View view = inflater.inflate(R.layout.fragment_fiche,container,false);
-
-         final Intervention intervention =new Intervention();
-
-         RestAdapter restAdapter = new RestAdapter.Builder()
-         .setEndpoint(END_POINT)
-         .build();
-         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
-         interventionAPI.GetIntervention("56eff377b760a2df933ccd61", new Callback<Intervention>() {
-        @Override
-        public void success(Intervention intervention, Response response) {
-
-        TextView id= (TextView)view.findViewById(R.id.textView);
-        TextView content =(TextView)view.findViewById(R.id.textView2);
-        TextView date = (TextView)view.findViewById(R.id.textView3);
-        TextView type=(TextView)view.findViewById(R.id.textView4);
-        TextView author =(TextView)view.findViewById(R.id.textView5);
-
-        id.setText(intervention.id);
-        content.setText(intervention.content);
-        date.setText(intervention.date);
-        type.setText(intervention.type);
-        author.setText(intervention.author);
-
-        }
-
-        @Override
-        public void failure(RetrofitError error) {
-        Log.d("==retrofit==", error.toString());
-        }
-        });*/
-
-
-
         final View view = inflater.inflate(R.layout.intervention_creation,container,false);
-
-
-
-
-
-        /*ArrayList image_details = getListData();
-        final ListView lv1 = (ListView) view.findViewById(R.id.moyenList);
-
-        lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
-        lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                Object o = lv1.getItemAtPosition(position);
-                InterventionItem newsData = (InterventionItem) o;
-            }
-        });*/
-
 
         final Button btnSaveIntervention = (Button) view.findViewById(R.id.btnSaveIntervention);
 
@@ -171,7 +127,6 @@ public class CreateInterventionFragment extends Fragment {
                 }
 
                 else if(text.equals("Feu de foret")){
-                    System.out.println("MOIUAOAAO333");
                     ArrayList image_details = getListData();
                     final ListView lv1 = (ListView) view.findViewById(R.id.moyenListView);
 
@@ -198,8 +153,6 @@ public class CreateInterventionFragment extends Fragment {
 
         });
 
-
-
         return view;
     }
 
@@ -216,26 +169,59 @@ public class CreateInterventionFragment extends Fragment {
 
         String sinisterCode = spinner.getSelectedItem().toString();
 
-
         ListView listView = (ListView) getView().findViewById(R.id.moyenListView);
 
+        final Intervention intervention = new Intervention();
+
+        List<MeansItem> meansItemList = new ArrayList<MeansItem>();
         int count = listView.getChildCount();
         for (int i=0; i<count; i++) {
 
             TextView t = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_name);
-            TextView t1 = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_quantity);
+            TextView quantityStr = (TextView)listView.getChildAt(i).findViewById(R.id.moyen_quantity);
 
-            System.out.println(t.getText());
-            System.out.println(t1.getText());
+            Spinner spinner1=(Spinner)listView.getChildAt(i).findViewById(R.id.colorMeanSpinner);
+            System.out.println(spinner1.getSelectedItem().toString());
 
+            int quantity = Integer.parseInt(quantityStr.getText().toString());
+
+            for(int q=0;q<quantity;q++){
+                MeansItem meansItem = new MeansItem();
+                meansItem.setName((String) t.getText()+q);
+                meansItemList.add(meansItem);
+            }
 
         }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");//format de la date
+        intervention.setWays(meansItemList);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");//format de la date
         String currentDateandTime = sdf.format(new Date());
 
-        //"263 Avenue Général Leclerc, 35000 Rennes"
-        final Intervention intervention = new Intervention(sinisterCode,currentDateandTime,addressInter.getText().toString(),"IN_PROGRESS");
+
+        intervention.setSinisterCode(sinisterCode);
+        intervention.setDate(currentDateandTime);
+        intervention.setAddress(addressInter.getText().toString());
+        intervention.setStatus("IN_PROGRESS");
+        try {
+            CoordinateItem coordinateItem = getLocationFromAddress(addressInter.getText().toString());
+
+            intervention.setLatitude(coordinateItem.getLatitude());
+            intervention.setLongitude(coordinateItem.getLongitude());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        requestNewIntervention(intervention);
+
+
+
+    }
+
+    /**
+     * Request new intervention with Retrofit
+     * @param intervention
+     */
+    public void requestNewIntervention(Intervention intervention){
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(END_POINT)
@@ -248,6 +234,12 @@ public class CreateInterventionFragment extends Fragment {
             @Override
             public void success(Intervention intervention, Response response) {
                 System.out.println("ca fonctionne");
+
+                InterventionSingleton.getInstance().setIntervention(intervention);
+
+                DetailsInterventionFragment detailsInterventionFragment = new DetailsInterventionFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, detailsInterventionFragment).commit();
             }
 
             @Override
@@ -257,10 +249,7 @@ public class CreateInterventionFragment extends Fragment {
             }
         });
 
-
-
     }
-
 
 
 
@@ -280,7 +269,6 @@ public class CreateInterventionFragment extends Fragment {
              ) {
             newsData = new MoyenInterventionItem();
 
-            System.out.println(value);
             newsData.setName(value);
             newsData.setQuantity(2);
             results.add(newsData);
@@ -293,62 +281,41 @@ public class CreateInterventionFragment extends Fragment {
         return results;
     }
 
-    /**
-     * Get latitude et Longitude
-     *
-     * @param adress
-     * @return
-     * @throws Exception
-     */
-    public CoordinateItem getCoordinatesByAdress(String adress) throws Exception {
-        CoordinateItem coordonne=new CoordinateItem();
 
-        int responseCode = 0;
-        String api = GEO_API + URLEncoder.encode(adress, "UTF-8") + "&sensor=true";
-        URL url = null;
+
+
+    public CoordinateItem getLocationFromAddress(String strAddress){
+
+        Geocoder coder = new Geocoder(getContext());
+        List<Address> address;
+        Barcode.GeoPoint p1 = null;
+
         try {
-            url = new URL(api);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        HttpURLConnection httpConnection = (HttpURLConnection)url.openConnection();
-        try {
-            httpConnection.connect();
+            address = coder.getFromLocationName(strAddress,5);
+            if (address==null) {
+                return null;
+            }
+            Address location=address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            CoordinateItem coordinateItem = new CoordinateItem();
+            coordinateItem.setLatitude(String.valueOf(location.getLatitude()));
+            coordinateItem.setLongitude(String.valueOf(location.getLongitude()));
+
+            return coordinateItem;
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            responseCode = httpConnection.getResponseCode();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(responseCode == 200)
-        {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();;
-            Document document = builder.parse(httpConnection.getInputStream());
-            XPathFactory xPathfactory = XPathFactory.newInstance();
-            XPath xpath = xPathfactory.newXPath();
-            XPathExpression expr = xpath.compile("/GeocodeResponse/status");
-            String status = (String)expr.evaluate(document, XPathConstants.STRING);
-            if(status.equals("OK"))
-            {
-                expr = xpath.compile("//geometry/location/lat");
-                String latitude = (String)expr.evaluate(document, XPathConstants.STRING);
-                System.out.print("============Coordonnes=============="+"\n");
-                coordonne.setLatitude(latitude);
-                expr = xpath.compile("//geometry/location/lng");
-                String longitude = (String)expr.evaluate(document, XPathConstants.STRING);
-                coordonne.setLongitude(longitude);
 
-            }
-            else
-            {
-                throw new Exception("Error from the API - response status: "+status);
-            }
-        }
-        return  coordonne;
-
+        return null;
     }
+
+
+
 
 }
 

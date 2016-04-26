@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <LinearLayout
         android:id="@+id/container_popup"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:layout_x="0dp"
         android:layout_y="0dp"
         android:background="@color/white"
@@ -18,7 +19,7 @@
 
         <TextView
             android:id="@+id/textview_title"
-            android:text="Hello title"
+            android:text=""
             android:textColor="#000000"
             android:textSize="24sp"
             android:textStyle="bold"

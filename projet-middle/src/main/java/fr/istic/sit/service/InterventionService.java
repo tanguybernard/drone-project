@@ -2,6 +2,7 @@ package fr.istic.sit.service;
 
 import java.util.List;
 
+import fr.istic.sit.domain.Way;
 import fr.istic.sit.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,8 +33,12 @@ public class InterventionService {
 		return  null;
 	}
 
-	public void insert(Intervention intervention) {
-		repository.insert(intervention);
+	public Intervention insert(Intervention intervention) {
+		//Ajouter les id's des moyens
+		for(int i=0; i<intervention.getWays().size(); i++){
+			intervention.getWays().get(i).setId(Integer.toString(i+1));
+		}
+		return repository.insert(intervention);
 	}
 
 	public void delete(Intervention intervention) {
@@ -42,5 +47,29 @@ public class InterventionService {
 
 	public void update(Intervention intervention) {
 		repository.save(intervention);
+	}
+
+	public Intervention addWay(String id, Way way){
+		Intervention intervention = repository.findById(id);
+		way.setId(Integer.toString(intervention.getWays().size()+1));
+		intervention.getWays().add(way);
+		return repository.save(intervention);
+	}
+
+	public Intervention editWay(String id, Way way){
+		Intervention intervention = repository.findById(id);
+
+		intervention.getWays()
+				.stream()
+				.filter(w -> w.getId().equalsIgnoreCase(way.getId()) )
+				.forEach(w ->  w.update(way) );
+
+		return repository.save(intervention);
+	}
+
+	public Intervention deleteWay(String id, String idWay){
+		Intervention intervention = repository.findById(id);
+		intervention.getWays().removeIf(w -> w.getId().equalsIgnoreCase(idWay));
+		return repository.save(intervention);
 	}
 }

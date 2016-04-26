@@ -2,12 +2,9 @@ package projet.istic.fr.firedrone.ModelAPI;
 
 import java.util.List;
 
-import projet.istic.fr.firedrone.model.SIG;
-import projet.istic.fr.firedrone.model.User;
+import projet.istic.fr.firedrone.model.Sig;
 import retrofit.Callback;
 import retrofit.http.GET;
-import retrofit.http.Header;
-import retrofit.http.Path;
 
 /**
  * Created by ramage on 22/04/16.
@@ -15,5 +12,5 @@ import retrofit.http.Path;
 public interface SIGAPI {
 
     @GET("/sig")
-    public void getSIGs( Callback<List<SIG>> callback);
+    public void getSIGs( Callback<List<Sig>> callback);
 }

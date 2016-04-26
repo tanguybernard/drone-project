@@ -13,55 +13,61 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.adapter.MoyenMapPanelListAdapter;
+import projet.istic.fr.firedrone.adapter.PointListAdapter;
 import projet.istic.fr.firedrone.model.MeansItem;
 
 /**
  * Created by ramage on 20/04/16.
  */
-public class PanelMapMoyenFragment extends Fragment {
+public class PanelMapMoyenFragment extends Fragment implements Serializable {
 
     private ListView listViewMoyen;
     private ListView listViewMoyenAPlacer;
+    private ListView listViewPoint;
 
     private ArrayAdapter adapter;
     private ArrayAdapter adapterAdd;
+    private PointListAdapter pointListAdapter;
 
     private List<MeansItem> listMoyens;
     private List<MeansItem> listMoyensNonPlacer;
 
     private MeansItem itemSelected;
+    private EnumPointType pointTypeSelected;
 
     private AdapterView<?> adapterViewDefault;
     private AdapterView<?> adapterViewAdd;
+    private AdapterView<?> adapterViewPoint;
+
+    private MapMoyenFragment mapMoyenFragment;
 
     private View layoutDemande;
-
-    private static PanelMapMoyenFragment INSTANCE;
-
-    public static PanelMapMoyenFragment getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new PanelMapMoyenFragment();
-        }
-        return INSTANCE;
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_map_panel_moyen, container, false);
+        mapMoyenFragment = new MapMoyenFragment();
 
-        getChildFragmentManager().beginTransaction().replace(R.id.content_map_moyen, MapMoyenFragment.getInstance()).commit();
+        Bundle args = new Bundle();
+        args.putSerializable("panel",this);
+        mapMoyenFragment.setArguments(args);
+
+        getChildFragmentManager().beginTransaction().replace(R.id.content_map_moyen, mapMoyenFragment).commit();
 
         layoutDemande = view.findViewById(R.id.layout_moyen_already_add);
 
         listViewMoyenAPlacer = (ListView) view.findViewById(R.id.panel_moyen_already_add);
         listViewMoyen = (ListView) view.findViewById(R.id.panel_moyen_to_add);
+        listViewPoint = (ListView) view.findViewById(R.id.panel_point_to_add);
 
         //BOUCHON
         MeansItem moyenItem = new MeansItem();
@@ -84,6 +90,7 @@ public class PanelMapMoyenFragment extends Fragment {
                     new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            pointTypeSelected = null;
                             adapterViewAdd = parent;
                             if(itemSelected != null && itemSelected == listMoyensNonPlacer.get(position)) {
                                 view.setBackgroundColor(Color.TRANSPARENT);
@@ -93,7 +100,7 @@ public class PanelMapMoyenFragment extends Fragment {
                                 view.setBackgroundColor(getResources().getColor(R.color.lightblue));
                                 itemSelected = listMoyensNonPlacer.get(position);
                             }
-                            MapMoyenFragment.getInstance().setMoyenItemAddSelected(itemSelected);
+                            mapMoyenFragment.setMoyenItemAddSelected(itemSelected);
                         }
                     }
             );
@@ -105,16 +112,36 @@ public class PanelMapMoyenFragment extends Fragment {
         listViewMoyen.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                pointTypeSelected=null;
                 adapterViewDefault = parent;
-                if(itemSelected != null && itemSelected == listMoyens.get(position)) {
+                if (itemSelected != null && itemSelected == listMoyens.get(position)) {
                     view.setBackgroundColor(Color.TRANSPARENT);
                     itemSelected = null;
-                }else {
+                } else {
                     removeSelectionListView();
                     view.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     itemSelected = listMoyens.get(position);
                 }
-                MapMoyenFragment.getInstance().setMoyenItemSelected(itemSelected);
+                mapMoyenFragment.setMoyenItemSelected(itemSelected);
+            }
+        });
+
+        pointListAdapter = new PointListAdapter(getContext());
+        listViewPoint.setAdapter(pointListAdapter);
+        listViewPoint.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                itemSelected = null;
+                adapterViewPoint = parent;
+                if(pointTypeSelected != null && pointTypeSelected == pointListAdapter.getItem(position)) {
+                    view.setBackgroundColor(Color.TRANSPARENT);
+                    pointTypeSelected = null;
+                }else{
+                    removeSelectionListView();
+                    view.setBackgroundColor(getResources().getColor(R.color.lightblue));
+                    pointTypeSelected = (EnumPointType) pointListAdapter.getItem(position);
+                }
+                mapMoyenFragment.setPointAddSelected(pointTypeSelected);
             }
         });
 
@@ -149,6 +176,11 @@ public class PanelMapMoyenFragment extends Fragment {
         if(adapterViewDefault != null){
             for (int j = 0; j < adapterViewDefault.getChildCount(); j++)
                 adapterViewDefault.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        if(adapterViewPoint != null){
+            for (int j = 0; j < adapterViewPoint.getChildCount(); j++)
+                adapterViewPoint.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
         }
     }
 
