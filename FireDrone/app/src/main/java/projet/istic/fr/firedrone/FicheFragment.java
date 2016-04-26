@@ -1,5 +1,8 @@
 package projet.istic.fr.firedrone;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,12 +46,13 @@ public class FicheFragment extends Fragment {
         return INSTANCE;
     }
 
-
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
 
 
-        final View view = inflater.inflate(R.layout.intervention_main,container,false);
+        final View view = inflater.inflate(R.layout.intervention_main, container, false);
+
+        FrameLayout frame = (FrameLayout) view.findViewById(R.id.interventionMapAddress);
 
         //Création de la liste et affichage dans la listview
         List image_details = getListData();
@@ -55,14 +61,24 @@ public class FicheFragment extends Fragment {
 
         lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
 
-        //Replace de la frame par google map
-        MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
+        //Test de la connexion de la tablette au réseau
+        if (isOnline() == true) {
+            //Replace de la frame par google map
+            MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
 
-        //On envoi la liste des interventions que l'on a récupérée de la base
-        mapInterventionFragment.setListInter(image_details);
+            //On envoi la liste des interventions que l'on a récupérée de la base
+            mapInterventionFragment.setListInter(image_details);
 
-        FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
-        transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
+            FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
+            transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
+        }
+        //Si pas de connexion wifi
+        else {
+            TextView notConnected = new TextView(getActivity());
+            notConnected.setText("Vous n'avez pas de connexion internet, la map ne peut pas s'afficher");
+
+            frame.addView(notConnected);
+        }
 
 
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -115,19 +131,22 @@ public class FicheFragment extends Fragment {
         interventionAPI.getIntervention("IN_PROGRESS", new Callback<List<Intervention>>() {
 
             @Override
-            public void success( List<Intervention> interventions, Response response) {
+            public void success(List<Intervention> interventions, Response response) {
                 results.addAll(interventions);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println(error);
 
             }
         });
 
-
         return results;
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 }
