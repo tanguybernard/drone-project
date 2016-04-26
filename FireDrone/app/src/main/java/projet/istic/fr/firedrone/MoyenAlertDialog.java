@@ -2,7 +2,6 @@ package projet.istic.fr.firedrone;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -87,7 +86,7 @@ public class MoyenAlertDialog extends DialogFragment {
         if (miLine > -1) {
             TableRow element = (TableRow) this.moTable.getChildAt(this.miLine);
             this.msCode = ((TextView) element.getChildAt(0)).getText().toString();
-            for (int colIdx = 0; colIdx < element.getChildCount(); colIdx++) {
+            for (int colIdx = 1; colIdx < element.getChildCount(); colIdx++) {
                 TextView oColValue = (TextView) element.getChildAt(colIdx);
                 if (oColValue.getText() == "") {
                     this.miType = colIdx;
@@ -99,7 +98,7 @@ public class MoyenAlertDialog extends DialogFragment {
         TextView oLblHour = ((TextView) this.dialView.findViewById(R.id.lblTxtHour));
         TextView oTxtHour = ((TextView) this.dialView.findViewById(R.id.txtEditHour));
         oTxtHour.setText(getTime());
-        if (this.miType == getResources().getInteger(R.integer.IDX_CODE)) {
+        if (this.miLine == -1) {
             oLblTitle.setText(getResources().getText(R.string.lbl_add_mean));
         } else {
             oLblTitle.setText(getResources().getText(R.string.lbl_edit_mean));
@@ -144,14 +143,15 @@ public class MoyenAlertDialog extends DialogFragment {
                 c.setTimeInMillis(System.currentTimeMillis());
                 Date hDate = c.getTime();
                 SimpleDateFormat dFormat = new SimpleDateFormat("yyyyMMdd");
-                sNewHour = dFormat.format(hDate) + " " + sNewHour;
                 if (sError.equals(NO_ERROR)) {
                     MoyenFragment moyen = MoyenFragment.getInstance();
-                    String[] tsHours = new String[5];
-                    tsHours[0] = sNewMean;
+                    String[] tsHours = new String[getResources().getInteger(R.integer.IDX_H_FREE) + 1];
+                    tsHours[getResources().getInteger(R.integer.IDX_CODE)] = sNewMean;
+                    tsHours[getResources().getInteger(R.integer.IDX_NAME)] = sNewMean;
                     if (miLine == -1) {
                         miType = getResources().getInteger(R.integer.IDX_H_CALL);
                     }
+                    sNewHour = dFormat.format(hDate) + " " + sNewHour;
                     tsHours[miType] = sNewHour;
                     if (miLine == -1) {
                         moyen.addMean(tsHours, true);
@@ -176,8 +176,5 @@ public class MoyenAlertDialog extends DialogFragment {
 
         builder.setView(this.dialView);
         return builder.create();
-
     }
-
-
 }

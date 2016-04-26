@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import fr.istic.sit.dao.InterventionRepository;
 import fr.istic.sit.domain.Intervention;
 
+/**
+ * @author FireDroneTeam
+ */
+
 @Component
 public class InterventionService {
 

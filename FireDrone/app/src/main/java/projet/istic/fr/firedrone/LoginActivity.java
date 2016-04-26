@@ -19,6 +19,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import projet.istic.fr.firedrone.Interceptor.Interceptor;
 import projet.istic.fr.firedrone.ModelAPI.UserApi;
 import projet.istic.fr.firedrone.model.User;
 import retrofit.Callback;
@@ -31,6 +32,22 @@ public class LoginActivity extends AppCompatActivity {
 
     //le token qu'il faut rajouter à toutes les requetes
     public String token = "";
+
+
+
+    /*
+    RequestInterceptor requestInterceptor = new RequestInterceptor() {
+        @Override
+        public void intercept(RequestFacade request) {
+            request.addHeader("User-Agent", "Retrofit-Sample-App");
+        }
+    };
+
+    RestAdapter restAdapter = new RestAdapter.Builder()
+            .setEndpoint("https://api.github.com")
+            .setRequestInterceptor(requestInterceptor)
+            .build();
+    */
 
     //*   Components   *//
     private EditText loginField;
@@ -48,17 +65,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
 
         /** Init the View Text Fields **/
@@ -111,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         String basicAuth = "Basic " + Base64.encodeToString(String.format("%s:%s", "drone_android", "4ndr01d").getBytes(), Base64.NO_WRAP);
 
 
+
         final UserApi userApi = restAdapter.create(UserApi.class);
         userApi.connectUser(basicAuth, login, password, "password", new Callback<User>() {
             @Override
@@ -136,10 +144,18 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 String access_token = null;
 
-                //recuperer le token
+                //récuperer le token
                 token = type+" "+sys;
 
-                userApi.getUser(token, login, new Callback<User>() {
+                //envoi de la requete avec le token comme header pour recuperer les informations de l'utilisateur
+
+                Interceptor.getInstance().setToken(token);
+                System.out.println("token=================" + Interceptor.getInstance().getToken());
+
+
+                final UserApi userApi = Interceptor.getInstance().getRestAdapter().create(UserApi.class);
+
+                userApi.getUser(login, new Callback<User>() {
 
                     @Override
                     public void success(User user, Response response) {
@@ -167,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println("Impossible de recuperer le token: "+error);
+                System.out.println("Impossible de récuperer le token: "+error);
             }
         });
 
@@ -212,12 +228,5 @@ public class LoginActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
-
-    /*
-    Intent intent = getIntent();
-
-    String userRole = intent.getExtras().getParcelable("userRole");
-    */
-
 
 }

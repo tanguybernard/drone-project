@@ -14,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 
+/**
+ * @author FireDroneTeam
+ */
 
 @Configuration
 @EnableWebSecurity
@@ -42,7 +45,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web
                 .ignoring()
                 .antMatchers("/intervention**")
-                .antMatchers("/sinister**");
+                .antMatchers("/sinister**")
+                .antMatchers("/sig**");
 
     }
 

@@ -1,21 +1,36 @@
 package projet.istic.fr.firedrone.model;
 
+import android.util.Log;
+import android.view.View;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by christophe on 19/04/16.
  */
 public class MeansItem {
 
+    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
+
     @SerializedName("id")
     private String msMeanId = "";
     @SerializedName("code")
     private String msMeanCode = "";
     @SerializedName("name")
-    private String name = "";
+    private String msMeanName = "";
     @SerializedName("request_time")
     private String msMeanHCall = null;
     @SerializedName("arriving_time")
@@ -44,7 +59,7 @@ public class MeansItem {
             return false;
         if (msMeanCode != null ? !msMeanCode.equals(meansItem.msMeanCode) : meansItem.msMeanCode != null)
             return false;
-        if (name != null ? !name.equals(meansItem.name) : meansItem.name != null)
+        if (msMeanName != null ? !msMeanName.equals(meansItem.msMeanName) : meansItem.msMeanName != null)
             return false;
         if (msMeanHCall != null ? !msMeanHCall.equals(meansItem.msMeanHCall) : meansItem.msMeanHCall != null)
             return false;
@@ -82,12 +97,12 @@ public class MeansItem {
         this.msMeanCode = msMeanCode;
     }
 
-    public String getName() {
-        return name;
+    public String getMsMeanName() {
+        return msMeanName;
     }
 
-    public void setName(String msMeanLib) {
-        this.name = msMeanLib;
+    public void setMsMeanName(String msMeanName) {
+        this.msMeanName = msMeanName;
     }
 
     public String getMsMeanHCall() {
@@ -165,7 +180,8 @@ public class MeansItem {
         return msMeanId;
     }
 
-    public MeansItem clone(){
+
+    public MeansItem clone() {
         MeansItem clone = new MeansItem();
         clone.setMsMeanCode(this.msMeanCode);
         clone.setMsMeanHEngaged(this.msMeanHEngaged);
@@ -173,7 +189,45 @@ public class MeansItem {
         clone.setMsColor(this.msColor);
         clone.setMsMeanHCall(this.msMeanHCall);
         clone.setMsMeanHFree(this.msMeanHFree);
-        clone.setName(this.name);
+        clone.setMsMeanName(this.msMeanName);
         return clone;
+    }
+
+    public List<MeansItem> addMean() {
+        final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
+        String sIntervId = oIntervention.getId();
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
+        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
+        meansApi.AddMean(sIntervId, this, new Callback<List<MeansItem>>() {
+            @Override
+            public void success(List<MeansItem> ploMeans, Response response) {
+                oIntervention.setWays(ploMeans);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("CONNEXION ERROR", error.getMessage());
+            }
+        });
+        return oIntervention.getWays();
+    }
+
+    public List<MeansItem> editMean() {
+        final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
+        String sIntervId = oIntervention.getId();
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
+        MeansAPI meansApi = restAdapter.create(MeansAPI.class);
+        meansApi.EditMean(sIntervId, this, new Callback<List<MeansItem>>() {
+            @Override
+            public void success(List<MeansItem> ploMeans, Response response) {
+                oIntervention.setWays(ploMeans);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("CONNEXION ERROR", error.getMessage());
+            }
+        });
+        return oIntervention.getWays();
     }
 }

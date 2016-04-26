@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         boolean usingControlDrone = false;
         Fragment fragment = null;
         switch (item.getItemId()) {
-            case R.id.nav_fiche:
+            case R.id.nav_details:
                 detailsFragment = DetailsInterventionFragment.getInstance();
                 fragment = detailsFragment;
                 break;
@@ -118,8 +118,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_rapport:
                 break;
             case R.id.nav_directive:
-                break;
-            case R.id.nav_plan:
                 break;
             case R.id.nav_parcours:
                 fragmentDrawPath = TabMapFragment.getInstance();

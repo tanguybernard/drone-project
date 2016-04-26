@@ -29,7 +29,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Transactional
     public UserDetails loadUserByUsername(final String login) {
 
-        log.debug("Authenticating {}", login);
+        log.debug("Authenticating [", login +"]");
         String lowercaseLogin = login.toLowerCase();
 
         User userFromDatabase;

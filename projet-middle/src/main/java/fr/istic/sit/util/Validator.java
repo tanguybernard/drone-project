@@ -1,7 +1,7 @@
 package fr.istic.sit.util;
 
 /**
- * @author fracma
+ * @author FireDroneTeam
  */
 public class Validator {
 

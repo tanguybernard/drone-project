@@ -4,6 +4,7 @@ package fr.istic.sit.configuration;
 import fr.istic.sit.security.Authorities;
 import fr.istic.sit.security.CustomAuthenticationEntryPoint;
 import fr.istic.sit.security.CustomLogoutSuccessHandler;
+import fr.istic.sit.security.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
@@ -24,6 +25,9 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+/**
+ * @author FireDroneTeam
+ */
 
 @Configuration
 public class OAuth2Configuration {
@@ -60,6 +64,7 @@ public class OAuth2Configuration {
                     .authorizeRequests()
                     .antMatchers("/intervention**").permitAll()
                     .antMatchers("/sinister**").permitAll()
+                    .antMatchers("/sig**").permitAll()
                     .antMatchers("/user/**").authenticated();
 
         }
@@ -76,6 +81,9 @@ public class OAuth2Configuration {
         private static final String PROP_TOKEN_VALIDITY_SECONDS = "tokenValidityInSeconds";
 
         private RelaxedPropertyResolver propertyResolver;
+
+        @Autowired
+        UserDetailsService userDetailsService;
 
         @Bean
         public TokenStore tokenStore() {
@@ -104,13 +112,35 @@ public class OAuth2Configuration {
                     .authorities(Authorities.ROLE_ADMIN.name(), Authorities.ROLE_USER.name())
                     .authorizedGrantTypes("password", "refresh_token")
                     .secret(propertyResolver.getProperty(PROP_SECRET))
-                    .accessTokenValiditySeconds(propertyResolver.getProperty(PROP_TOKEN_VALIDITY_SECONDS, Integer.class, 1800));
+                    .accessTokenValiditySeconds(propertyResolver.getProperty(PROP_TOKEN_VALIDITY_SECONDS, Integer.class, 9900));
         }
 
         @Override
         public void setEnvironment(Environment environment) {
             this.propertyResolver = new RelaxedPropertyResolver(environment, ENV_OAUTH);
         }
+
+        /*@Bean
+        public TokenEnhancer tokenEnhancer() {
+            return new CustomTokenEnhancer();
+        }
+
+        public class CustomTokenEnhancer implements TokenEnhancer {
+            @Override
+            public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+                SecurityProperties.User user = (SecurityProperties.User) authentication.getPrincipal();
+
+                final Map<String, Object> additionalInfo = new HashMap<>();
+
+                additionalInfo.put("User", userDetailsService.loadUserByUsername(user.getName()));
+
+                ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
+
+                return accessToken;
+            }
+        }*/
+
+
 
     }
 

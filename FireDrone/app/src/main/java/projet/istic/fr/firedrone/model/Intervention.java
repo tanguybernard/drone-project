@@ -80,5 +80,20 @@ public class Intervention {
 
     }
 
-    public Intervention(){}
+    public List<MeansItem> getWays() {
+        return ways;
+    }
+
+    public Intervention(){
+
+    }
+
+    public Intervention(String sinisterCode, String date, String address, String status ) {
+
+        this.sinisterCode = sinisterCode;
+        this.date = date;
+        this.address = address;
+        this.status = status;
+
+    }
 }
