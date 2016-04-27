@@ -29,6 +29,8 @@ public class DragRemoveOnMapListener implements GoogleMap.OnMarkerDragListener {
         callMethodeDrag = pCallMethodeDrag;
     }
 
+
+
     @Override
     public void onMarkerDragStart(Marker marker) {
         suppressionMarker.setVisibility(View.VISIBLE);
@@ -62,6 +64,10 @@ public class DragRemoveOnMapListener implements GoogleMap.OnMarkerDragListener {
         }else{
             if(polylineManager != null) {
                 polylineManager.addPolyline(marker);
+            }
+
+            if(callMethodeDrag!=null){
+                callMethodeDrag.dragEnd(marker);
             }
         }
         suppressionMarker.setVisibility(View.INVISIBLE);

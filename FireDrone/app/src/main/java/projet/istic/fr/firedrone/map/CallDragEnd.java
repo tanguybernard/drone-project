@@ -3,10 +3,9 @@ package projet.istic.fr.firedrone.map;
 import com.google.android.gms.maps.model.Marker;
 
 /**
- * Created by ramage on 22/04/16.
+ * Created by ramage on 27/04/16.
  */
-public interface MethodCallWhenDrag {
+public interface CallDragEnd {
 
-    void dragStart();
     void dragEnd(Marker marker);
 }

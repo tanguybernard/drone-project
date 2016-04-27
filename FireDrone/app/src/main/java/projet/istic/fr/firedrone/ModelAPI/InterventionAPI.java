@@ -3,6 +3,7 @@ package projet.istic.fr.firedrone.ModelAPI;
 import java.util.List;
 
 import projet.istic.fr.firedrone.model.Intervention;
+import projet.istic.fr.firedrone.model.Resource;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -42,4 +43,11 @@ public interface InterventionAPI {
          */
         @POST("/intervention")
         public void createIntervention(@Body Intervention intervention,retrofit.Callback<Intervention> response);
+
+        @POST("/intervention/{id}/ressource")
+        public void addResource(@Path("id") String identifiant,@Body Resource resource, Callback<List<Resource>> response);
+
+
+        @GET("/intervention/{id}/ressource")
+        public void getResources(@Path("id") String identifiant, Callback<List<Resource>> response);
 }

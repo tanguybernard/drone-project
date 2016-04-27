@@ -161,8 +161,8 @@ public class CreateInterventionFragment extends Fragment {
         try {
             CoordinateItem coordinateItem = getLocationFromAddress(addressInter.getText().toString());
 
-            intervention.setLatitude(coordinateItem.getLatitude());
-            intervention.setLongitude(coordinateItem.getLongitude());
+            intervention.setLatitude(String.valueOf(coordinateItem.getLatitude()));
+            intervention.setLongitude(String.valueOf(coordinateItem.getLongitude()));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -331,12 +331,10 @@ public class CreateInterventionFragment extends Fragment {
             location.getLongitude();
 
             CoordinateItem coordinateItem = new CoordinateItem();
-            coordinateItem.setLatitude(String.valueOf(location.getLatitude()));
-            coordinateItem.setLongitude(String.valueOf(location.getLongitude()));
+            coordinateItem.setLatitude(location.getLatitude());
+            coordinateItem.setLongitude(location.getLongitude());
 
             return coordinateItem;
-
-
 
         } catch (IOException e) {
             e.printStackTrace();
