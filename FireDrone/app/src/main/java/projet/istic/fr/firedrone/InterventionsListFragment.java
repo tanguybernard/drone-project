@@ -18,6 +18,8 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
@@ -96,6 +98,7 @@ public class InterventionsListFragment extends Fragment {
      * @return list data of in progress interventions
      */
     private List<Intervention> getListData(final View view) {
+
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -136,8 +139,19 @@ public class InterventionsListFragment extends Fragment {
             //On envoi la liste des interventions que l'on a récupérée de la base
             mapInterventionFragment.setListInter(listInter);
 
-            FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
-            transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
+            View layoutId = view.findViewById(R.id.interventionMapAddress);
+
+            if (layoutId.getVisibility() == View.VISIBLE) {
+                // Its visible
+                FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
+                transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
+            } else {
+                // Either gone or invisible
+
+            }
+
+
+
         }
         //Si pas de connexion wifi
         else {

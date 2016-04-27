@@ -18,9 +18,11 @@ import java.util.Collection;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
 
 public class MainActivity extends AppCompatActivity
-        implements TowerListener{
+        implements TowerListener, Observable{
 
     //tower pour se connecter au drone et recevoir les évènements du drone
     private ControlTower controlTower;
@@ -177,6 +179,23 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTowerDisconnected() {
+
+    }
+
+    //------------------------------------- OBSERVABLE PART ------------------------------------------------
+
+    @Override
+    public void ajouterObservateur(Observateur o) {
+
+    }
+
+    @Override
+    public void supprimerObservateur(Observateur o) {
+
+    }
+
+    @Override
+    public void notifierObservateurs() {
 
     }
 }
