@@ -1,5 +1,6 @@
 package projet.istic.fr.firedrone;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -7,14 +8,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
 import com.o3dr.android.client.Drone;
 import com.o3dr.android.client.interfaces.TowerListener;
 
+import java.net.URL;
 import java.util.Collection;
 
+import me.pushy.sdk.Pushy;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
@@ -63,7 +67,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Pushy.listen(this);
         setContentView(R.layout.activity_main);
+
+
+        new registerForPushNotificationsAsync().execute();
+
 
         MeansItemService.createListDefaultWay();
 
@@ -198,4 +207,56 @@ public class MainActivity extends AppCompatActivity
     public void notifierObservateurs() {
 
     }
+
+    //--------------------------------------------PUSHY----------------------------------------------------
+
+
+    private class registerForPushNotificationsAsync extends AsyncTask<Void, Void, Exception>
+    {
+        protected Exception doInBackground(Void... params)
+        {
+            try
+            {
+                // Acquire a unique registration ID for this device
+                String registrationId = Pushy.register(getApplicationContext());
+
+                // Send the registration ID to your backend server and store it for later
+                sendRegistrationIdToBackendServer(registrationId);
+            }
+            catch( Exception exc )
+            {
+                // Return exc to onPostExecute
+                return exc;
+            }
+
+            // We're good
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Exception exc)
+        {
+            // Failed?
+            if ( exc != null )
+            {
+                // Show error as toast message
+                Toast.makeText(getApplicationContext(), exc.toString(), Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            // Succeeded, do something to alert the user
+        }
+
+        // Example implementation
+        void sendRegistrationIdToBackendServer(String registrationId) throws Exception
+        {
+            // The URL to the function in your backend API that stores registration IDs
+            URL sendRegIdRequest = new URL("https://{YOUR_API_HOSTNAME}/register/device?registration_id=" + registrationId);
+
+            // Send the registration ID by executing the GET request
+            sendRegIdRequest.openConnection();
+        }
+    }
+
+
 }
