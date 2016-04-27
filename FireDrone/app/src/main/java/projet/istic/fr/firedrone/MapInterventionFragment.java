@@ -83,7 +83,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
                             LatLng coordonnees = new LatLng(latitude, longitude);
 
                             //On récupère la référence pour l'afficher dans l'infobulle du marqueur
-                            String refInter = listInter.get(i).getId();
+                            String refInter = listInter.get(i).getAddress();
 
                             // TODO : Récupérer d'autres infos à mettre dans l'infobulle (voir tuto google)
                             // TODO : Gérer la sélection d'un marqueur et mettre en évidence dans la liste (et inversement)
