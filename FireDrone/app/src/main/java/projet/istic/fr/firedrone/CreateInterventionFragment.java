@@ -176,7 +176,6 @@ public class CreateInterventionFragment extends Fragment {
                 Toast.makeText(getContext(),"Adresse invalide",Toast.LENGTH_LONG).show();
             }
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -352,8 +351,6 @@ public class CreateInterventionFragment extends Fragment {
             coordinateItem.setLongitude(String.valueOf(location.getLongitude()));
 
             return coordinateItem;
-
-
 
         } catch (IOException e) {
             e.printStackTrace();

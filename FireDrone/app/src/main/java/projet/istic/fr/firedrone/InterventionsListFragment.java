@@ -119,6 +119,7 @@ public class InterventionsListFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
+
             }
         });
 

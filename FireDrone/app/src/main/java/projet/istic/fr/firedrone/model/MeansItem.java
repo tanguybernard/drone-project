@@ -41,9 +41,9 @@ public class MeansItem {
     @SerializedName("release_time")
     private String msMeanHFree = null;
     @SerializedName("longitude")
-    private String msLongitude = "";
+    private String msLongitude;
     @SerializedName("latitude")
-    private String msLatitude = "";
+    private String msLatitude;
     @SerializedName("color")
     private String msColor;
     @SerializedName("groupId")
