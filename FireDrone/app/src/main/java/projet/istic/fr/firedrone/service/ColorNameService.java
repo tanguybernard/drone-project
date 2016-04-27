@@ -32,5 +32,32 @@ public class ColorNameService {
 
     }
 
+    /**
+     * return INCENDIE, SAP, EAU by a color
+     * @param color
+     * @return
+     */
+    public static String getTypeInterventionByColor(String color){
+
+        String typeName;
+        switch (color){
+
+            case "#FF0000":
+                typeName = "INCENDIE";
+                break;
+            case "#00FF00":
+                typeName = "SAP";
+                break;
+            case "#0000FF":
+                typeName = "EAU";
+                break;
+            default: typeName = "INCENDIE";
+                break;
+
+        }
+        return typeName;
+
+    }
+
 
 }

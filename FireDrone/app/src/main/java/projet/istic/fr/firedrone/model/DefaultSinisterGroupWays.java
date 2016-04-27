@@ -12,17 +12,17 @@ public class DefaultSinisterGroupWays {
     private String acronym;
 
     @SerializedName("count")
-    private String count;
+    private int count;
 
     @SerializedName("color")
     private String color;
 
 
-    public String getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(int count) {
         this.count = count;
     }
 

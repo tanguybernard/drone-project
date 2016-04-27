@@ -267,7 +267,8 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     private Marker addMeansOnMap(MeansItem meansItem,LatLng latLng){
         return googleMap.addMarker(new MarkerOptions()
                 .position(latLng).draggable(true)
-                .icon(BitmapDescriptorFactory.fromResource(meansItem.getResource())));
+                .icon(BitmapDescriptorFactory.fromBitmap(meansItem.getDashedBitmap(true))));
+                //.icon(BitmapDescriptorFactory.fromResource(meansItem.getResource())));
     }
 
     @Override

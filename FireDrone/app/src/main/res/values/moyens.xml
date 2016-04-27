@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="moyens">
-        <item>SVAS</item>
-        <item>FPT</item>
+        <item>CCF</item>
+        <item>CCGC</item>
         <item>EPA</item>
-        <item>VLCG</item>
+        <item>FPT</item>
+        <item>VLGC</item>
+        <item>VLHR</item>
+        <item>VSAV</item>
+        <item>SVAS</item>
     </string-array>
 </resources>

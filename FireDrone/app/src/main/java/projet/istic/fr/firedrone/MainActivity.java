@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
@@ -33,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     private DroneListenerEvent droneListenerEvent;
 
     private TabMapFragment fragmentDrawPath;
-    private FicheFragment fragmentFiche;
+    private InterventionsListFragment fragmentFiche;
     private DetailsInterventionFragment detailsFragment;
 
     private MoyenFragment fragmentMoyen;
@@ -67,7 +65,7 @@ public class MainActivity extends AppCompatActivity
 
         MeansItemService.createListDefaultWay();
 
-        fragmentFiche = FicheFragment.getInstance();
+        fragmentFiche = InterventionsListFragment.getInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche).addToBackStack("detailFragment").commit();
 
 
@@ -109,6 +107,10 @@ public class MainActivity extends AppCompatActivity
         boolean usingControlDrone = false;
         Fragment fragment = null;
         switch (item.getItemId()) {
+            case R.id.nav_liste:
+                fragmentFiche = InterventionsListFragment.getInstance();
+                fragment = fragmentFiche;
+                break;
             case R.id.nav_details:
                 detailsFragment = DetailsInterventionFragment.getInstance();
                 fragment = detailsFragment;
