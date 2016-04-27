@@ -165,7 +165,7 @@ public class CreateInterventionFragment extends Fragment {
         intervention.setStatus("IN_PROGRESS");// put status of intervention
         try {
             CoordinateItem coordinateItem = getLocationFromAddress(addressInter.getText().toString());
-            
+
             if(coordinateItem!=null){
                 intervention.setLatitude(coordinateItem.getLatitude());
                 intervention.setLongitude(coordinateItem.getLongitude());
@@ -175,8 +175,6 @@ public class CreateInterventionFragment extends Fragment {
                 System.out.println("adresse invalide");
                 Toast.makeText(getContext(),"Adresse invalide",Toast.LENGTH_LONG).show();
             }
-
->>>>>>> 7a9c22dbeca8af0443bee09f2b7d96d68425fbe4
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -349,8 +347,8 @@ public class CreateInterventionFragment extends Fragment {
             location.getLongitude();
 
             CoordinateItem coordinateItem = new CoordinateItem();
-            coordinateItem.setLatitude(location.getLatitude());
-            coordinateItem.setLongitude(location.getLongitude());
+            coordinateItem.setLatitude(String.valueOf(location.getLatitude()));
+            coordinateItem.setLongitude(String.valueOf(location.getLongitude()));
 
             return coordinateItem;
 
