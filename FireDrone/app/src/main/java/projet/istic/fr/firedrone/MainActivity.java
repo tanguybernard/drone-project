@@ -131,8 +131,6 @@ public class MainActivity extends AppCompatActivity
                 Log.d("TAG", "selectDrawerItem: ");
                 fragment = fragmentMoyen;
                 break;
-            case R.id.nav_rapport:
-                break;
             case R.id.nav_directive:
                 break;
             case R.id.nav_parcours:

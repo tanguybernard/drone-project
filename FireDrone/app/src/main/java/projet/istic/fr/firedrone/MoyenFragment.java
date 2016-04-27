@@ -216,6 +216,11 @@ public class MoyenFragment extends Fragment {
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
         table.removeAllViews();
         loadTable();
+
+        if(oIntervention.getIntervention()==null){
+            return;
+        }
+
         List<MeansItem> loMeans = oIntervention.getIntervention().getWays();
         if (loMeans != null && loMeans.size() > 0) {
             table.removeAllViews();

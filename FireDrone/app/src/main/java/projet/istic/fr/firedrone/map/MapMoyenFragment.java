@@ -237,8 +237,15 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             for (MeansItem moyen : moyens) {
                 if (moyen.getMsLatitude() != null && moyen.getMsLongitude() != null  && moyen.getMsMeanHFree() == null) {
                     //on ajoute le moyen à la carte
-                    Marker marker = addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
-                    mapMarkerItem.put(marker, moyen);
+
+                    if (!moyen.getMsLatitude().equals("") && !moyen.getMsLongitude().equals("")) {
+                        Marker marker = addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
+                        mapMarkerItem.put(marker, moyen);
+
+                    }
+
+
+
                 }
             }
         }
@@ -250,10 +257,13 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         interventionAPI.getResources(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Resource>>() {
             @Override
             public void success(List<Resource> resources, Response response) {
-                for(Resource r: resources){
-                    EnumPointType enumPointType = EnumPointType.valueOf(r.getType());
-                    Marker marker = addResourceOnMap(enumPointType,new LatLng(r.getLatitude(),r.getLongitude()));
-                    mapMarkerItem.put(marker, enumPointType);
+                if(resources!=null) {
+                    for (Resource r : resources) {
+                        System.out.println(r.getId());
+                        EnumPointType enumPointType = EnumPointType.valueOf(r.getType());
+                        Marker marker = addResourceOnMap(enumPointType, new LatLng(r.getLatitude(), r.getLongitude()));
+                        mapMarkerItem.put(marker, enumPointType);
+                    }
                 }
             }
 
