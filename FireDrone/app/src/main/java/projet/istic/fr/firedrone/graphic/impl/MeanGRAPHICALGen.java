@@ -1,6 +1,5 @@
 package projet.istic.fr.firedrone.graphic.impl;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import projet.istic.fr.firedrone.graphic.BITMAPGen;
+import projet.istic.fr.firedrone.model.MeansItem;
 
 
 /**
@@ -51,17 +51,11 @@ public class MeanGRAPHICALGen implements BITMAPGen {
     }
 
     //    Getter & Setter
-    /** ...  TODO: DEFINES GETTER AND SETTER **/
-
-    //    GetBITMAP
+    /** ...  TODO: DEFINES GETTER AND SETTER IF NEEDED **/
 
     @Override
-    public Bitmap getDashedBitMap(boolean dashed) {
+    public Bitmap getBitMap(MeansItem mean) {
 
-        //Default BITMAP
-        //Bitmap bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
-        //  - -  CANVAS allow you to DRAW SHAPE and TEXT - -  //
-        //Canvas canvas = new Canvas(bitmap);
         Canvas canvas = new Canvas();
         /**   Draw Text  **/
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -69,7 +63,7 @@ public class MeanGRAPHICALGen implements BITMAPGen {
             color = "#000000";
         }
         textPaint.setColor(Color.parseColor(color));
-        //textPaint.setColor(Color.BLUE);
+
         textPaint.setFakeBoldText(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(30);
@@ -96,10 +90,10 @@ public class MeanGRAPHICALGen implements BITMAPGen {
         /**   Draw Border  **/
         Paint dashPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         dashPaint.setColor(Color.parseColor(color));
-        //dashPaint.setColor(Color.BLACK);
+
         dashPaint.setStyle(Paint.Style.STROKE);
         dashPaint.setStrokeWidth(8);
-        if(dashed) {
+        if(mean.getMsMeanHEngaged() == null) {
             dashPaint.setPathEffect(new DashPathEffect(new float[]{10, 10}, 0));
         }
 

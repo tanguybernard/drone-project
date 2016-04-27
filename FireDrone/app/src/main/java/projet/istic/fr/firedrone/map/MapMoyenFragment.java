@@ -314,7 +314,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     private Marker addMeansOnMap(MeansItem meansItem,LatLng latLng){
         return googleMap.addMarker(new MarkerOptions()
                 .position(latLng).draggable(true)
-                .icon(BitmapDescriptorFactory.fromBitmap(meansItem.getDashedBitmap(true))));
+                .icon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap())));
                 //.icon(BitmapDescriptorFactory.fromResource(meansItem.getResource())));
     }
 
@@ -405,6 +405,9 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 if (moyenItem.getMsMeanHEngaged() == null) {
                     moyenItem.setMsMeanHEngaged(FiredroneConstante.DATE_FORMAT.format(newDate));
                     MeansItemService.editMean(moyenItem);
+                    // Refresh Mean's icon
+                    markerSelected.setIcon(BitmapDescriptorFactory.fromBitmap(moyenItem.getBitmap()));
+
                     setFrontMap(true);
                 } else {
                     if (moyenItem.getMsMeanHFree() == null) {
