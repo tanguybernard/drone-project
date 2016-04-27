@@ -65,6 +65,9 @@ public class MeanGRAPHICALGen implements BITMAPGen {
         Canvas canvas = new Canvas();
         /**   Draw Text  **/
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        if(color == null){
+            color = "#000000";
+        }
         textPaint.setColor(Color.parseColor(color));
         //textPaint.setColor(Color.BLUE);
         textPaint.setFakeBoldText(true);
