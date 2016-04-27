@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Created by fracma on 3/18/16.
+ *  @author FireDroneTeam
  */
 
 @RestController
@@ -18,12 +18,12 @@ public class SinisterController {
     @Autowired
     private SinisterService service;
     
-    @RequestMapping("/{id}")
+    @RequestMapping(value= "/{id}", method = RequestMethod.GET)
     public Sinister searchSinister(@PathVariable String id) {
     	return service.getId(id);
     }
     
-    @RequestMapping("")
+    @RequestMapping(value= "", method = RequestMethod.GET)
     public List<Sinister> sinisters() {
     	return service.getAll();
     }

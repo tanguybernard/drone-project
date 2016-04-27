@@ -55,6 +55,7 @@ public class InterventionsListFragment extends Fragment {
 
         lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
 
+        //Un clic sur une intervention de la liste permet de la sélectionner
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -66,7 +67,6 @@ public class InterventionsListFragment extends Fragment {
                 DetailsInterventionFragment detailsInterventionFragment = new DetailsInterventionFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.content_frame, detailsInterventionFragment).commit();
-
             }
         });
 
