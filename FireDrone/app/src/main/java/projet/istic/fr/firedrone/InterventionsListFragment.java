@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,9 @@ import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.Client;
+import retrofit.client.OkClient;
+import retrofit.client.Request;
 import retrofit.client.Response;
 
 /**
@@ -92,7 +96,6 @@ public class InterventionsListFragment extends Fragment {
      * @return list data of in progress interventions
      */
     private List<Intervention> getListData(final View view) {
-
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -113,7 +116,6 @@ public class InterventionsListFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println(error.getMessage());
             }
         });
 

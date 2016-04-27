@@ -82,6 +82,10 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
 
         //BOUCHON
         Intervention intervention = InterventionSingleton.getInstance().getIntervention();
+        listMoyensNonPlacer.clear();
+        if(adapterAdd != null) {
+            adapterAdd.notifyDataSetChanged();
+        }
 
         listMoyens = MeansItemService.getListDefaultMeansItem();
         //parcours de toutes les moyens de l'intervention pour trouver ceux qui ne sont pas encore placés et pas encore libéré
