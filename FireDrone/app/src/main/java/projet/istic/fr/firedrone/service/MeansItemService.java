@@ -84,10 +84,12 @@ public class MeansItemService {
 
     public static List<MeansItem> getListDefaultMeansItem(){
         List<MeansItem> listMeansItem = new ArrayList<>();
+
         for( DefaultWay defautWay : listDefaultWays){
             MeansItem meansItem = new MeansItem();
-            meansItem.setMsMeanName(defautWay.getAcronym());
+            meansItem.setMsMeanCode(defautWay.getAcronym());
             meansItem.setMsColor(defautWay.getColor());
+            meansItem.setMsMeanName(defautWay.getAcronym());
             listMeansItem.add(meansItem);
         }
         return listMeansItem;

@@ -1,10 +1,12 @@
 package projet.istic.fr.firedrone.Interceptor;
 
+import projet.istic.fr.firedrone.FiredroneConstante;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
 /**
  * Created by mamadian on 22/04/16.
+ *
  */
 public class Interceptor {
 
@@ -13,7 +15,7 @@ public class Interceptor {
 
     private String token;
 
-    /** un interceptor de requete qui ajoute à toutes les requetes vers END_POINT un header */
+    /** un interceptor de requete qui ajoute à toutes les requetes vers END_POINT un header (token) */
     private RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
@@ -23,7 +25,7 @@ public class Interceptor {
 
     /**Un adapter */
     private RestAdapter restAdapter = new RestAdapter.Builder()
-            .setEndpoint(END_POINT)
+            .setEndpoint(FiredroneConstante.END_POINT)
             .setRequestInterceptor(requestInterceptor)
             .build();
 

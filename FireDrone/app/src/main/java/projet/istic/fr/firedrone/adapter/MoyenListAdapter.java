@@ -16,16 +16,18 @@ import java.util.List;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
+import projet.istic.fr.firedrone.service.ColorNameService;
 
 /**
  * Created by tbernard on 18/04/16.
  */
 public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
-    private ArrayList<Intervention> listData;
+    private List<MoyenInterventionItem> listData;
     private LayoutInflater layoutInflater;
 
     public MoyenListAdapter(Context aContext, List<MoyenInterventionItem> listData) {
         super(aContext,0,listData);
+        this.listData =listData;
         //layoutInflater = LayoutInflater.from(aContext);
     }
 
@@ -49,7 +51,20 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
 
         final Spinner spinner = (Spinner) convertView.findViewById(R.id.colorMeanSpinner);
 
-        spinner.setAdapter(new SpinnerColorAdapter(this.getContext()));
+        //set EAU, INCENDIE, SAP into spinner
+        spinner.setAdapter(new SpinnerColorAdapter(this.getContext(), listData));
+
+
+            String myString = ColorNameService.getTypeInterventionByColor(item.getColor());
+
+            //Selectionne un role de moyen EAU,INCENDIE, SAP
+            for(int i = 0; i < spinner.getCount(); i++) {
+                System.out.println(spinner.getItemAtPosition(i).toString());
+                if (spinner.getItemAtPosition(i).toString().equals(myString)) {
+                    spinner.setSelection(i);
+                    break;
+                }
+            }
 
 
         subQuantity.setOnClickListener(new View.OnClickListener() {
@@ -67,8 +82,6 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
         });
 
 
-
-        System.out.println(item.getName());
         holder.myName.setText(item.getName());
         holder.quantity.setText(String.valueOf(item.getQuantity()), TextView.BufferType.EDITABLE);
 

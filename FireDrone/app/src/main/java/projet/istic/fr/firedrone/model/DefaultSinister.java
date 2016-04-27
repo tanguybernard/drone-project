@@ -2,33 +2,36 @@ package projet.istic.fr.firedrone.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by ramage on 26/04/16.
  */
 public class DefaultSinister {
 
+    @SerializedName("id")
+    private String id;
+
     @SerializedName("code")
-    private Long code;
+    private String code;
 
-    @SerializedName("group_ways")
-    private DefaultSinisterGroupWays groupWays;
+    @SerializedName("ways")
+    private List<DefaultSinisterGroupWays> groupWays;
 
-    public DefaultSinisterGroupWays getGroupWays() {
+    public List<DefaultSinisterGroupWays> getGroupWays() {
         return groupWays;
     }
 
-    public void setGroupWays(DefaultSinisterGroupWays groupWays) {
+    public void setGroupWays(List<DefaultSinisterGroupWays> groupWays) {
         this.groupWays = groupWays;
     }
 
 
-
-
-    public Long getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Long code) {
+    public void setCode(String code) {
         this.code = code;
     }
 }

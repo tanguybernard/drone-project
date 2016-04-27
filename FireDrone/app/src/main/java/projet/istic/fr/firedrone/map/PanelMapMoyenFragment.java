@@ -39,27 +39,27 @@ import retrofit.client.Response;
  */
 public class PanelMapMoyenFragment extends Fragment implements Serializable {
 
-    private ListView listViewMoyen;
-    private ListView listViewMoyenAPlacer;
-    private ListView listViewPoint;
+    private transient ListView listViewMoyen;
+    private transient ListView listViewMoyenAPlacer;
+    private transient ListView listViewPoint;
 
-    private ArrayAdapter adapter;
-    private ArrayAdapter adapterAdd;
-    private PointListAdapter pointListAdapter;
+    private transient ArrayAdapter adapter;
+    private transient ArrayAdapter adapterAdd;
+    private transient PointListAdapter pointListAdapter;
 
-    private List<MeansItem> listMoyens;
-    private List<MeansItem> listMoyensNonPlacer = new ArrayList<>();
+    private transient List<MeansItem> listMoyens;
+    private transient List<MeansItem> listMoyensNonPlacer = new ArrayList<>();
 
-    private MeansItem itemSelected;
-    private EnumPointType pointTypeSelected;
+    private transient MeansItem itemSelected;
+    private transient EnumPointType pointTypeSelected;
 
-    private AdapterView<?> adapterViewDefault;
-    private AdapterView<?> adapterViewAdd;
-    private AdapterView<?> adapterViewPoint;
+    private transient AdapterView<?> adapterViewDefault;
+    private transient AdapterView<?> adapterViewAdd;
+    private transient AdapterView<?> adapterViewPoint;
 
-    private MapMoyenFragment mapMoyenFragment;
+    private transient MapMoyenFragment mapMoyenFragment;
 
-    private View layoutDemande;
+    private transient View layoutDemande;
 
     @Nullable
     @Override
@@ -85,9 +85,11 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
 
         listMoyens = MeansItemService.getListDefaultMeansItem();
         //parcours de toutes les moyens de l'intervention pour trouver ceux qui ne sont pas encore placés et pas encore libéré
-        for(MeansItem moyenInter :intervention.getWays()) {
-            if((moyenInter.getMsLongitude() == null ||moyenInter.getMsLatitude() == null || moyenInter.getMsLatitude().equals("") || moyenInter.getMsLongitude().equals("") )&& moyenInter.getMsMeanHFree()==null){
-                listMoyensNonPlacer.add(moyenInter);
+        if(intervention.getWays() != null) {
+            for (MeansItem moyenInter : intervention.getWays()) {
+                if ((moyenInter.getMsLongitude() == null || moyenInter.getMsLatitude() == null || moyenInter.getMsLatitude().equals("") || moyenInter.getMsLongitude().equals("")) && moyenInter.getMsMeanHFree() == null) {
+                    listMoyensNonPlacer.add(moyenInter);
+                }
             }
         }
 

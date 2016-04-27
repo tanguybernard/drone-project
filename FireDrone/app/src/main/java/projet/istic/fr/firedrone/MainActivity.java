@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.ControlTower;
@@ -33,13 +31,13 @@ public class MainActivity extends AppCompatActivity
     private DroneListenerEvent droneListenerEvent;
 
     private TabMapFragment fragmentDrawPath;
-    private FicheFragment fragmentFiche;
+    private InterventionsListFragment fragmentFiche;
     private DetailsInterventionFragment detailsFragment;
 
     private MoyenFragment fragmentMoyen;
 
     //fragment pour contrôler le drône
-    private ControleFragment droneControlFragment;
+    private PanelControleDroneFragment droneControlFragment;
 
     @Override
     protected void onStart() {
@@ -50,11 +48,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if (droneControlFragment.getDrone().isConnected()) {
-            droneControlFragment.getDrone().disconnect();
+        if ( ControleFragment.getInstance().getDrone().isConnected()) {
+            ControleFragment.getInstance().getDrone().disconnect();
         }
         //on supprime le drône de la tower
-        controlTower.unregisterDrone(droneControlFragment.getDrone());
+        controlTower.unregisterDrone(ControleFragment.getInstance().getDrone());
         //on se déconnecte de la tower
         controlTower.disconnect();
     }
@@ -67,17 +65,17 @@ public class MainActivity extends AppCompatActivity
 
         MeansItemService.createListDefaultWay();
 
-        fragmentFiche = FicheFragment.getInstance();
+        fragmentFiche = InterventionsListFragment.getInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche).addToBackStack("detailFragment").commit();
 
 
 
         //instanciation du fragment de contrôle du drône
-        droneControlFragment = ControleFragment.getInstance();
+        droneControlFragment = PanelControleDroneFragment.getInstance();
         //on crée le drône içi
-        droneControlFragment.setDrone( new Drone(getApplicationContext()));;
+        ControleFragment.getInstance().setDrone(new Drone(getApplicationContext()));;
         //création du listener qui écoute le drône
-        droneListenerEvent = new DroneListenerEvent(droneControlFragment);
+        droneListenerEvent = new DroneListenerEvent( ControleFragment.getInstance());
         //fragmentMoyen = MoyenFragment.getInstance();
 
         //instanciation du contrôle tower
@@ -109,6 +107,10 @@ public class MainActivity extends AppCompatActivity
         boolean usingControlDrone = false;
         Fragment fragment = null;
         switch (item.getItemId()) {
+            case R.id.nav_liste:
+                fragmentFiche = InterventionsListFragment.getInstance();
+                fragment = fragmentFiche;
+                break;
             case R.id.nav_details:
                 detailsFragment = DetailsInterventionFragment.getInstance();
                 fragment = detailsFragment;
@@ -125,11 +127,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_parcours:
                 fragmentDrawPath = TabMapFragment.getInstance();
 
-                //fragmentDrawPath.getMapAsync(this);
                 fragment = fragmentDrawPath;
                 break;
             case R.id.nav_controle:
-                droneControlFragment = ControleFragment.getInstance();
+                droneControlFragment = PanelControleDroneFragment.getInstance();
                 usingControlDrone = true;
                 fragment= droneControlFragment;
                 break;
@@ -164,14 +165,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTowerConnected() {
         //quand la tower est connecté, on enregistre le drône
-        controlTower.registerDrone(droneControlFragment.getDrone(), droneControlFragment.getHandler());
+        controlTower.registerDrone(ControleFragment.getInstance().getDrone(), ControleFragment.getInstance().getHandler());
     }
 
     public Collection<LatLng> getArrayPointsForMission(){
         if(fragmentDrawPath == null){
             return null;
         }
-        return TabMapFragment.getInstance().getListPointForMissionDrone();
+        return droneControlFragment.getMapDrone().getListMarkers();
     }
 
     @Override

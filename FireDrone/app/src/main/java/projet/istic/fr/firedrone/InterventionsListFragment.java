@@ -30,15 +30,15 @@ import retrofit.client.Response;
 /**
  * Created by nduquesne on 18/03/16.
  */
-public class FicheFragment extends Fragment {
+public class InterventionsListFragment extends Fragment {
 
-    private static FicheFragment INSTANCE;
+    private static InterventionsListFragment INSTANCE;
 
     View view = null;
 
-    public static FicheFragment getInstance() {
+    public static InterventionsListFragment getInstance() {
         if(INSTANCE == null){
-            INSTANCE = new FicheFragment();
+            INSTANCE = new InterventionsListFragment();
         }
         return INSTANCE;
     }

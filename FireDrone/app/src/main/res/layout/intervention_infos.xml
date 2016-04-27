@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="ID: "
-        android:textColor="#0041c4"
+        android:textColor="#000000"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
@@ -22,17 +22,16 @@
         android:layout_toRightOf="@+id/textMyId"
         android:text=" "
         android:textColor="#0041c4"
-        android:textStyle="bold|italic"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView android:id="@+id/textCodeSinistre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textMyId"
         android:text="Code sinistre: "
-        android:textColor="#0041c4"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textColor="#000000"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView android:id="@+id/codeSinistre"
         android:layout_width="wrap_content"
@@ -41,31 +40,55 @@
         android:layout_alignBottom="@+id/textCodeSinistre"
         android:layout_toRightOf="@+id/textCodeSinistre"
         android:text=" "
-        android:textStyle="bold"
-        android:textColor="#b30707"
+        android:textColor="#FF4800FF"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
-    <TextView android:id="@+id/textAdress"
+    <TextView android:id="@+id/addressLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textCodeSinistre"
         android:text="Adresse: "
-        android:textColor="#0041c4"
+        android:textColor="#000000"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView android:id="@+id/adress"
+    <TextView android:id="@+id/address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textAdress"
-        android:layout_alignBottom="@+id/textAdress"
-        android:layout_toRightOf="@+id/textAdress"
+        android:layout_alignBaseline="@+id/addressLabel"
+        android:layout_alignBottom="@+id/addressLabel"
+        android:layout_toRightOf="@+id/addressLabel"
         android:text=" "
         android:textStyle="bold"
-        android:textColor="#b30707"
+        android:textColor="#f40004"
 
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView android:id="@+id/labelDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date: "
+        android:textColor="#000000"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/codeSinistre"
+        android:layout_toEndOf="@+id/codeSinistre"
+        android:layout_marginLeft="59dp"
+        android:layout_marginStart="59dp" />
+
+    <TextView android:id="@+id/dateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/labelDate"
+        android:layout_alignBottom="@+id/labelDate"
+        android:layout_toRightOf="@+id/labelDate"
+        android:text=" "
+        android:textColor="#4800ff"
+
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
 
     <!--<Button
         android:layout_width="wrap_content"
