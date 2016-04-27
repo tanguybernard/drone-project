@@ -18,12 +18,12 @@ public class SIGController {
     @Autowired
     private SIGService service;
     
-    @RequestMapping("/{id}")
+    @RequestMapping(value= "/{id}", method = RequestMethod.GET)
     public Sig searchSIG(@PathVariable String id) {
     	return service.getId(id);
     }
     
-    @RequestMapping("")
+    @RequestMapping(value= "", method = RequestMethod.GET)
     public List<Sig> allSIG() {
     	return service.getAll();
     }

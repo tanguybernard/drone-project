@@ -89,7 +89,6 @@ public class MeansItemService {
             MeansItem meansItem = new MeansItem();
             meansItem.setMsMeanCode(defautWay.getAcronym());
             meansItem.setMsColor(defautWay.getColor());
-            meansItem.setMsMeanName(defautWay.getAcronym());
             listMeansItem.add(meansItem);
         }
         return listMeansItem;

@@ -11,11 +11,11 @@ public class Sinister {
     @Id
     private String id;
     private String code;
-    private List<Way> ways;
+    private List<WayDefault> ways;
 
     public Sinister() {}
 
-    public Sinister(String id, String code, List<Way> ways) {
+    public Sinister(String id, String code, List<WayDefault> ways) {
         this.id = id;
         this.code = code;
         this.setWays(ways);
@@ -29,27 +29,28 @@ public class Sinister {
         this.id = id;
     }
 
-    public String getcode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setcode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public List<Way> getWays() {
-		return ways;
-	}
+    public List<WayDefault> getWays() {
+        return ways;
+    }
 
-	public void setWays(List<Way> ways) {
-		this.ways = ways;
-	}
+    public void setWays(List<WayDefault> ways) {
+        this.ways = ways;
+    }
 
-	@Override
+    @Override
     public String toString() {
-        return "Intervention{" +
+        return "Sinister{" +
                 "id='" + id + '\'' +
                 ", code='" + code + '\'' +
+                ", ways=" + ways +
                 '}';
     }
 }

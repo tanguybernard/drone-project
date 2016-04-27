@@ -14,15 +14,16 @@ public class Intervention {
     private String sinisterCode;
     private String date;
     private String address;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
     private String status;
+    private Cos cos;
     private List<Way> ways;
 
     public Intervention() {}
 
-    public Intervention(String id, String sinisterCode, String date, String address, String latitude, 
-    		String longitude, String status, List<Way> ways) {
+    public Intervention(String id, String sinisterCode, String date, String address, Double latitude,
+                        Double longitude, String status, List<Way> ways) {
         this.id = id;
         this.sinisterCode = sinisterCode;
         this.date = date;
@@ -65,19 +66,19 @@ public class Intervention {
 		this.address = address;
 	}
 
-	public String getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(String latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
-	public String getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(String longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
     
@@ -89,7 +90,15 @@ public class Intervention {
 		this.status = status;
 	}
 
-	public List<Way> getWays() {
+    public Cos getCos() {
+        return cos;
+    }
+
+    public void setCos(Cos cos) {
+        this.cos = cos;
+    }
+
+    public List<Way> getWays() {
 		return ways;
 	}
 
@@ -142,9 +151,10 @@ public class Intervention {
                 ", sinisterCode='" + sinisterCode + '\'' +
                 ", date='" + date + '\'' +
                 ", address='" + address + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", longitude='" + longitude + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 ", status='" + status + '\'' +
+                ", cos='" + cos + '\'' +
                 ", ways=" + ways +
                 '}';
     }
