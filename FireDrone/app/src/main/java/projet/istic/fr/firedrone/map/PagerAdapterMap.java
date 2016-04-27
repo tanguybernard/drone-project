@@ -24,9 +24,9 @@ public class PagerAdapterMap extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
 
         switch(position){
-            case 0: mapDroneFragment = new MapDroneFragment();
+            case 1: mapDroneFragment = new MapDroneFragment();
                 return mapDroneFragment;
-            case 1: return new PanelMapMoyenFragment();
+            case 0: return new PanelMapMoyenFragment();
         }
         return null;
 
@@ -41,8 +41,8 @@ public class PagerAdapterMap extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         switch(position){
-            case 0:return "Drône";
-            case 1: return "Moyen";
+            case 1:return "Drône";
+            case 0: return "Moyen";
         }
         return null;
     }

@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -78,29 +80,48 @@ public class MoyenFragment extends Fragment {
         });
     }
 
-    private TableRow addRow(String[] plsValues, boolean pbHeader, int piColor) {
+    private TableRow addRow(String[] plsValues, boolean pbHeader, String psColor) {
         TableRow element = new TableRow(getContext());
 
         for (int iView = 0; iView < plsValues.length; iView++) {
+            LinearLayout outerLayout = new LinearLayout(getContext());
             TextView tvColumn = new TextView(getContext());
+            ImageView picture = new ImageView(getContext());
             tvColumn.setText(plsValues[iView]);
             if (iView < getResources().getInteger(R.integer.IDX_NAME)) {
                 tvColumn.setVisibility(View.INVISIBLE);
             }
             tvColumn.setGravity(Gravity.CENTER);
-            tvColumn.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+            LinearLayout.LayoutParams textLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            textLayoutParams.setMargins(2, 5, 2, 5);
+            tvColumn.setLayoutParams(textLayoutParams);
+            if (iView == getResources().getInteger(R.integer.IDX_NAME) && !pbHeader) {
+                picture.setMinimumWidth(30);
+                picture.setMaxWidth(30);
+                picture.setMinimumHeight(30);
+                picture.setMaxHeight(30);
+                picture.setBackgroundColor(Color.parseColor(psColor));
+                LinearLayout.LayoutParams imgLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+                imgLayoutParams.setMargins(3, 3, 3, 3);
+                picture.setLayoutParams(imgLayoutParams);
+            }
             if (pbHeader) {
                 tvColumn.setBackgroundColor(Color.GRAY);
                 tvColumn.setTextColor(Color.WHITE);
             } else {
                 tvColumn.setBackgroundColor(Color.LTGRAY);
                 if (iView == getResources().getInteger(R.integer.IDX_NAME)) {
-                    tvColumn.setTextColor(piColor);
+                    tvColumn.setTextColor(Color.parseColor(psColor));
                 } else {
                     tvColumn.setTextColor(Color.BLACK);
                 }
             }
-            element.addView(tvColumn);
+            if (iView == getResources().getInteger(R.integer.IDX_CODE)) {
+                Log.d("COLUMN_CODE", tvColumn.getText().toString());
+            }
+            outerLayout.addView(tvColumn);
+            outerLayout.addView(picture);
+            element.addView(outerLayout);
         }
         return element;
     }
@@ -109,30 +130,38 @@ public class MoyenFragment extends Fragment {
         final String [] columnHeaders = {"", "", "Moyens", "Demandé à", "Arrivé à", "Engagé à", "Libéré à"};
 
         TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
-        TableRow element = addRow(columnHeaders, true, -1);
+        TableRow element = addRow(columnHeaders, true, "#OOOOOO");
         table.addView(element);
         table.setColumnCollapsed(0, true);
         table.setColumnCollapsed(1, true);
     }
 
-    public void addMean(String[] psHours, boolean pbSend) {
-        // TODO Add final code number
+    public void addMean(String[] psHours, boolean pbSend, String psColor) {
+        if (psColor == null || psColor.isEmpty()) {
+            psColor = "#000000";
+        }
         for (int idxTime = getResources().getInteger(R.integer.IDX_H_CALL); idxTime < psHours.length; idxTime++) {
-            if (psHours[idxTime] != null && !psHours[idxTime].isEmpty()) {
+            if (psHours[idxTime] != null && !psHours[idxTime].isEmpty() && psHours[idxTime].contains(" ")) {
                 psHours[idxTime] = psHours[idxTime].split(" ")[1];
             }
         }
+
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
-        TableRow element = addRow(psHours, false, Color.BLACK); // TODO Get Mean Color
+        TableRow element = addRow(psHours, false, psColor);
         final int rowIdx = table.getChildCount();
-        element.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MoyenAlertDialog popUp = new MoyenAlertDialog();
-                popUp.setMiLine(rowIdx, (TableLayout) mView.findViewById(R.id.tableMeans));
-                popUp.show(getFragmentManager(), "");
-            }
-        });
+
+        LinearLayout cellLayout = ((LinearLayout) (element.getChildAt(getResources().getInteger(R.integer.IDX_H_FREE))));
+        TextView oLastTxt = (TextView) cellLayout.getChildAt(0);
+        if (oLastTxt.getText().toString().isEmpty()) {
+            element.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MoyenAlertDialog popUp = new MoyenAlertDialog();
+                    popUp.setMiLine(rowIdx, (TableLayout) mView.findViewById(R.id.tableMeans));
+                    popUp.show(getFragmentManager(), "");
+                }
+            });
+        }
         table.addView(element);
         table.setColumnCollapsed(0, true);
         // send to server
@@ -141,9 +170,9 @@ public class MoyenFragment extends Fragment {
             oNewMean.setMsMeanCode(psHours[getResources().getInteger(R.integer.IDX_CODE)]);
             oNewMean.setMsMeanName(psHours[getResources().getInteger(R.integer.IDX_NAME)]);
             oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_CALL)]);
-            oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_ARRIV)]);
-            oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
-            oNewMean.setMsMeanHCall(psHours[getResources().getInteger(R.integer.IDX_H_FREE)]);
+            oNewMean.setMsMeanHArriv(psHours[getResources().getInteger(R.integer.IDX_H_ARRIV)]);
+            oNewMean.setMsMeanHEngaged(psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
+            oNewMean.setMsMeanHFree(psHours[getResources().getInteger(R.integer.IDX_H_FREE)]);
             MeansItemService.addMean(oNewMean);
         }
     }
@@ -155,7 +184,8 @@ public class MoyenFragment extends Fragment {
         MeansItem oMean = new MeansItem();
         boolean bEmpty = false;
         for (int colIdx = 0; colIdx < element.getChildCount(); colIdx++) {
-            TextView oColValue = (TextView) element.getChildAt(colIdx);
+            LinearLayout cellLayout = ((LinearLayout) (element.getChildAt(colIdx)));
+            TextView oColValue = (TextView) cellLayout.getChildAt(0);
             if (oColValue.getText().equals("") && colIdx > getResources().getInteger(R.integer.IDX_NAME)) {
                 oColValue.setText(psHour);
                 bEmpty = true;
@@ -198,7 +228,7 @@ public class MoyenFragment extends Fragment {
                         oMean.getMsMeanHArriv(),
                         oMean.getMsMeanHEngaged(),
                         oMean.getMsMeanHFree()};
-                addMean(sHours, false);
+                addMean(sHours, false, oMean.getMsColor());
             }
         }
     }
