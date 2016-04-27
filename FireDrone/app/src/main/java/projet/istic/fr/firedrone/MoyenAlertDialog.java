@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -68,8 +69,9 @@ public class MoyenAlertDialog extends DialogFragment {
                 error = ERROR_BAD_MIN;
             }
             TableRow element = (TableRow) this.moTable.getChildAt(this.miLine);
-            for (int colIdx = 1; colIdx < this.miType; colIdx++) {
-                TextView oColValue = (TextView) element.getChildAt(colIdx);
+            for (int colIdx = getResources().getInteger(R.integer.IDX_H_CALL); colIdx < this.miType; colIdx++) {
+                LinearLayout cellLayout = ((LinearLayout) (element.getChildAt(colIdx)));
+                TextView oColValue = (TextView) cellLayout.getChildAt(0);
                 if (!oColValue.getText().equals("")) {
                     if (Integer.parseInt(oColValue.getText().toString()) > Integer.parseInt(psTime)) {
                         error = ERROR_BAD_ORDER;
@@ -85,9 +87,11 @@ public class MoyenAlertDialog extends DialogFragment {
     public void setDialogType() {
         if (miLine > -1) {
             TableRow element = (TableRow) this.moTable.getChildAt(this.miLine);
-            this.msCode = ((TextView) element.getChildAt(0)).getText().toString();
-            for (int colIdx = 1; colIdx < element.getChildCount(); colIdx++) {
-                TextView oColValue = (TextView) element.getChildAt(colIdx);
+            LinearLayout cellLayout = ((LinearLayout) (element.getChildAt(getResources().getInteger(R.integer.IDX_CODE))));
+            this.msCode = ((TextView) cellLayout.getChildAt(0)).getText().toString();
+            for (int colIdx = getResources().getInteger(R.integer.IDX_H_CALL); colIdx < element.getChildCount(); colIdx++) {
+                cellLayout = ((LinearLayout) (element.getChildAt(colIdx)));
+                TextView oColValue = (TextView) cellLayout.getChildAt(0);
                 if (oColValue.getText() == "") {
                     this.miType = colIdx;
                     colIdx = element.getChildCount() + 1;
@@ -123,6 +127,22 @@ public class MoyenAlertDialog extends DialogFragment {
             }
         }
     }
+
+    public int getCodeIndex(TableLayout poTable, String psCode) {
+        int iResult = 0;
+        if (poTable.getChildCount() > 1) {
+            for (int iRow = 1; iRow < poTable.getChildCount(); iRow++) {
+                TableRow oRow = (TableRow) poTable.getChildAt(iRow);
+                LinearLayout cellLayout = ((LinearLayout) (oRow.getChildAt(getResources().getInteger(R.integer.IDX_CODE))));
+                String sCode = ((TextView) cellLayout.getChildAt(0)).getText().toString();
+                if (psCode.equals(sCode)) {
+                    iResult++;
+                }
+            }
+        }
+        return iResult;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -138,15 +158,19 @@ public class MoyenAlertDialog extends DialogFragment {
                 String sNewMean = lstMeans.getSelectedItem().toString();
                 String sNewHour = ((EditText) dialView.findViewById(R.id.txtEditHour)).getText().toString();
                 TextView txtErr = (TextView) dialView.findViewById(R.id.lblHourError);
+                Log.d("HOUR", sNewHour);
                 String sError = checkTime(sNewHour);
                 Calendar c = Calendar.getInstance();
                 c.setTimeInMillis(System.currentTimeMillis());
                 Date hDate = c.getTime();
                 SimpleDateFormat dFormat = new SimpleDateFormat("yyyyMMdd");
+
                 if (sError.equals(NO_ERROR)) {
                     MoyenFragment moyen = MoyenFragment.getInstance();
                     String[] tsHours = new String[getResources().getInteger(R.integer.IDX_H_FREE) + 1];
                     tsHours[getResources().getInteger(R.integer.IDX_CODE)] = sNewMean;
+                    int iCodeIndex = getCodeIndex(moTable, sNewMean);
+                    sNewMean = sNewMean + String.valueOf(iCodeIndex);
                     tsHours[getResources().getInteger(R.integer.IDX_NAME)] = sNewMean;
                     if (miLine == -1) {
                         miType = getResources().getInteger(R.integer.IDX_H_CALL);
@@ -154,7 +178,7 @@ public class MoyenAlertDialog extends DialogFragment {
                     sNewHour = dFormat.format(hDate) + " " + sNewHour;
                     tsHours[miType] = sNewHour;
                     if (miLine == -1) {
-                        moyen.addMean(tsHours, true);
+                        moyen.addMean(tsHours, true, "#000000"); // TODO Get default color
                     } else {
                         moyen.editMean(sNewHour, miLine);
                     }
