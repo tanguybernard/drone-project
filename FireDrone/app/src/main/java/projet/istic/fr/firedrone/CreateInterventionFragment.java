@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -27,10 +28,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import projet.istic.fr.firedrone.ModelAPI.DefaultWaysSinisterApi;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.MoyenListAdapter;
+import projet.istic.fr.firedrone.map.MapMoyenFragment;
+import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.model.CoordinateItem;
 import projet.istic.fr.firedrone.model.DefaultSinister;
 import projet.istic.fr.firedrone.model.DefaultSinisterGroupWays;
@@ -42,6 +46,7 @@ import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 
@@ -161,14 +166,22 @@ public class CreateInterventionFragment extends Fragment {
         try {
             CoordinateItem coordinateItem = getLocationFromAddress(addressInter.getText().toString());
 
-            intervention.setLatitude(coordinateItem.getLatitude());
-            intervention.setLongitude(coordinateItem.getLongitude());
+            if(coordinateItem!=null){
+                intervention.setLatitude(coordinateItem.getLatitude());
+                intervention.setLongitude(coordinateItem.getLongitude());
+                requestNewIntervention(intervention);
+            }
+            else{
+                System.out.println("adresse invalide");
+                Toast.makeText(getContext(),"Adresse invalide",Toast.LENGTH_LONG).show();
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        requestNewIntervention(intervention);
+
 
 
     }
@@ -193,9 +206,9 @@ public class CreateInterventionFragment extends Fragment {
 
                 InterventionSingleton.getInstance().setIntervention(intervention);
 
-                DetailsInterventionFragment detailsInterventionFragment = new DetailsInterventionFragment();
+                TabMapFragment tabMapFragment = new TabMapFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, detailsInterventionFragment).commit();
+                transaction.replace(R.id.content_frame, tabMapFragment).commit();
             }
 
             @Override
@@ -217,6 +230,7 @@ public class CreateInterventionFragment extends Fragment {
     private ArrayList<MoyenInterventionItem> getListData(final View view, final String sinisterCode) {
 
         final ArrayList<MoyenInterventionItem> results = new ArrayList<MoyenInterventionItem>();
+
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -324,6 +338,9 @@ public class CreateInterventionFragment extends Fragment {
         try {
             address = coder.getFromLocationName(strAddress,5);
             if (address==null) {
+                return null;
+            }
+            if(address.size()<=0){
                 return null;
             }
             Address location=address.get(0);
