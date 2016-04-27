@@ -65,6 +65,7 @@ public class OAuth2Configuration {
                     .antMatchers("/intervention**").permitAll()
                     .antMatchers("/sinister**").permitAll()
                     .antMatchers("/sig**").permitAll()
+                    .antMatchers("/way**").permitAll()
                     .antMatchers("/user/**").authenticated();
 
         }
