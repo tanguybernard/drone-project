@@ -1,5 +1,6 @@
 package projet.istic.fr.firedrone.listener;
 
+import android.location.Location;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -13,9 +14,12 @@ import com.o3dr.services.android.lib.drone.mission.MissionItemType;
 import com.o3dr.services.android.lib.drone.mission.item.MissionItem;
 import com.o3dr.services.android.lib.drone.mission.item.spatial.Waypoint;
 import com.o3dr.services.android.lib.drone.property.Gps;
+import com.o3dr.services.android.lib.drone.property.Home;
+import com.o3dr.services.android.lib.drone.property.Speed;
 import com.o3dr.services.android.lib.drone.property.Type;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import projet.istic.fr.firedrone.ControleFragment;
@@ -27,6 +31,7 @@ public class DroneListenerEvent implements DroneListener {
 
     //référence vers le fragment de contrôle du drone
     private ControleFragment controlFragement;
+    private long lastDateTimeDroneMove;
 
     //variable indiquant si on est dans le panel de contrôle du drone
     private boolean usingControlPanel;
@@ -117,13 +122,14 @@ public class DroneListenerEvent implements DroneListener {
                 break;
             case AttributeEvent.GPS_POSITION:
                 //lorsque la position du drone a bougé
-
-                if(droneMoveListener != null){
+                long time = new Date().getTime();
+                if(droneMoveListener != null ){
                     //on récupère la position du drône
                     Gps gps = controlFragement.getDrone().getAttribute(AttributeType.GPS);
                     LatLong position = gps.getPosition();
 
-                    if(position != null) {
+                    if(position != null && (time - lastDateTimeDroneMove > 1000)) {
+                        lastDateTimeDroneMove = time;
                         //on appelle la méthode qui gère lle mouveemnt du drone
                         droneMoveListener.onDroneMove(new LatLng(gps.getPosition().getLatitude(), gps.getPosition().getLongitude()));
                     }

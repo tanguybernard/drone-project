@@ -166,7 +166,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     public boolean onMarkerClick(Marker marker) {
 
         MeansItem meansItem = mapMeansItem.get(marker);
-
+        button.setVisibility(View.VISIBLE);
         if(meansItem !=null) {
             //si on est sur un marker de type moyen
             if (markerSelected != null && markerSelected.getId().equals(marker.getId()) && infoWindowContainer == viewFront) {
@@ -218,9 +218,10 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         if(moyens != null) {
             //parcours de tous les moyens pour trouvés ceux déjà positionné sur la carte
             for (MeansItem moyen : moyens) {
-                if (moyen.getMsLatitude() != null && !moyen.getMsLatitude().equals("") && moyen.getMsLongitude() != null && !moyen.getMsLongitude().equals("")) {
+                if (moyen.getMsLatitude() != null && !moyen.getMsLatitude().equals("") && moyen.getMsLongitude() != null && !moyen.getMsLongitude().equals("") && moyen.getMsMeanHFree() == null) {
                     //on ajoute le moyen à la carte
-                    addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
+                    Marker marker = addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
+                    mapMeansItem.put(marker,moyen);
                 }
             }
         }

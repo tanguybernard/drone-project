@@ -122,7 +122,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         suppressionMarker.setVisibility(View.INVISIBLE);
 
         //ajout du bouton de suppression et placement
-        mapView.addView(suppressionMarker, new FrameLayout.LayoutParams(150, 150, Gravity.CENTER_HORIZONTAL));
+        mapView.addView(suppressionMarker, new FrameLayout.LayoutParams(150,150, Gravity.CENTER_HORIZONTAL));
 
 
         if(myMap != null){

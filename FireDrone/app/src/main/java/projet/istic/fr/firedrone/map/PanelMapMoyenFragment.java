@@ -85,9 +85,11 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
 
         listMoyens = MeansItemService.getListDefaultMeansItem();
         //parcours de toutes les moyens de l'intervention pour trouver ceux qui ne sont pas encore placés et pas encore libéré
-        for(MeansItem moyenInter :intervention.getWays()) {
-            if((moyenInter.getMsLongitude() == null ||moyenInter.getMsLatitude() == null || moyenInter.getMsLatitude().equals("") || moyenInter.getMsLongitude().equals("") )&& moyenInter.getMsMeanHFree()==null){
-                listMoyensNonPlacer.add(moyenInter);
+        if(intervention.getWays() != null) {
+            for (MeansItem moyenInter : intervention.getWays()) {
+                if ((moyenInter.getMsLongitude() == null || moyenInter.getMsLatitude() == null || moyenInter.getMsLatitude().equals("") || moyenInter.getMsLongitude().equals("")) && moyenInter.getMsMeanHFree() == null) {
+                    listMoyensNonPlacer.add(moyenInter);
+                }
             }
         }
 

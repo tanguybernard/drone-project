@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
     private MoyenFragment fragmentMoyen;
 
     //fragment pour contrôler le drône
-    private ControleFragment droneControlFragment;
+    private PanelControleDroneFragment droneControlFragment;
 
     @Override
     protected void onStart() {
@@ -50,11 +50,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if (droneControlFragment.getDrone().isConnected()) {
-            droneControlFragment.getDrone().disconnect();
+        if ( ControleFragment.getInstance().getDrone().isConnected()) {
+            ControleFragment.getInstance().getDrone().disconnect();
         }
         //on supprime le drône de la tower
-        controlTower.unregisterDrone(droneControlFragment.getDrone());
+        controlTower.unregisterDrone(ControleFragment.getInstance().getDrone());
         //on se déconnecte de la tower
         controlTower.disconnect();
     }
@@ -73,11 +73,11 @@ public class MainActivity extends AppCompatActivity
 
 
         //instanciation du fragment de contrôle du drône
-        droneControlFragment = ControleFragment.getInstance();
+        droneControlFragment = PanelControleDroneFragment.getInstance();
         //on crée le drône içi
-        droneControlFragment.setDrone( new Drone(getApplicationContext()));;
+        ControleFragment.getInstance().setDrone(new Drone(getApplicationContext()));;
         //création du listener qui écoute le drône
-        droneListenerEvent = new DroneListenerEvent(droneControlFragment);
+        droneListenerEvent = new DroneListenerEvent( ControleFragment.getInstance());
         //fragmentMoyen = MoyenFragment.getInstance();
 
         //instanciation du contrôle tower
@@ -125,11 +125,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_parcours:
                 fragmentDrawPath = TabMapFragment.getInstance();
 
-                //fragmentDrawPath.getMapAsync(this);
                 fragment = fragmentDrawPath;
                 break;
             case R.id.nav_controle:
-                droneControlFragment = ControleFragment.getInstance();
+                droneControlFragment = PanelControleDroneFragment.getInstance();
                 usingControlDrone = true;
                 fragment= droneControlFragment;
                 break;
@@ -164,14 +163,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTowerConnected() {
         //quand la tower est connecté, on enregistre le drône
-        controlTower.registerDrone(droneControlFragment.getDrone(), droneControlFragment.getHandler());
+        controlTower.registerDrone(ControleFragment.getInstance().getDrone(), ControleFragment.getInstance().getHandler());
     }
 
     public Collection<LatLng> getArrayPointsForMission(){
         if(fragmentDrawPath == null){
             return null;
         }
-        return TabMapFragment.getInstance().getListPointForMissionDrone();
+        return droneControlFragment.getMapDrone().getListMarkers();
     }
 
     @Override

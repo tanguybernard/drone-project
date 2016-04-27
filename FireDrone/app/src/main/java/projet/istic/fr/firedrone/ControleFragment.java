@@ -23,6 +23,7 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeType;
 import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
 import com.o3dr.services.android.lib.drone.connection.ConnectionType;
 import com.o3dr.services.android.lib.drone.mission.Mission;
+import com.o3dr.services.android.lib.drone.mission.item.MissionItem;
 import com.o3dr.services.android.lib.drone.mission.item.spatial.Waypoint;
 import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.Gps;
@@ -31,8 +32,12 @@ import com.o3dr.services.android.lib.drone.property.Speed;
 import com.o3dr.services.android.lib.drone.property.State;
 import com.o3dr.services.android.lib.drone.property.Type;
 import com.o3dr.services.android.lib.drone.property.VehicleMode;
+import com.o3dr.services.android.lib.model.AbstractCommandListener;
+import com.o3dr.services.android.lib.model.action.Action;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
@@ -144,6 +149,9 @@ public class ControleFragment extends Fragment {
         updateVehicleModesForType(droneType);
     }
 
+    private void takeSnapshot(View v) {
+    }
+
     public void onFlightModeSelected(View view) {
         //mise à jour du mode du drône
         VehicleMode vehicleMode = (VehicleMode) this.modeSelector.getSelectedItem();
@@ -190,6 +198,7 @@ public class ControleFragment extends Fragment {
 
         //récupérations des points choisi par l'utilisateur
         Collection<LatLng> positions = getListOfPoint();
+
         if (positions != null) {
             //création de la mission
             Mission mission = new Mission();
@@ -200,9 +209,40 @@ public class ControleFragment extends Fragment {
                 waypoint.setCoordinate(new LatLongAlt(point.latitude, point.longitude, 0));
                 mission.addMissionItem(waypoint);
             }
+
+            if(positions.size()>1) {
+
+                for (int i = positions.size() - 2; i >= 0; i--) {
+                    LatLng latLng = (LatLng) positions.toArray()[i];
+                    Waypoint waypoint = new Waypoint();
+                    waypoint.setCoordinate(new LatLongAlt(latLng.latitude, latLng.longitude, 0));
+                    mission.addMissionItem(waypoint);
+                }
+            }
+            Waypoint waypoint = new Waypoint();
+            waypoint.setCoordinate(((Home)drone.getAttribute(AttributeType.HOME)).getCoordinate());
+            mission.addMissionItem(waypoint);
+
             //on envoi le drône en mission
+
+
+            ((Mission)drone.getAttribute(AttributeType.MISSION)).clear();
             MissionApi.getApi(drone).setMission(mission, true);
-            MissionApi.getApi(drone).loadWaypoints();
+            MissionApi.getApi(drone).startMission(true, true, new AbstractCommandListener() {
+                @Override
+                public void onSuccess() {
+                }
+
+                @Override
+                public void onError(int executionError) {
+
+                }
+
+                @Override
+                public void onTimeout() {
+
+                }
+            });
         }
     }
 
@@ -271,10 +311,12 @@ public class ControleFragment extends Fragment {
 
     public void updateConnectedButton() {
         //Mise à jour du texte du bouton connecté
-        if (drone.isConnected()) {
-            connectButton.setText("Disconnect");
-        } else {
-            connectButton.setText("Connect");
+        if(drone != null) {
+            if (drone.isConnected()) {
+                connectButton.setText("Disconnect");
+            } else {
+                connectButton.setText("Connect");
+            }
         }
     }
 
@@ -344,9 +386,6 @@ public class ControleFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_controle, container, false);
     }
 
-    private void takeSnapshot(View v) {
-
-    }
 
     //récupération de la liste des points choisies par l'utilisateur
     private Collection<LatLng> getListOfPoint() {
