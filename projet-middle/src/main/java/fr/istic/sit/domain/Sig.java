@@ -17,13 +17,13 @@ public class Sig {
     @Id
     private String id;
     private String type;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
     private String name;
 
     public Sig() {}
 
-    public Sig(String id, String type, String latitude, String longitude) {
+    public Sig(String id, String type, Double latitude, Double longitude) {
         this.id = id;
         this.type = type;
         this.latitude = latitude;
@@ -47,19 +47,19 @@ public class Sig {
         this.type = type;
     }
 
-    public String getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 

@@ -25,13 +25,13 @@ public class UserController {
     @Autowired
 	private UserService userService;
 
-    @RequestMapping("")
+    @RequestMapping(value=  "",  method = RequestMethod.GET)
     public List<User> users(OAuth2Authentication authentication) {
         return userService.getAll();
     }
 
 
-    @RequestMapping("/{login}")
+    @RequestMapping(value= "/{login}", method = RequestMethod.GET)
     public User searchUser(OAuth2Authentication authentication, @PathVariable String login) {
         return userService.getByLogin(login);
     }
