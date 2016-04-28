@@ -9,45 +9,72 @@ import android.content.Intent;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
+
+import java.util.ArrayList;
+
+import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.MainActivity;
+import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.model.Intervention;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by tbernard on 27/04/16.
  */
-public class PushReceiver extends BroadcastReceiver
-{
+public class PushReceiver extends BroadcastReceiver  {
     @Override
     public void onReceive(Context context, Intent intent)
     {
         String notificationTitle = "Pushy";
-        String notificationDesc = "Test notification";
+        String myMessage = "Test notification";
 
         // Attempt to grab the message property from the payload
         if ( intent.getStringExtra("message") != null )
         {
-            notificationDesc = intent.getStringExtra("message");
+            myMessage = intent.getStringExtra("message");
         }
 
-        System.out.println(notificationDesc);
+
+        /*InterventionSingleton.getInstance().getIntervention().getId()
+        if(myMessage.equals()){
+
+            notifyApp(context);
+
+        }
+        else{
+
+        }*/
 
 
+        notifyApp(context);//bouchon
 
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        context,
-                        0,
-                        intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+    }
+
+
+    public void notifyApp(Context context){
+
+
 
 
         NotificationCompat.Builder builder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_menu_send)
                         .setContentTitle("Mise à Jour Intervention")
+                        //.setDefaults(Notification.DEFAULT_VIBRATE)
+
+                        .setAutoCancel(true)
+
                         .setContentText("Synchronisation ...");
         int NOTIFICATION_ID = 12345;
+
+
+
+
 
         Intent targetIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -57,8 +84,41 @@ public class PushReceiver extends BroadcastReceiver
 
 
 
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+
+        InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+
+
+        interventionAPI.getInterventionById(
+                InterventionSingleton.getInstance().getIntervention().getId(), new Callback<Intervention>() {
+
+                    @Override
+                    public void success(Intervention intervention, Response response) {
+
+                        InterventionSingleton.getInstance().setIntervention(intervention);
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+
+
+
+        MyObservable.getInstance().notifierObservateurs();
 
 
 
     }
+
+
+
+
+
+
 }

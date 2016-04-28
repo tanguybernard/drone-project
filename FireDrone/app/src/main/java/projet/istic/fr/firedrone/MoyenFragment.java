@@ -175,7 +175,7 @@ public class MoyenFragment extends Fragment {
             oNewMean.setMsMeanHEngaged(psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
             oNewMean.setMsMeanHFree(psHours[getResources().getInteger(R.integer.IDX_H_FREE)]);
             oNewMean.setMsColor(psColor);
-            MeansItemService.addMean(oNewMean,getContext());
+            MeansItemService.addMean(oNewMean,getContext(),true);
         }
     }
 

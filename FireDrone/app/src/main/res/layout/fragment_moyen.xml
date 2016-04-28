@@ -27,6 +27,11 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
             <TableLayout
                 android:layout_width="fill_parent"
                 android:stretchColumns="0"
@@ -34,20 +39,17 @@
                 android:id="@+id/tableMeans">
             </TableLayout>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ajouter un moyen"
+                android:id="@+id/btnAddMean"
+                android:onClick="addMean"
+                android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+
         </ScrollView>
-    </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ajouter un moyen"
-            android:id="@+id/btnAddMean"
-            android:onClick="addMean" />
     </LinearLayout>
 
 </LinearLayout>

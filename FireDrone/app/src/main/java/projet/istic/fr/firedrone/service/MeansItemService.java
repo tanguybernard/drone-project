@@ -1,6 +1,8 @@
 package projet.istic.fr.firedrone.service;
 
+
 import android.content.Context;
+import android.telecom.Call;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.List;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
+import projet.istic.fr.firedrone.MoyenFragment;
 import projet.istic.fr.firedrone.model.DefaultWay;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
@@ -24,16 +27,22 @@ public class MeansItemService {
 
     private static List<DefaultWay> listDefaultWays ;
 
-    public static List<MeansItem> addMean(MeansItem meansItem,final Context context) {
+    public static List<MeansItem> addMean(MeansItem meansItem,final Context context,final boolean isTableMoyen) {
         final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
         String sIntervId = oIntervention.getId();
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
+        RestAdapter restAdapter = new RestAdapter.Builder().
+                setEndpoint(FiredroneConstante.END_POINT).
+                setLogLevel(RestAdapter.LogLevel.FULL).
+                build();
         MeansAPI meansApi = restAdapter.create(MeansAPI.class);
         meansApi.AddMean(sIntervId, meansItem, new Callback<List<MeansItem>>() {
             @Override
             public void success(List<MeansItem> ploMeans, Response response) {
 
                 oIntervention.setWays(ploMeans);
+                if(isTableMoyen){
+                    MoyenFragment.getInstance().getMeans();
+                }
             }
 
             @Override

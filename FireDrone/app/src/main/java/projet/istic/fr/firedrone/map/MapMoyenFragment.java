@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +37,15 @@ import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.Resource;
 import projet.istic.fr.firedrone.model.Sig;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.synchro.MyObservable;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -50,7 +56,7 @@ import retrofit.client.Response;
  */
 public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener,GoogleMap.OnMarkerClickListener,GoogleMap.OnCameraChangeListener,
-        View.OnClickListener,MethodCallWhenDrag {
+        View.OnClickListener,MethodCallWhenDrag, Observateur {
 
 
     //item sélectionné dans le panel
@@ -131,6 +137,9 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        MyObservable.getInstance().ajouterObservateur(this);
+
         View rootView = inflater.inflate(R.layout.fragment_map_moyen, null);
         containerMap = (FrameLayout) rootView.findViewById(R.id.container_map);
         FrameLayout mapView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
@@ -273,6 +282,8 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        System.out.println("loldsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsds");
+
         this.googleMap =googleMap;
         googleMap.setOnMapClickListener(this);
         googleMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, googleMap, null, this));
@@ -400,7 +411,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 //on le met à nulle
                 moyenItemSelected = null;;
             }else{
-                MeansItemService.addMean(meansItemCloned,getContext());
+                MeansItemService.addMean(meansItemCloned,getContext(),false);
             }
         }else if(enumPointTypeSelected != null){
             //ajout du marker sur la carte
@@ -536,4 +547,26 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             }
         }
     }
+
+
+    @Override
+    public void actualiser(Observable o) {
+
+        if(o instanceof MyObservable){
+
+
+
+            MapMoyenFragment myFragment = (MapMoyenFragment)getFragmentManager().findFragmentById(R.id.content_map_moyen);
+            if (myFragment != null && myFragment.isVisible()) {
+                //ICI ROMAIN
+
+            }
+
+
+        }
+
+
+    }
+
+
 }

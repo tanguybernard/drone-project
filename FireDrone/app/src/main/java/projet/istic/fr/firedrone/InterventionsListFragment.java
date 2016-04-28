@@ -10,34 +10,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
+import projet.istic.fr.firedrone.synchro.PushReceiver;
+import projet.istic.fr.firedrone.synchro.MyObservable;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
-import retrofit.client.Client;
-import retrofit.client.OkClient;
-import retrofit.client.Request;
 import retrofit.client.Response;
 
 /**
  * Created by nduquesne on 18/03/16.
  */
-public class InterventionsListFragment extends Fragment {
+public class InterventionsListFragment extends Fragment implements Observateur {
 
     private static InterventionsListFragment INSTANCE;
 
@@ -49,18 +48,27 @@ public class InterventionsListFragment extends Fragment {
         }
         return INSTANCE;
     }
+    List<Intervention> listIntervention;
+    ListView lv1 = null;
+    ArrayAdapter<Intervention> listAdapter;
+    //Map<String, Intervention> mapIntervention;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
+
+        MyObservable p = MyObservable.getInstance();
+        p.ajouterObservateur(this);
         
         view = inflater.inflate(R.layout.intervention_main, container, false);
 
         //Création de la liste et affichage dans la listview
-        List<Intervention> image_details = getListData(view);
+        listIntervention = getListData(view);
 
-        final ListView lv1 = (ListView) view.findViewById(R.id.interventionList);
+        lv1 = (ListView) view.findViewById(R.id.interventionList);
 
-        lv1.setAdapter(new CustomListAdapter(this.getContext(), image_details));
+        listAdapter = new CustomListAdapter(this.getContext(), listIntervention);
+
+        lv1.setAdapter(listAdapter);
 
         //Un clic sur une intervention de la liste permet de la sélectionner
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -163,6 +171,22 @@ public class InterventionsListFragment extends Fragment {
         }
     }
 
+    //Méthode de focus sur l'item de la liste quand on clique sur un marker de la map
+    public void UpdateList(String idInter) {
+
+        int positionList = 0;
+
+        for (int i = 0; i < listIntervention.size(); i++){
+            if (idInter.equals(listIntervention.get(i).getId())){
+                positionList = i;
+            }
+        }
+
+        if(lv1 != null){
+            lv1.setSelection(positionList);
+            lv1.requestFocus();
+        }
+    }
 
 
     //Méthode de vérification de la connexion wifi
@@ -170,5 +194,33 @@ public class InterventionsListFragment extends Fragment {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    public void actualiser(Observable o) {
+
+        System.out.println("TEST synchro");
+        if(o instanceof MyObservable){
+
+
+            Fragment frag = getFragmentManager().findFragmentById(R.id.content_frame);
+
+
+            InterventionsListFragment myFragment = (InterventionsListFragment)getFragmentManager().findFragmentByTag("InterventionsListFragment");
+            if (myFragment != null && myFragment.isVisible()) {
+
+                FragmentTransaction tr = getFragmentManager().beginTransaction();
+                tr.replace(R.id.content_frame, this);
+                tr.commit();
+            }
+
+
+
+
+
+
+        }
+
+
     }
 }
