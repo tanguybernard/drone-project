@@ -18,14 +18,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by nduquesne on 18/03/16.
@@ -73,15 +68,17 @@ public class MoyenFragment extends Fragment {
         final Button addMeans = (Button) view.findViewById(R.id.btnAddMean);
         addMeans.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                MoyenAlertDialog popUp = new MoyenAlertDialog();
+                MoyenEditDialog popUp = new MoyenEditDialog();
                 popUp.setMiLine(-1, (TableLayout) mView.findViewById(R.id.tableMeans));
                 popUp.show(getFragmentManager(), "");
             }
         });
     }
 
-    private TableRow addRow(String[] plsValues, boolean pbHeader, String psColor) {
+    private TableRow addRow(String[] plsValues, boolean pbHeader, final String psColor) {
         TableRow element = new TableRow(getContext());
+
+        final int iRowIdx = ((TableLayout) mView.findViewById(R.id.tableMeans)).getChildCount();
 
         for (int iView = 0; iView < plsValues.length; iView++) {
             LinearLayout outerLayout = new LinearLayout(getContext());
@@ -104,6 +101,15 @@ public class MoyenFragment extends Fragment {
                 LinearLayout.LayoutParams imgLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
                 imgLayoutParams.setMargins(3, 3, 3, 3);
                 picture.setLayoutParams(imgLayoutParams);
+                picture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("CLICK", "Click sur la couleur");
+                        MoyenColorDialog colorPopup = new MoyenColorDialog();
+                        colorPopup.setLine(iRowIdx, psColor, (TableLayout) mView.findViewById(R.id.tableMeans));
+                        colorPopup.show(getFragmentManager(), "");
+                    }
+                });
             }
             if (pbHeader) {
                 tvColumn.setBackgroundColor(Color.GRAY);
@@ -156,7 +162,7 @@ public class MoyenFragment extends Fragment {
             element.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MoyenAlertDialog popUp = new MoyenAlertDialog();
+                    MoyenEditDialog popUp = new MoyenEditDialog();
                     popUp.setMiLine(rowIdx, (TableLayout) mView.findViewById(R.id.tableMeans));
                     popUp.show(getFragmentManager(), "");
                 }
@@ -173,6 +179,7 @@ public class MoyenFragment extends Fragment {
             oNewMean.setMsMeanHArriv(psHours[getResources().getInteger(R.integer.IDX_H_ARRIV)]);
             oNewMean.setMsMeanHEngaged(psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
             oNewMean.setMsMeanHFree(psHours[getResources().getInteger(R.integer.IDX_H_FREE)]);
+            oNewMean.setMsColor(psColor);
             MeansItemService.addMean(oNewMean);
         }
     }
