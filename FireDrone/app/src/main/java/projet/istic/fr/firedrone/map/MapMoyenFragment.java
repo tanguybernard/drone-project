@@ -104,33 +104,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
         super.onCreate(savedInstanceState);
         getMapAsync(this);
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(FiredroneConstante.END_POINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
-                .build();
-
-        final SIGAPI sigApi = restAdapter.create(SIGAPI.class);
-
-        //récupération des Sig en base de données
-        sigApi.getSIGs(new Callback<List<Sig>>() {
-            @Override
-            public void success(List<Sig> sigs, Response response) {
-
-                listSIG = sigs;
-                //si google map existe déjà on place les sig
-                if(googleMap != null){
-                    createSIG();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                FiredroneConstante.getToastError(getContext()).show();
-            }
-        });
-
-
     }
 
 
@@ -296,26 +269,13 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             createSIG();
         }
 
-        //placement des moyens qui sont sur la carte
-        List<MeansItem> moyens = InterventionSingleton.getInstance().getIntervention().getWays();
-        if(moyens != null) {
-            //parcours de tous les moyens pour trouvés ceux déjà positionné sur la carte
-            for (MeansItem moyen : moyens) {
-                if (moyen.getMsLatitude() != null && moyen.getMsLongitude() != null  && moyen.getMsMeanHFree() == null) {
-                    //on ajoute le moyen à la carte
+        createMoyenOnMap();
 
-                    if (!moyen.getMsLatitude().equals("") && !moyen.getMsLongitude().equals("")) {
-                        Marker marker = addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
-                        mapMarkerItem.put(marker, moyen);
+        crateRessourceOnMap();
 
-                    }
+    }
 
-
-
-                }
-            }
-        }
-
+    private void crateRessourceOnMap(){
         //récupération en base de données des ressources de l'intervention
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
@@ -339,26 +299,70 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         });
     }
 
-    private void createSIG(){
-        //création des points Sig
-        for (Sig sig : listSIG) {
-            //type WATER
-            if(sig.getType().equals("WATER")){
-                googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.water))
-                );
-            }else if(sig.getType().equals("HYDRANT")){
-                //type HYDRANT
-                googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.hydrant))
-                );
-            }else if(sig.getType().equals("CHEMICALS")){
-                //type CHEMICALS
-                googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.chemicals))
-                );
+    private void createMoyenOnMap(){
+        //placement des moyens qui sont sur la carte
+        List<MeansItem> moyens = InterventionSingleton.getInstance().getIntervention().getWays();
+        if(moyens != null) {
+            //parcours de tous les moyens pour trouvés ceux déjà positionné sur la carte
+            for (MeansItem moyen : moyens) {
+                if (moyen.getMsLatitude() != null && moyen.getMsLongitude() != null  && moyen.getMsMeanHFree() == null) {
+                    //on ajoute le moyen à la carte
+
+                    if (!moyen.getMsLatitude().equals("") && !moyen.getMsLongitude().equals("")) {
+                        Marker marker = addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
+                        mapMarkerItem.put(marker, moyen);
+
+                    }
+
+                }
             }
         }
+    }
+
+    private void createSIG(){
+
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
+                .build();
+
+
+        final SIGAPI sigApi = restAdapter.create(SIGAPI.class);
+
+        //récupération des Sig en base de données
+        sigApi.getSIGs(new Callback<List<Sig>>() {
+            @Override
+            public void success(List<Sig> sigs, Response response) {
+
+                listSIG = sigs;
+                //si google map existe déjà on place les sig
+                //création des points Sig
+                for (Sig sig : listSIG) {
+                    //type WATER
+                    if(sig.getType().equals("WATER")){
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.water))
+                        );
+                    }else if(sig.getType().equals("HYDRANT")){
+                        //type HYDRANT
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.hydrant))
+                        );
+                    }else if(sig.getType().equals("CHEMICALS")){
+                        //type CHEMICALS
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.chemicals))
+                        );
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                FiredroneConstante.getToastError(getContext()).show();
+            }
+        });
     }
 
     public void setMoyenItemSelected(MeansItem pMoyenItemSelected) {
@@ -551,21 +555,21 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public void actualiser(Observable o) {
-
         if(o instanceof MyObservable){
-
-
-
             MapMoyenFragment myFragment = (MapMoyenFragment)getFragmentManager().findFragmentById(R.id.content_map_moyen);
             if (myFragment != null && myFragment.isVisible()) {
                 //ICI ROMAIN
+                googleMap.clear();
+                mapMarkerItem.clear();
+                if(listSIG != null) {
+                    createSIG();
+                }
 
+                createMoyenOnMap();
+
+                crateRessourceOnMap();
             }
-
-
         }
-
-
     }
 
 

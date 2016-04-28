@@ -99,7 +99,7 @@ public class PushReceiver extends BroadcastReceiver  {
                     public void success(Intervention intervention, Response response) {
 
                         InterventionSingleton.getInstance().setIntervention(intervention);
-
+                        MyObservable.getInstance().notifierObservateurs();
                     }
 
                     @Override
@@ -107,13 +107,6 @@ public class PushReceiver extends BroadcastReceiver  {
 
                     }
                 });
-
-
-
-        MyObservable.getInstance().notifierObservateurs();
-
-
-
     }
 
 
