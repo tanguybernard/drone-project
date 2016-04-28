@@ -6,6 +6,7 @@ import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.Resource;
 import retrofit.Callback;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -44,10 +45,40 @@ public interface InterventionAPI {
         @POST("/intervention")
         public void createIntervention(@Body Intervention intervention,retrofit.Callback<Intervention> response);
 
+        /**
+         *
+         * @param identifiant
+         * @param resource
+         * @param response
+         */
         @POST("/intervention/{id}/ressource")
         public void addResource(@Path("id") String identifiant,@Body Resource resource, Callback<List<Resource>> response);
 
-
+        /**
+         *
+         * @param identifiant
+         * @param response
+         */
         @GET("/intervention/{id}/ressource")
         public void getResources(@Path("id") String identifiant, Callback<List<Resource>> response);
+
+        /**
+         *
+         * @param identifiant
+         * @param response
+         */
+        @GET("/intervention/{id}/cos")
+        public void getInterventionCos(@Path("id") String identifiant, Callback<Intervention> response);
+
+        /**
+         *
+         * @param identifiant
+         * @param response
+         */
+
+        @DELETE("/intervention/{id}/cos")
+        public void deletenterventionCos(@Path("id") String identifiant, Callback<Intervention> response);
+
+        @POST("/intervention/{id}/cos")
+        public void setInterventionCos(@Path("id") String identifiant, Callback<Intervention> response);
 }
