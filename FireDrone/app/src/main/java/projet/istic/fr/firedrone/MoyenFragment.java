@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,13 +95,12 @@ public class MoyenFragment extends Fragment implements Observateur {
             textLayoutParams.setMargins(2, 5, 2, 5);
             tvColumn.setLayoutParams(textLayoutParams);
             if (iView == getResources().getInteger(R.integer.IDX_NAME) && !pbHeader) {
-                picture.setMinimumWidth(30);
-                picture.setMaxWidth(30);
                 picture.setMinimumHeight(30);
                 picture.setMaxHeight(30);
+                picture.setAdjustViewBounds(true);
                 picture.setBackgroundColor(Color.parseColor(psColor));
                 LinearLayout.LayoutParams imgLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-                imgLayoutParams.setMargins(3, 3, 3, 3);
+                imgLayoutParams.setMargins(0, 5, 3, 5);
                 picture.setLayoutParams(imgLayoutParams);
                 picture.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -122,6 +122,8 @@ public class MoyenFragment extends Fragment implements Observateur {
                     tvColumn.setTextColor(Color.BLACK);
                 }
             }
+            tvColumn.setWidth(200);
+            tvColumn.setHeight(30);
             outerLayout.addView(tvColumn);
             outerLayout.addView(picture);
             element.addView(outerLayout);
