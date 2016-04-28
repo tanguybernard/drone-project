@@ -7,6 +7,7 @@ import projet.istic.fr.firedrone.model.Resource;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.PATCH;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -50,4 +51,7 @@ public interface InterventionAPI {
 
         @GET("/intervention/{id}/ressource")
         public void getResources(@Path("id") String identifiant, Callback<List<Resource>> response);
+
+        @PATCH("/intervention/{id}/ressource")
+        public void updateResource(@Path("id") String identifiant,@Body Resource resource, Callback<List<Resource>> response);
 }

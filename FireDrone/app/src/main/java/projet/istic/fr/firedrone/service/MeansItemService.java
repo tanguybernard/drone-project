@@ -31,6 +31,7 @@ public class MeansItemService {
         meansApi.AddMean(sIntervId,meansItem , new Callback<List<MeansItem>>() {
             @Override
             public void success(List<MeansItem> ploMeans, Response response) {
+
                 oIntervention.setWays(ploMeans);
             }
 

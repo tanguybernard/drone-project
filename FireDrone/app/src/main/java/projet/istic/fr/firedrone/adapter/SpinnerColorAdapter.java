@@ -41,6 +41,7 @@ class SpinnerColorAdapter extends BaseAdapter
             names.add(re);
         }
     }
+
     @Override
     public int getCount()
     {
