@@ -13,8 +13,11 @@ import retrofit.http.Query;
 public interface UserApi {
 
     /**
-     * cette fonction permet de recuperer  le token de l'utilisateur
+     * get token for user
      * @param authorization
+     * @param username
+     * @param password
+     * @param grant_type
      * @param response
      */
     @GET("/oauth/token")
@@ -25,6 +28,11 @@ public interface UserApi {
             @Query("grant_type") String grant_type,
             Callback<User> response);
 
+    /**
+     * get user with token
+     * @param username
+     * @param callback
+     */
     @GET("/user/{username}")
     public void getUser(
             @Path("username") String username,

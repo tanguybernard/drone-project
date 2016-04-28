@@ -34,6 +34,7 @@ import java.util.Map;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
+import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.Intervention;
@@ -94,6 +95,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     private List<Sig> listSIG;
 
     private PanelMapMoyenFragment panelMapMoyenFragment;
+
 
     public MapMoyenFragment(){}
 
@@ -211,15 +213,57 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         return true;
     }
 
-    public void dragEnd(Marker marker){
+    public void dragEnd(final Marker marker){
         for(Marker markerSet : mapMarkerItem.keySet()){
             if(markerSet.getId().equals(marker.getId())){
                 Object object = mapMarkerItem.get(markerSet);
                 if(object instanceof MeansItem) {
                     MeansItem meansItem = (MeansItem) object;
+                    if(meansItem.getMsMeanId().equals("")){
+                       //si l'identifiant est nulle, on recherche l'identifiant dans la liste des identifiants
+                        for(MeansItem moyenInter : InterventionSingleton.getInstance().getIntervention().getWays()){
+                            if(moyenInter.getMsLongitude().equals(meansItem.getMsLongitude()) && moyenInter.getMsLatitude().equals(meansItem.getMsLatitude())){
+                                meansItem.setMsMeanId(moyenInter.getMsMeanId());
+                                break;
+                            }
+                        }
+                    }
                     meansItem.setMsLongitude(String.valueOf(marker.getPosition().longitude));
                     meansItem.setMsLatitude(String.valueOf(marker.getPosition().latitude));
                     MeansItemService.editMean(meansItem);
+                }else if (object instanceof Resource){
+                    final Resource resource = (Resource) object;
+                    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
+                    final InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+                    interventionAPI.getResources(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Resource>>() {
+                        @Override
+                        public void success(List<Resource> resources, Response response) {
+                            for(Resource r : resources){
+                                if(r.getLongitude().equals(resource.getLongitude()) && r.getLatitude().equals(resource.getLatitude())){
+                                    resource.setId(r.getId());
+                                    break;
+                                }
+                            }
+                            resource.setLatitude(marker.getPosition().latitude);
+                            resource.setLongitude(marker.getPosition().longitude);
+                            interventionAPI.updateResource(InterventionSingleton.getInstance().getIntervention().getId(), resource, new Callback<List<Resource>>() {
+                                @Override
+                                public void success(List<Resource> resources, Response response) {
+
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
+                    });
                 }
                 break;
             }
@@ -270,10 +314,9 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             public void success(List<Resource> resources, Response response) {
                 if(resources!=null) {
                     for (Resource r : resources) {
-                        System.out.println(r.getId());
                         EnumPointType enumPointType = EnumPointType.valueOf(r.getType());
                         Marker marker = addResourceOnMap(enumPointType, new LatLng(r.getLatitude(), r.getLongitude()));
-                        mapMarkerItem.put(marker, enumPointType);
+                        mapMarkerItem.put(marker, r);
                     }
                 }
             }
@@ -363,12 +406,16 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             //ajout du marker sur la carte
             Marker marker = addResourceOnMap(enumPointTypeSelected,latLng);
 
+
             //ajout en base de données
             RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
             InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
 
             //ressource a ajouté en base de données
             Resource resource = new Resource(enumPointTypeSelected.name(),latLng);
+
+            mapMarkerItem.put(marker, resource);
+
             interventionAPI.addResource(InterventionSingleton.getInstance().getIntervention().getId(), resource, new Callback<List<Resource>>() {
                 @Override
                 public void success(List<Resource> resources, Response response) {
