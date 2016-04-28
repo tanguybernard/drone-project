@@ -89,6 +89,8 @@ public class CreateInterventionFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         codeSinistreList.setAdapter(adapter);
 
+
+
         /**
          * Select a code sinister => get default ways
          */
@@ -212,7 +214,7 @@ public class CreateInterventionFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println(error);
+                FiredroneConstante.getToastError(getContext()).show();
 
             }
         });
@@ -311,7 +313,7 @@ public class CreateInterventionFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println(error.getMessage());
+                FiredroneConstante.getToastError(getContext()).show();
             }
         });
 

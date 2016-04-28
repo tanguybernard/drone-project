@@ -5,7 +5,6 @@ package projet.istic.fr.firedrone.synchro;
  */
 public interface Observable {
 
-    // Méthode permettant d'ajouter (abonner) un observateur.
     public void ajouterObservateur(Observateur o);
     // Méthode permettant de supprimer (résilier) un observateur.
     public void supprimerObservateur(Observateur o);

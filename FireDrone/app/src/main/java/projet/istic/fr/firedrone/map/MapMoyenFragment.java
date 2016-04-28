@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +37,15 @@ import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.Resource;
 import projet.istic.fr.firedrone.model.Sig;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.synchro.MyObservable;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -50,7 +56,7 @@ import retrofit.client.Response;
  */
 public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener,GoogleMap.OnMarkerClickListener,GoogleMap.OnCameraChangeListener,
-        View.OnClickListener,MethodCallWhenDrag {
+        View.OnClickListener,MethodCallWhenDrag, Observateur {
 
 
     //item sélectionné dans le panel
@@ -67,7 +73,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
     private Map<Marker,Object> mapMarkerItem = new HashMap<>();
     private ViewTreeObserver.OnGlobalLayoutListener infoWindowLayoutListener;
-    private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
 
     private View infoWindowContainer;
     private FrameLayout containerMap;
@@ -99,38 +104,15 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
         super.onCreate(savedInstanceState);
         getMapAsync(this);
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(FiredroneConstante.END_POINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
-                .build();
-
-        final SIGAPI sigApi = restAdapter.create(SIGAPI.class);
-
-        //récupération des Sig en base de données
-        sigApi.getSIGs(new Callback<List<Sig>>() {
-            @Override
-            public void success(List<Sig> sigs, Response response) {
-
-                listSIG = sigs;
-                //si google map existe déjà on place les sig
-                if(googleMap != null){
-                    createSIG();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-            }
-        });
-
-
     }
 
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        MyObservable.getInstance().ajouterObservateur(this);
+
         View rootView = inflater.inflate(R.layout.fragment_map_moyen, null);
         containerMap = (FrameLayout) rootView.findViewById(R.id.container_map);
         FrameLayout mapView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
@@ -194,8 +176,12 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                     if (meansItem.getMsMeanHEngaged() == null) {
                         button.setText("Engagé");
                     } else {
-                        if (meansItem.getMsMeanHFree() == null) {
-                            button.setText("Libéré");
+                        if(meansItem.isRedeployement()){
+                            button.setText("Redéployé");
+                        }else {
+                            if (meansItem.getMsMeanHFree() == null) {
+                                button.setText("Libéré");
+                            }
                         }
                     }
                 }
@@ -221,7 +207,13 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                     }
                     meansItem.setMsLongitude(String.valueOf(marker.getPosition().longitude));
                     meansItem.setMsLatitude(String.valueOf(marker.getPosition().latitude));
-                    MeansItemService.editMean(meansItem);
+                    //cas ou le moyen était déjà engagé, après le déplacement on le passe en mode redéploiement
+                    if(meansItem.getMsMeanHEngaged() != null ) {
+                        meansItem.setRedeployement(true);
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
+                    }
+
+                    MeansItemService.editMean(meansItem,getContext());
                 }else if (object instanceof Resource){
                     final Resource resource = (Resource) object;
                     RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
@@ -245,14 +237,14 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
                                 @Override
                                 public void failure(RetrofitError error) {
-
+                                    FiredroneConstante.getToastError(getContext()).show();
                                 }
                             });
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-
+                            FiredroneConstante.getToastError(getContext()).show();
                         }
                     });
                 }
@@ -263,37 +255,27 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        System.out.println("loldsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsds");
+
         this.googleMap =googleMap;
         googleMap.setOnMapClickListener(this);
         googleMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, googleMap, null, this));
         googleMap.setOnMarkerClickListener(this);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
+        LatLng positionIntervention = new LatLng(Double.valueOf(InterventionSingleton.getInstance().getIntervention().getLatitude()),Double.valueOf(InterventionSingleton.getInstance().getIntervention().getLongitude()));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positionIntervention, 16));
 
         infoWindowContainer.setVisibility(View.VISIBLE);
         if(listSIG != null) {
             createSIG();
         }
 
-        //placement des moyens qui sont sur la carte
-        List<MeansItem> moyens = InterventionSingleton.getInstance().getIntervention().getWays();
-        if(moyens != null) {
-            //parcours de tous les moyens pour trouvés ceux déjà positionné sur la carte
-            for (MeansItem moyen : moyens) {
-                if (moyen.getMsLatitude() != null && moyen.getMsLongitude() != null  && moyen.getMsMeanHFree() == null) {
-                    //on ajoute le moyen à la carte
+        createMoyenOnMap();
 
-                    if (!moyen.getMsLatitude().equals("") && !moyen.getMsLongitude().equals("")) {
-                        Marker marker = addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
-                        mapMarkerItem.put(marker, moyen);
+        crateRessourceOnMap();
 
-                    }
+    }
 
-
-
-                }
-            }
-        }
-
+    private void crateRessourceOnMap(){
         //récupération en base de données des ressources de l'intervention
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
@@ -312,31 +294,75 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
             @Override
             public void failure(RetrofitError error) {
-
+                FiredroneConstante.getToastError(getContext()).show();
             }
         });
     }
 
-    private void createSIG(){
-        //création des points Sig
-        for (Sig sig : listSIG) {
-            //type WATER
-            if(sig.getType().equals("WATER")){
-                googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.water))
-                );
-            }else if(sig.getType().equals("HYDRANT")){
-                //type HYDRANT
-                googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.hydrant))
-                );
-            }else if(sig.getType().equals("CHEMICALS")){
-                //type CHEMICALS
-                googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.chemicals))
-                );
+    private void createMoyenOnMap(){
+        //placement des moyens qui sont sur la carte
+        List<MeansItem> moyens = InterventionSingleton.getInstance().getIntervention().getWays();
+        if(moyens != null) {
+            //parcours de tous les moyens pour trouvés ceux déjà positionné sur la carte
+            for (MeansItem moyen : moyens) {
+                if (moyen.getMsLatitude() != null && moyen.getMsLongitude() != null  && moyen.getMsMeanHFree() == null) {
+                    //on ajoute le moyen à la carte
+
+                    if (!moyen.getMsLatitude().equals("") && !moyen.getMsLongitude().equals("")) {
+                        Marker marker = addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
+                        mapMarkerItem.put(marker, moyen);
+
+                    }
+
+                }
             }
         }
+    }
+
+    private void createSIG(){
+
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
+                .build();
+
+
+        final SIGAPI sigApi = restAdapter.create(SIGAPI.class);
+
+        //récupération des Sig en base de données
+        sigApi.getSIGs(new Callback<List<Sig>>() {
+            @Override
+            public void success(List<Sig> sigs, Response response) {
+
+                listSIG = sigs;
+                //si google map existe déjà on place les sig
+                //création des points Sig
+                for (Sig sig : listSIG) {
+                    //type WATER
+                    if(sig.getType().equals("WATER")){
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.water))
+                        );
+                    }else if(sig.getType().equals("HYDRANT")){
+                        //type HYDRANT
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.hydrant))
+                        );
+                    }else if(sig.getType().equals("CHEMICALS")){
+                        //type CHEMICALS
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(Double.parseDouble(sig.getLatitude()),Double.parseDouble(sig.getLongitude())))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.chemicals))
+                        );
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                FiredroneConstante.getToastError(getContext()).show();
+            }
+        });
     }
 
     public void setMoyenItemSelected(MeansItem pMoyenItemSelected) {
@@ -385,11 +411,11 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             //on supprime l'item du panel après l'avoir ajouté
             if(itemToRemove){
                panelMapMoyenFragment.removeItem(moyenItemSelected);
-                MeansItemService.editMean(meansItemCloned);
+                MeansItemService.editMean(meansItemCloned,getContext());
                 //on le met à nulle
                 moyenItemSelected = null;;
             }else{
-                MeansItemService.addMean(meansItemCloned);
+                MeansItemService.addMean(meansItemCloned,getContext(),false);
             }
         }else if(enumPointTypeSelected != null){
             //ajout du marker sur la carte
@@ -413,7 +439,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
                 @Override
                 public void failure(RetrofitError error) {
-
+                    FiredroneConstante.getToastError(getContext()).show();
                 }
             });
         }
@@ -446,23 +472,31 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             Date newDate = new Date();
             if (moyenItem.getMsMeanHArriv() == null) {
                 moyenItem.setMsMeanHArriv(FiredroneConstante.DATE_FORMAT.format(newDate));
-                MeansItemService.editMean(moyenItem);
+                MeansItemService.editMean(moyenItem,getContext());
                 setFrontMap(true);
             } else {
                 if (moyenItem.getMsMeanHEngaged() == null) {
                     moyenItem.setMsMeanHEngaged(FiredroneConstante.DATE_FORMAT.format(newDate));
-                    MeansItemService.editMean(moyenItem);
+                    MeansItemService.editMean(moyenItem,getContext());
                     // Refresh Mean's icon
                     markerSelected.setIcon(BitmapDescriptorFactory.fromBitmap(moyenItem.getBitmap()));
 
                     setFrontMap(true);
                 } else {
-                    if (moyenItem.getMsMeanHFree() == null) {
-                        moyenItem.setMsMeanHFree(FiredroneConstante.DATE_FORMAT.format(newDate));
-                        MeansItemService.editMean(moyenItem);
+                    if(moyenItem.isRedeployement()){
+                        moyenItem.setRedeployement(false);
+                        MeansItemService.editMean(moyenItem,getContext());
+                        // Refresh Mean's icon
+                        markerSelected.setIcon(BitmapDescriptorFactory.fromBitmap(moyenItem.getBitmap()));
                         setFrontMap(true);
-                        markerSelected.remove();
-                        mapMarkerItem.remove(moyenItem);
+                    }else {
+                        if (moyenItem.getMsMeanHFree() == null) {
+                            moyenItem.setMsMeanHFree(FiredroneConstante.DATE_FORMAT.format(newDate));
+                            MeansItemService.editMean(moyenItem,getContext());
+                            setFrontMap(true);
+                            markerSelected.remove();
+                            mapMarkerItem.remove(moyenItem);
+                        }
                     }
                 }
             }
@@ -517,4 +551,26 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             }
         }
     }
+
+
+    @Override
+    public void actualiser(Observable o) {
+        if(o instanceof MyObservable){
+            MapMoyenFragment myFragment = (MapMoyenFragment)getFragmentManager().findFragmentById(R.id.content_map_moyen);
+            if (myFragment != null && myFragment.isVisible()) {
+                //ICI ROMAIN
+                googleMap.clear();
+                mapMarkerItem.clear();
+                if(listSIG != null) {
+                    createSIG();
+                }
+
+                createMoyenOnMap();
+
+                crateRessourceOnMap();
+            }
+        }
+    }
+
+
 }

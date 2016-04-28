@@ -1,5 +1,7 @@
 package projet.istic.fr.firedrone.service;
 
+
+import android.content.Context;
 import android.telecom.Call;
 import android.util.Log;
 
@@ -25,7 +27,7 @@ public class MeansItemService {
 
     private static List<DefaultWay> listDefaultWays ;
 
-    public static List<MeansItem> addMean(MeansItem meansItem) {
+    public static List<MeansItem> addMean(MeansItem meansItem,final Context context,final boolean isTableMoyen) {
         final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
         String sIntervId = oIntervention.getId();
         RestAdapter restAdapter = new RestAdapter.Builder().
@@ -33,24 +35,25 @@ public class MeansItemService {
                 setLogLevel(RestAdapter.LogLevel.FULL).
                 build();
         MeansAPI meansApi = restAdapter.create(MeansAPI.class);
-        meansApi.AddMean(sIntervId,meansItem , new Callback<List<MeansItem>>() {
+        meansApi.AddMean(sIntervId, meansItem, new Callback<List<MeansItem>>() {
             @Override
             public void success(List<MeansItem> ploMeans, Response response) {
 
                 oIntervention.setWays(ploMeans);
-                MoyenFragment oMoyenFrag = MoyenFragment.getInstance();
-                oMoyenFrag.getMeans();
+                if(isTableMoyen){
+                    MoyenFragment.getInstance().getMeans();
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e("CONNEXION ERROR", error.getMessage());
+                FiredroneConstante.getToastError(context).show();
             }
         });
         return oIntervention.getWays();
     }
 
-    public static List<MeansItem> editMean(MeansItem meansItem) {
+    public static List<MeansItem> editMean(MeansItem meansItem,final Context context) {
         final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
         String sIntervId = oIntervention.getId();
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
@@ -64,13 +67,13 @@ public class MeansItemService {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e("CONNEXION ERROR", error.getMessage());
+                FiredroneConstante.getToastError(context).show();
             }
         });
         return oIntervention.getWays();
     }
 
-    public static void createListDefaultWay(){
+    public static void createListDefaultWay(final Context context){
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
@@ -86,7 +89,7 @@ public class MeansItemService {
 
             @Override
             public void failure(RetrofitError error) {
-
+                FiredroneConstante.getToastError(context).show();
             }
         });
     }

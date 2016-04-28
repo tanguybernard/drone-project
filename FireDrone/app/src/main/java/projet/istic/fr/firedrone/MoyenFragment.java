@@ -177,7 +177,7 @@ public class MoyenFragment extends Fragment {
             oNewMean.setMsMeanHEngaged(psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
             oNewMean.setMsMeanHFree(psHours[getResources().getInteger(R.integer.IDX_H_FREE)]);
             oNewMean.setMsColor(psColor);
-            MeansItemService.addMean(oNewMean);
+            MeansItemService.addMean(oNewMean,getContext(),true);
         }
     }
 
@@ -213,14 +213,14 @@ public class MoyenFragment extends Fragment {
                 colIdx = element.getChildCount() + 1;
             }
         }
-        MeansItemService.editMean(oMean);
+        MeansItemService.editMean(oMean,getContext());
     }
 
     public void changeColor(String psId, String psColor) {
         MeansItem oMean = new MeansItem();
         oMean.setMsMeanId(psId);
         oMean.setMsColor(psColor);
-        MeansItemService.editMean(oMean);
+        MeansItemService.editMean(oMean,getContext());
     }
 
     public void getMeans() {

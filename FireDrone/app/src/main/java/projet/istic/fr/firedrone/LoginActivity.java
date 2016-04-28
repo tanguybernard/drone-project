@@ -3,10 +3,7 @@ package projet.istic.fr.firedrone;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -19,14 +16,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-
 import projet.istic.fr.firedrone.Interceptor.Interceptor;
-import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.ModelAPI.UserApi;
-import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.User;
-import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.singleton.UserSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -162,8 +155,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void success(User user, Response response) {
-                        user = new User(user.getLogin(), user.getLastname(), user.getFirstname(), user.getPhone(), user.getEmail(),user.getRole());
-
+                        UserSingleton.getInstance().setUser(user);
                         Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
                         myIntent.putExtra("user", "user");
                         LoginActivity.this.startActivity(myIntent);
@@ -173,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                         System.out.println("impossible de recuperer l'utilisateur: "+error);
+                        FiredroneConstante.getToastError(getApplicationContext()).show();;
                     }
                 });
 
@@ -186,7 +178,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println("Impossible de récuperer le token: "+error);
+                FiredroneConstante.getToastError(getApplicationContext()).show();
             }
         });
 

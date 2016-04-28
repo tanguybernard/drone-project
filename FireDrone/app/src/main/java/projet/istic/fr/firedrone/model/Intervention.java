@@ -1,6 +1,5 @@
 package projet.istic.fr.firedrone.model;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.internal.Streams;
 
 import java.util.List;
 
@@ -32,6 +31,9 @@ public class Intervention {
 
     @SerializedName("ways")
     private List<MeansItem> ways;
+
+    @SerializedName("cos")
+    private User cos;
 
     //private List<Way> ways;
 
@@ -78,6 +80,14 @@ public class Intervention {
     public void setWays(List<MeansItem> ways){
         this.ways = ways;
 
+    }
+
+    public User getCos() {
+        return cos;
+    }
+
+    public void setCos(User cos) {
+        this.cos = cos;
     }
 
     public List<MeansItem> getWays() {
