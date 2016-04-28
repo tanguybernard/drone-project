@@ -49,6 +49,7 @@ import projet.istic.fr.firedrone.synchro.Observateur;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 /**
@@ -216,7 +217,11 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                     MeansItemService.editMean(meansItem,getContext());
                 }else if (object instanceof Resource){
                     final Resource resource = (Resource) object;
-                    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
+                    RestAdapter restAdapter = new RestAdapter.Builder()
+                            .setEndpoint(FiredroneConstante.END_POINT)
+                            .setLogLevel(RestAdapter.LogLevel.FULL)
+                            .setClient(new OkClient())
+                            .build();
                     final InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
                     interventionAPI.getResources(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Resource>>() {
                         @Override

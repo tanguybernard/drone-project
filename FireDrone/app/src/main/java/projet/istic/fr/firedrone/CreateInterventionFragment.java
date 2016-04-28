@@ -244,6 +244,7 @@ public class CreateInterventionFragment extends Fragment {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setClient(new OkClient())
                 .build();
 
         DefaultWaysSinisterApi sinisterApi = restAdapter.create(DefaultWaysSinisterApi.class);
