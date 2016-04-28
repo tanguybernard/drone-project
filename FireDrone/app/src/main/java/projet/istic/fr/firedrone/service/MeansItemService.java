@@ -99,6 +99,7 @@ public class MeansItemService {
         for( DefaultWay defautWay : listDefaultWays){
             MeansItem meansItem = new MeansItem();
             meansItem.setMsMeanCode(defautWay.getAcronym());
+            meansItem.setMsMeanName(defautWay.getAcronym());
             meansItem.setMsColor(defautWay.getColor());
             listMeansItem.add(meansItem);
         }

@@ -29,6 +29,7 @@ import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.singleton.UserSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -65,6 +66,11 @@ public class PanelMapMoyenFragment extends Fragment implements Serializable {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_map_panel_moyen, container, false);
+        if(UserSingleton.getInstance().getUser().getRole().equals("ROLE_SIT")){
+            view.findViewById(R.id.panel_map_moyen).setVisibility(View.INVISIBLE);
+            view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
+
         mapMoyenFragment = new MapMoyenFragment();
 
         Bundle args = new Bundle();

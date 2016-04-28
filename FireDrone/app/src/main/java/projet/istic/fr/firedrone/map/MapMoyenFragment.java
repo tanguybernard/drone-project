@@ -254,6 +254,44 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     @Override
+    public boolean displayButton(Marker marker) {
+        for(Marker mar : mapMarkerItem.keySet()){
+            if(mar.getId().equals(marker.getId())){
+                if(mapMarkerItem.get(mar) instanceof MeansItem){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void dragRemove(Marker marker) {
+        for(Marker mar : mapMarkerItem.keySet()){
+            if(mar.getId().equals(marker.getId())){
+                Object object = mapMarkerItem.get(mar);
+                if(object instanceof Resource){
+                    Resource resource = (Resource) object;
+                    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
+                    InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+
+                    interventionAPI.deleteResource(InterventionSingleton.getInstance().getIntervention().getId(), resource.getId(), new Callback<Void>() {
+                        @Override
+                        public void success(Void aVoid, Response response) {
+
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         System.out.println("loldsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsds");
 

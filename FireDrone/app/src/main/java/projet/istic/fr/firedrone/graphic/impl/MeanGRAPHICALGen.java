@@ -47,7 +47,7 @@ public class MeanGRAPHICALGen implements BITMAPGen {
         this.name = name;
         this.type = type;
         this.color = colorHexa;
-        this.fullNAME = type + " " + name;
+        this.fullNAME = name;
     }
 
     //    Getter & Setter

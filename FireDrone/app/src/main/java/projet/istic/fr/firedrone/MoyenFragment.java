@@ -20,6 +20,7 @@ import java.util.List;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.singleton.UserSingleton;
 
 /**
  * Created by nduquesne on 18/03/16.

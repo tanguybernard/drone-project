@@ -9,4 +9,8 @@ public interface MethodCallWhenDrag {
 
     void dragStart();
     void dragEnd(Marker marker);
+
+    boolean displayButton(Marker marker);
+
+    void dragRemove(Marker marker);
 }

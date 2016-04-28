@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -28,7 +29,7 @@ import projet.istic.fr.firedrone.synchro.Observateur;
 import projet.istic.fr.firedrone.synchro.PushReceiver;
 
 public class MainActivity extends AppCompatActivity
-        implements TowerListener{
+        implements TowerListener,VisibilityMenu{
 
     //tower pour se connecter au drone et recevoir les évènements du drone
     private ControlTower controlTower;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity
 
     //fragment pour contrôler le drône
     private PanelControleDroneFragment droneControlFragment;
+
+    private   NavigationView navigationView;
 
     @Override
     protected void onStart() {
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+       navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
     }
 
@@ -192,6 +195,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTowerDisconnected() {
 
+    }
+
+    @Override
+    public void showMenu() {
+        navigationView.setVisibility(View.VISIBLE);
     }
 
 
