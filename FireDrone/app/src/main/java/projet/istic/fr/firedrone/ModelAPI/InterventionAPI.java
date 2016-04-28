@@ -63,7 +63,7 @@ public interface InterventionAPI {
         @GET("/intervention/{id}/ressource")
         public void getResources(@Path("id") String identifiant, Callback<List<Resource>> response);
 
-<<<<<<< HEAD
+
         /**
          *
          * @param identifiant
@@ -83,8 +83,8 @@ public interface InterventionAPI {
 
         @POST("/intervention/{id}/cos")
         public void setInterventionCos(@Path("id") String identifiant, Callback<Intervention> response);
-=======
+
         @PATCH("/intervention/{id}/ressource")
         public void updateResource(@Path("id") String identifiant,@Body Resource resource, Callback<List<Resource>> response);
->>>>>>> 73f8e3017118b602e8348ebb702d3995b1592425
+
 }
