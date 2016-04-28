@@ -54,7 +54,6 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
         //set EAU, INCENDIE, SAP into spinner
         spinner.setAdapter(new SpinnerColorAdapter(this.getContext(), listData));
 
-
             String myString = ColorNameService.getTypeInterventionByColor(item.getColor());
 
             //Selectionne un role de moyen EAU,INCENDIE, SAP

@@ -17,7 +17,7 @@ import projet.istic.fr.firedrone.model.MoyenInterventionItem;
 /**
  * Created by tbernard on 24/04/16.
  */
-class SpinnerColorAdapter extends BaseAdapter
+public class SpinnerColorAdapter extends BaseAdapter
 {
     List<Integer> colors;
     List<String> names;
