@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -104,6 +105,14 @@ public class MainActivity extends AppCompatActivity
 
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+
+        navigationView.getMenu().setGroupVisible(R.id.group_1, false);
+        navigationView.getMenu().setGroupVisible(R.id.group_2, false);
+        navigationView.getMenu().setGroupVisible(R.id.group_3, false);
+
+
+
+
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -136,8 +145,6 @@ public class MainActivity extends AppCompatActivity
                 fragmentMoyen = MoyenFragment.getInstance();
                 Log.d("TAG", "selectDrawerItem: ");
                 fragment = fragmentMoyen;
-                break;
-            case R.id.nav_directive:
                 break;
             case R.id.nav_parcours:
                 fragmentDrawPath = TabMapFragment.getInstance();

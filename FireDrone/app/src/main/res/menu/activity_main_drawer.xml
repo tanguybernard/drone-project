@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/group_1"
+        >
         <item
             android:id="@+id/nav_liste"
             android:icon="@drawable/ic_menu_camera"
@@ -15,26 +17,24 @@
             android:id="@+id/nav_moyen"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/moyen" />
-        <item
-            android:id="@+id/nav_rapport"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/rapport" />
+
     </group>
 
-    <item android:title="Centre de commandement">
+    <group android:title="Centre de commandement"
+        android:id="@+id/group_2"
+
+        >
         <menu>
-            <item
-                android:id="@+id/nav_directive"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/directive" />
+
             <item
                 android:id="@+id/nav_parcours"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/parcours" />
         </menu>
-    </item>
+    </group>
 
-    <item android:title="Drône">
+    <group android:title="Drône"
+        android:id="@+id/group_3">
         <menu>
             <item
                 android:id="@+id/nav_controle"
@@ -46,6 +46,6 @@
                 android:title="@string/image" />
 
         </menu>
-    </item>
+    </group>
 
 </menu>
