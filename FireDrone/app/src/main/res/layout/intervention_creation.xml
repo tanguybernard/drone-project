@@ -17,7 +17,7 @@
     <TextView android:id="@+id/textAddress" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1" android:layout_marginTop="13dp"
-        android:text="Addresse :" android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Adresse :" android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000000"
         />
 

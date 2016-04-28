@@ -38,6 +38,7 @@ import java.util.Map;
 import projet.istic.fr.firedrone.MainActivity;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
 
 public class MapDroneFragment extends SupportMapFragment implements
@@ -50,7 +51,6 @@ public class MapDroneFragment extends SupportMapFragment implements
     private Map<String, Marker> listMarkers = null;
 
     private PolylineOptions polylineOptions;//add lines bettwen markers
-    private LatLng rennes_istic = new LatLng(48.1154538, -1.6387933);//LatLng of ISTIC rennes
 
     private Polyline polyline;
 
@@ -141,16 +141,17 @@ public class MapDroneFragment extends SupportMapFragment implements
         googleMap.setOnMapLongClickListener(this);
         myMap = googleMap;
 
+        LatLng positionIntervention = new LatLng(Double.valueOf(InterventionSingleton.getInstance().getIntervention().getLatitude()),Double.valueOf(InterventionSingleton.getInstance().getIntervention().getLongitude()));
         MarkerOptions marker = new MarkerOptions();
 
-        marker.position(rennes_istic);
+        marker.position(positionIntervention);
 
         myMap.addMarker(marker);
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rennes_istic, 16));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positionIntervention, 16));
 
         markerDrone = myMap.addMarker(new MarkerOptions()
-                        .position(rennes_istic)
+                        .position(positionIntervention)
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36))
         );
 
@@ -168,11 +169,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         //add marker
         putMarker(point, listMarkers.size());
-
-        Marker mar = myMap.addMarker(new MarkerOptions()
-                .position(rennes_istic)
-                .title("Rennes")
-                .snippet("Population: ??"));
+;
     }
 
 

@@ -48,6 +48,8 @@ public class MeansItem {
     private String msColor;
     @SerializedName("groupId")
     private String msGroupeId = "";
+    @SerializedName("redeployement")
+    private boolean redeployement;
 
     @Override
     public boolean equals(Object o) {
@@ -56,6 +58,7 @@ public class MeansItem {
 
         MeansItem meansItem = (MeansItem) o;
 
+        if (redeployement != meansItem.redeployement) return false;
         if (msMeanId != null ? !msMeanId.equals(meansItem.msMeanId) : meansItem.msMeanId != null)
             return false;
         if (msMeanCode != null ? !msMeanCode.equals(meansItem.msMeanCode) : meansItem.msMeanCode != null)
@@ -74,7 +77,7 @@ public class MeansItem {
             return false;
         if (msLatitude != null ? !msLatitude.equals(meansItem.msLatitude) : meansItem.msLatitude != null)
             return false;
-        if (msColor == meansItem.msColor)
+        if (msColor != null ? !msColor.equals(meansItem.msColor) : meansItem.msColor != null)
             return false;
         return !(msGroupeId != null ? !msGroupeId.equals(meansItem.msGroupeId) : meansItem.msGroupeId != null);
 
@@ -82,7 +85,27 @@ public class MeansItem {
 
     @Override
     public int hashCode() {
-        return msMeanId != null ? msMeanId.hashCode() : 0;
+        int result = msMeanId != null ? msMeanId.hashCode() : 0;
+        result = 31 * result + (msMeanCode != null ? msMeanCode.hashCode() : 0);
+        result = 31 * result + (msMeanName != null ? msMeanName.hashCode() : 0);
+        result = 31 * result + (msMeanHCall != null ? msMeanHCall.hashCode() : 0);
+        result = 31 * result + (msMeanHArriv != null ? msMeanHArriv.hashCode() : 0);
+        result = 31 * result + (msMeanHEngaged != null ? msMeanHEngaged.hashCode() : 0);
+        result = 31 * result + (msMeanHFree != null ? msMeanHFree.hashCode() : 0);
+        result = 31 * result + (msLongitude != null ? msLongitude.hashCode() : 0);
+        result = 31 * result + (msLatitude != null ? msLatitude.hashCode() : 0);
+        result = 31 * result + (msColor != null ? msColor.hashCode() : 0);
+        result = 31 * result + (msGroupeId != null ? msGroupeId.hashCode() : 0);
+        result = 31 * result + (redeployement ? 1 : 0);
+        return result;
+    }
+
+    public boolean isRedeployement() {
+        return redeployement;
+    }
+
+    public void setRedeployement(boolean redeployement) {
+        this.redeployement = redeployement;
     }
 
     public void setMsMeanId(String msMeanId) {
@@ -137,19 +160,6 @@ public class MeansItem {
     public void setMsMeanHFree(String msMeanHFree) {
         this.msMeanHFree = msMeanHFree;
     }
-
-    /**
-     * Get Default Local Image Resource for Means
-     * (USE IN DEV/TEST)
-     * @return
-     */
-    public Integer getResource() {
-        if (msMeanId.equals("1")) {
-            return R.drawable.delete_24dp_rouge;
-        }
-        return R.drawable.drone_36_36;
-    }
-
 
 
     /**

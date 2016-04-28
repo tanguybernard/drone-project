@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         new registerForPushNotificationsAsync().execute();
 
 
-        MeansItemService.createListDefaultWay();
+        MeansItemService.createListDefaultWay(getApplicationContext());
 
         fragmentFiche = InterventionsListFragment.getInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche).addToBackStack("detailFragment").commit();

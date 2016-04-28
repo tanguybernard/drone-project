@@ -173,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                         System.out.println("impossible de recuperer l'utilisateur: "+error);
+                        FiredroneConstante.getToastError(getApplicationContext()).show();;
                     }
                 });
 
@@ -186,7 +186,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println("Impossible de récuperer le token: "+error);
+                FiredroneConstante.getToastError(getApplicationContext()).show();
             }
         });
 
