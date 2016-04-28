@@ -19,11 +19,15 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import projet.istic.fr.firedrone.model.MeansItem;
+import projet.istic.fr.firedrone.service.MeansItemService;
 
 /**
  * Created by christophe on 20/04/16.
  */
-public class MoyenAlertDialog extends DialogFragment {
+public class MoyenEditDialog extends DialogFragment {
 
     private static final String NO_ERROR = "";
     private static final String ERROR_BAD_LENGTH = "L'heure doit être composée de 4 chiffres";
@@ -143,6 +147,20 @@ public class MoyenAlertDialog extends DialogFragment {
         return iResult;
     }
 
+    private String getMeanColor(String psCode) {
+        String sColor = "#000000";
+        MeansItemService oMeansService = new MeansItemService();
+        List<MeansItem> loDefMeans = oMeansService.getListDefaultMeansItem();
+        if (loDefMeans != null && loDefMeans.size() > 0) {
+            for (MeansItem oMean : loDefMeans) {
+                if (psCode.equals(oMean.getMsMeanCode())) {
+                    sColor = oMean.getMsColor();
+                }
+            }
+        }
+        return sColor;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -170,6 +188,7 @@ public class MoyenAlertDialog extends DialogFragment {
                     String[] tsHours = new String[getResources().getInteger(R.integer.IDX_H_FREE) + 1];
                     tsHours[getResources().getInteger(R.integer.IDX_CODE)] = sNewMean;
                     int iCodeIndex = getCodeIndex(moTable, sNewMean);
+                    String iMeanColor = getMeanColor(sNewMean);
                     sNewMean = sNewMean + String.valueOf(iCodeIndex);
                     tsHours[getResources().getInteger(R.integer.IDX_NAME)] = sNewMean;
                     if (miLine == -1) {
@@ -178,7 +197,7 @@ public class MoyenAlertDialog extends DialogFragment {
                     sNewHour = dFormat.format(hDate) + " " + sNewHour;
                     tsHours[miType] = sNewHour;
                     if (miLine == -1) {
-                        moyen.addMean(tsHours, true, "#000000"); // TODO Get default color
+                        moyen.addMean(tsHours, true, iMeanColor);
                     } else {
                         moyen.editMean(sNewHour, miLine);
                     }

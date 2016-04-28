@@ -1,5 +1,8 @@
 package projet.istic.fr.firedrone.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by tbernard on 26/04/16.
  */
@@ -57,6 +60,16 @@ public class ColorNameService {
         }
         return typeName;
 
+    }
+
+    public Map<String, String> getAllType() {
+        Map<String, String> mapResult = new HashMap<String, String>();
+        mapResult.put("EAU","#0000FF");
+        mapResult.put("INCENDIE","#FF0000");
+        mapResult.put("SAP","#00FF00");
+        mapResult.put("TECHNO","#FFA500");
+        mapResult.put("DIR","#A020F0");
+        return mapResult;
     }
 
 
