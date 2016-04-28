@@ -19,14 +19,16 @@ import java.net.URL;
 import java.util.Collection;
 
 import me.pushy.sdk.Pushy;
+import me.pushy.sdk.config.PushyAPI;
+import me.pushy.sdk.json.PushySingleton;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
-import projet.istic.fr.firedrone.synchro.Observable;
 import projet.istic.fr.firedrone.synchro.Observateur;
+import projet.istic.fr.firedrone.synchro.PushReceiver;
 
 public class MainActivity extends AppCompatActivity
-        implements TowerListener, Observable{
+        implements TowerListener{
 
     //tower pour se connecter au drone et recevoir les évènements du drone
     private ControlTower controlTower;
@@ -67,7 +69,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Pushy.listen(this);
+
+
         setContentView(R.layout.activity_main);
 
 
@@ -77,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         MeansItemService.createListDefaultWay();
 
         fragmentFiche = InterventionsListFragment.getInstance();
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche).addToBackStack("detailFragment").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche, "InterventionsListFragment").addToBackStack("detailFragment").commit();
 
 
 
@@ -189,22 +194,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    //------------------------------------- OBSERVABLE PART ------------------------------------------------
-
-    @Override
-    public void ajouterObservateur(Observateur o) {
-
-    }
-
-    @Override
-    public void supprimerObservateur(Observateur o) {
-
-    }
-
-    @Override
-    public void notifierObservateurs() {
-
-    }
 
     //--------------------------------------------PUSHY----------------------------------------------------
 

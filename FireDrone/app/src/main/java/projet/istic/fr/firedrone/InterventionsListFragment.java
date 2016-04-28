@@ -26,6 +26,10 @@ import projet.istic.fr.firedrone.adapter.CustomListAdapter;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
+import projet.istic.fr.firedrone.synchro.PushReceiver;
+import projet.istic.fr.firedrone.synchro.MyObservable;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -37,7 +41,7 @@ import retrofit.client.Response;
 /**
  * Created by nduquesne on 18/03/16.
  */
-public class InterventionsListFragment extends Fragment {
+public class InterventionsListFragment extends Fragment implements Observateur {
 
     private static InterventionsListFragment INSTANCE;
 
@@ -52,6 +56,9 @@ public class InterventionsListFragment extends Fragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
+
+        MyObservable p = MyObservable.getInstance();
+        p.ajouterObservateur(this);
         
         view = inflater.inflate(R.layout.intervention_main, container, false);
 
@@ -170,5 +177,33 @@ public class InterventionsListFragment extends Fragment {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    public void actualiser(Observable o) {
+
+        System.out.println("TEST synchro");
+        if(o instanceof MyObservable){
+
+
+            Fragment frag = getFragmentManager().findFragmentById(R.id.content_frame);
+
+
+            InterventionsListFragment myFragment = (InterventionsListFragment)getFragmentManager().findFragmentByTag("InterventionsListFragment");
+            if (myFragment != null && myFragment.isVisible()) {
+
+                FragmentTransaction tr = getFragmentManager().beginTransaction();
+                tr.replace(R.id.content_frame, this);
+                tr.commit();
+            }
+
+
+
+
+
+
+        }
+
+
     }
 }
