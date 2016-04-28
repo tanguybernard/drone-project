@@ -23,10 +23,11 @@ import projet.istic.fr.firedrone.model.Intervention;
  * Created by nduquesne on 20/04/16.
  */
 public class MapInterventionFragment extends SupportMapFragment implements
-        GoogleMap.OnCameraChangeListener, OnMapReadyCallback {
+        GoogleMap.OnCameraChangeListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
         private GoogleMap myMap;
 
+        private InterventionsListFragment interListFragment = InterventionsListFragment.getInstance();
 
         //ensemble des marqueurs, clé : identifiant du marqueur, valeur : marqueur
         private Map<String, Marker> listMarkers = null;
@@ -83,13 +84,18 @@ public class MapInterventionFragment extends SupportMapFragment implements
                             LatLng coordonnees = new LatLng(latitude, longitude);
 
                             //On récupère la référence pour l'afficher dans l'infobulle du marqueur
-                            String refInter = listInter.get(i).getAddress();
+                            String idInter = listInter.get(i).getId();
+                            String addressInter = listInter.get(i).getAddress();
+                            String codeSinistreInter = listInter.get(i).getSinisterCode();
+                            String dateInter = listInter.get(i).getDate();
+
+                            String snippet = "Adresse : " + addressInter;
 
                             // TODO : Récupérer d'autres infos à mettre dans l'infobulle (voir tuto google)
                             // TODO : Gérer la sélection d'un marqueur et mettre en évidence dans la liste (et inversement)
 
                             //Définition du marqueur
-                            MarkerOptions marker = new MarkerOptions().position(coordonnees).title(refInter);
+                            MarkerOptions marker = new MarkerOptions().position(coordonnees).title(idInter).snippet(snippet);
 
                             //Ajout du marqueur
                             myMap.addMarker(marker);
@@ -132,6 +138,9 @@ public class MapInterventionFragment extends SupportMapFragment implements
                     });
                 }
             }
+
+
+            myMap.setOnMarkerClickListener(this);
         }
 
 
@@ -145,5 +154,15 @@ public class MapInterventionFragment extends SupportMapFragment implements
 
     public void setListInter(List<Intervention> listInter) {
         this.listInter = listInter;
+    }
+
+    //quand on clique sur le marker, on update la liste pour faire un focus sur l'intervention
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        String idInter = marker.getTitle();
+
+        interListFragment.UpdateList(idInter);
+
+        return false;
     }
 }
