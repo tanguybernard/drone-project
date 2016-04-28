@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,7 +103,6 @@ public class MoyenFragment extends Fragment {
                 picture.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("CLICK", "Click sur la couleur");
                         MoyenColorDialog colorPopup = new MoyenColorDialog();
                         colorPopup.setLine(iRowIdx, psColor, (TableLayout) mView.findViewById(R.id.tableMeans));
                         colorPopup.show(getFragmentManager(), "");
@@ -121,9 +119,6 @@ public class MoyenFragment extends Fragment {
                 } else {
                     tvColumn.setTextColor(Color.BLACK);
                 }
-            }
-            if (iView == getResources().getInteger(R.integer.IDX_CODE)) {
-                Log.d("COLUMN_CODE", tvColumn.getText().toString());
             }
             outerLayout.addView(tvColumn);
             outerLayout.addView(picture);
@@ -219,28 +214,33 @@ public class MoyenFragment extends Fragment {
         MeansItemService.editMean(oMean);
     }
 
+    public void changeColor(String psId, String psColor) {
+        MeansItem oMean = new MeansItem();
+        oMean.setMsMeanId(psId);
+        oMean.setMsColor(psColor);
+        MeansItemService.editMean(oMean);
+    }
+
     public void getMeans() {
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
         table.removeAllViews();
         loadTable();
 
-        if(oIntervention.getIntervention()==null){
-            return;
-        }
-
-        List<MeansItem> loMeans = oIntervention.getIntervention().getWays();
-        if (loMeans != null && loMeans.size() > 0) {
-            table.removeAllViews();
-            loadTable();
-            for (MeansItem oMean : loMeans) {
-                String[] sHours = {oMean.getMsMeanId(),
-                        oMean.getMsMeanCode(),
-                        oMean.getMsMeanName(),
-                        oMean.getMsMeanHCall(),
-                        oMean.getMsMeanHArriv(),
-                        oMean.getMsMeanHEngaged(),
-                        oMean.getMsMeanHFree()};
-                addMean(sHours, false, oMean.getMsColor());
+        if (oIntervention.getIntervention() != null) {
+            List<MeansItem> loMeans = oIntervention.getIntervention().getWays();
+            if (loMeans != null && loMeans.size() > 0) {
+                table.removeAllViews();
+                loadTable();
+                for (MeansItem oMean : loMeans) {
+                    String[] sHours = {oMean.getMsMeanId(),
+                            oMean.getMsMeanCode(),
+                            oMean.getMsMeanName(),
+                            oMean.getMsMeanHCall(),
+                            oMean.getMsMeanHArriv(),
+                            oMean.getMsMeanHEngaged(),
+                            oMean.getMsMeanHFree()};
+                    addMean(sHours, false, oMean.getMsColor());
+                }
             }
         }
     }

@@ -67,7 +67,7 @@ public class ColorNameService {
         mapResult.put("EAU","#0000FF");
         mapResult.put("INCENDIE","#FF0000");
         mapResult.put("SAP","#00FF00");
-        mapResult.put("TECH","#FFA500");
+        mapResult.put("TECHNO","#FFA500");
         mapResult.put("DIR","#A020F0");
         return mapResult;
     }

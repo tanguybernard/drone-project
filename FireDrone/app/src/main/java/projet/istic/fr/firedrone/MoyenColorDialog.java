@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import projet.istic.fr.firedrone.adapter.MoyenListAdapter;
+import projet.istic.fr.firedrone.adapter.SpinnerColorAdapter;
 import projet.istic.fr.firedrone.service.ColorNameService;
 
 /**
@@ -43,13 +45,22 @@ public class MoyenColorDialog extends DialogFragment {
         this.msColor = psColor;
     }
 
-    private void updateColor(String psColor) {
+    private void updateColor(String psType) {
+        ColorNameService oColors = new ColorNameService();
+        Map<String, String> mapColors = oColors.getAllType();
+        String psColor = mapColors.get(psType);
         TableRow oRow = (TableRow) moEditTable.getChildAt(this.miLine);
-        LinearLayout oCell = (LinearLayout) oRow.getChildAt(getResources().getInteger(R.integer.IDX_NAME));
-        TextView oTxtName = (TextView) oCell.getChildAt(0);
-        ImageView oImgColor = (ImageView) oCell.getChildAt(1);
+        LinearLayout oCellName = (LinearLayout) oRow.getChildAt(getResources().getInteger(R.integer.IDX_NAME));
+        TextView oTxtName = (TextView) oCellName.getChildAt(0);
+        ImageView oImgColor = (ImageView) oCellName.getChildAt(1);
+        LinearLayout oCellId = (LinearLayout) oRow.getChildAt(getResources().getInteger(R.integer.IDX_ID));
+        TextView oTxtId = (TextView) oCellId.getChildAt(0);
+        Log.d("TYPE", psType);
+        Log.d("COLOR", psColor == null ? "NULL" : psColor);
         oTxtName.setTextColor(Color.parseColor(psColor));
         oImgColor.setBackgroundColor(Color.parseColor(psColor));
+        MoyenFragment oMoyenFrag = MoyenFragment.getInstance();
+        oMoyenFrag.changeColor(oTxtId.getText().toString(), psColor);
     }
 
     @Override
@@ -59,51 +70,15 @@ public class MoyenColorDialog extends DialogFragment {
 
         this.dialView = inflater.inflate(R.layout.means_select_color, null);
 
-        ColorNameService oColors = new ColorNameService();
-        Map<String, String> mapColors = oColors.getAllType();
-        Iterator<Entry<String, String>> ieColors = mapColors.entrySet().iterator();
         Spinner lsColors = (Spinner) dialView.findViewById(R.id.lstColors);
-
-        List<String> lsColorsValues = new ArrayList<String>();
-        Set<String> ssColorsKeys = mapColors.keySet();
-
-        /*ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>());
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        lsColors.setAdapter(spinnerAdapter);
-        for (String sKey : ssColorsKeys) {
-            spinnerAdapter.add(sKey);
-            lsColorsValues.add(mapColors.get(sKey));
-        }
-
-        int iSlcIdx = 0;
-        for (int iValue = 0; iValue < lsColorsValues.size(); iValue++) {
-            lsColors.getChildAt(iValue).setBackgroundColor(Color.parseColor(lsColorsValues.get(iValue)));
-            if (this.msColor.equals(lsColorsValues.get(iValue))) {
-                iSlcIdx = iValue;
-            }
-        }*/
-        int iSlcIdx = 0;
-        while (ieColors.hasNext()) {
-            Entry<String, String> eColors = ieColors.next();
-            String sText = eColors.getKey();
-            String sColor = eColors.getValue();
-            TextView oView = new TextView(getContext());
-            oView.setText(sText);
-            oView.setBackgroundColor(Color.parseColor(sColor));
-            lsColors.addView(oView);
-            if (!this.msColor.equals(sColor)) {
-                iSlcIdx++;
-            }
-        }
-
-        lsColors.setSelection(iSlcIdx);
+        lsColors.setAdapter(new SpinnerColorAdapter(this.getContext(), null));
 
         final Button validMean = (Button) this.dialView.findViewById(R.id.btn_valid_color);
         validMean.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Spinner lsColors = (Spinner) dialView.findViewById(R.id.lstColors);
-                String slcColor = (String) lsColors.getSelectedItem();
-                updateColor(slcColor);
+                String slcType = (String) lsColors.getSelectedItem();
+                updateColor(slcType);
                 dismiss();
             }
         });
