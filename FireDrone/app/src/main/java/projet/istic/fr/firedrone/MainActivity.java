@@ -25,6 +25,7 @@ import me.pushy.sdk.json.PushySingleton;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.synchro.MyObservable;
 import projet.istic.fr.firedrone.synchro.Observateur;
 import projet.istic.fr.firedrone.synchro.PushReceiver;
 
@@ -106,6 +107,14 @@ public class MainActivity extends AppCompatActivity
 
        navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+
+        navigationView.getMenu().setGroupVisible(R.id.group_1, false);
+        navigationView.getMenu().setGroupVisible(R.id.group_2, false);
+        navigationView.getMenu().setGroupVisible(R.id.group_3, false);
+
+
+
+
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -139,8 +148,6 @@ public class MainActivity extends AppCompatActivity
                 Log.d("TAG", "selectDrawerItem: ");
                 fragment = fragmentMoyen;
                 break;
-            case R.id.nav_directive:
-                break;
             case R.id.nav_parcours:
                 fragmentDrawPath = TabMapFragment.getInstance();
 
@@ -156,6 +163,7 @@ public class MainActivity extends AppCompatActivity
         }
         //on remplace ici l'ancien fragment
         if(fragment != null){
+            MyObservable.getInstance().setFragment((Observateur) fragment);
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("detailFragment").commit();
         }
         droneListenerEvent.setUsingControlPanel(usingControlDrone);

@@ -58,6 +58,7 @@ public class MeansItemService {
         String sIntervId = oIntervention.getId();
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
         MeansAPI meansApi = restAdapter.create(MeansAPI.class);
+        Log.d("ID_INTERV", sIntervId);
         meansApi.EditMean(sIntervId, meansItem, new Callback<List<MeansItem>>() {
             @Override
             public void success(List<MeansItem> ploMeans, Response response) {

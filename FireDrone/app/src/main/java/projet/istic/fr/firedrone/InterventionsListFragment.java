@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -82,6 +83,14 @@ public class InterventionsListFragment extends Fragment implements Observateur {
                 TabMapFragment tabMapFragment = new TabMapFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.content_frame, tabMapFragment).commit();
+
+                NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+                navigationView.getMenu().setGroupVisible(R.id.group_1, true);
+                navigationView.getMenu().setGroupVisible(R.id.group_2, true);
+                navigationView.getMenu().setGroupVisible(R.id.group_3, true);
+
+
+
             }
         });
 

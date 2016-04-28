@@ -56,9 +56,7 @@ public class PushReceiver extends BroadcastReceiver  {
     }
 
 
-    public void notifyApp(Context context){
-
-
+    public void notifyApp(Context context) {
 
 
         NotificationCompat.Builder builder =
@@ -73,15 +71,11 @@ public class PushReceiver extends BroadcastReceiver  {
         int NOTIFICATION_ID = 12345;
 
 
-
-
-
         Intent targetIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(contentIntent);
         NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nManager.notify(NOTIFICATION_ID, builder.build());
-
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -91,24 +85,26 @@ public class PushReceiver extends BroadcastReceiver  {
 
         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
 
+        if (InterventionSingleton.getInstance().getIntervention() != null) {
 
-        interventionAPI.getInterventionById(
-                InterventionSingleton.getInstance().getIntervention().getId(), new Callback<Intervention>() {
+            interventionAPI.getInterventionById(
+                    InterventionSingleton.getInstance().getIntervention().getId(), new Callback<Intervention>() {
 
-                    @Override
-                    public void success(Intervention intervention, Response response) {
+                        @Override
+                        public void success(Intervention intervention, Response response) {
 
-                        InterventionSingleton.getInstance().setIntervention(intervention);
-                        MyObservable.getInstance().notifierObservateurs();
-                    }
+                            InterventionSingleton.getInstance().setIntervention(intervention);
+                            MyObservable.getInstance().notifierObservateurs();
+                        }
 
-                    @Override
-                    public void failure(RetrofitError error) {
+                        @Override
+                        public void failure(RetrofitError error) {
 
-                    }
-                });
+                        }
+                    });
+        }
+
     }
-
 
 
 
