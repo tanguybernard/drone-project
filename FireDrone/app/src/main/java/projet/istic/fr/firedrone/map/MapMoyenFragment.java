@@ -111,7 +111,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        MyObservable.getInstance().ajouterObservateur(this);
+        MyObservable.getInstance().setFragment(this);
 
         View rootView = inflater.inflate(R.layout.fragment_map_moyen, null);
         containerMap = (FrameLayout) rootView.findViewById(R.id.container_map);
@@ -556,18 +556,21 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     @Override
     public void actualiser(Observable o) {
         if(o instanceof MyObservable){
-            MapMoyenFragment myFragment = (MapMoyenFragment)getFragmentManager().findFragmentById(R.id.content_map_moyen);
-            if (myFragment != null && myFragment.isVisible()) {
-                //ICI ROMAIN
-                googleMap.clear();
-                mapMarkerItem.clear();
-                if(listSIG != null) {
-                    createSIG();
-                }
 
-                createMoyenOnMap();
 
-                crateRessourceOnMap();
+                MapMoyenFragment myFragment = (MapMoyenFragment) getFragmentManager().findFragmentById(R.id.content_map_moyen);
+                if (myFragment != null && myFragment.isVisible()) {
+                    //ICI ROMAIN
+                    googleMap.clear();
+                    mapMarkerItem.clear();
+                    if (listSIG != null) {
+                        createSIG();
+                    }
+
+                    createMoyenOnMap();
+
+                    crateRessourceOnMap();
+
             }
         }
     }

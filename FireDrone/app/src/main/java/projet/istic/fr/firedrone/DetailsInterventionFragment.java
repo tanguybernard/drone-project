@@ -12,6 +12,8 @@ import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -20,7 +22,7 @@ import retrofit.client.Response;
 /**
  * Created by tbernard on 23/04/16.
  */
-public class DetailsInterventionFragment extends Fragment {
+public class DetailsInterventionFragment extends Fragment implements Observateur {
 
 
     public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
@@ -202,4 +204,8 @@ public class DetailsInterventionFragment extends Fragment {
 
     }
 
+    @Override
+    public void actualiser(Observable o) {
+
+    }
 }

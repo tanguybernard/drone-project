@@ -24,6 +24,7 @@ import me.pushy.sdk.json.PushySingleton;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.synchro.MyObservable;
 import projet.istic.fr.firedrone.synchro.Observateur;
 import projet.istic.fr.firedrone.synchro.PushReceiver;
 
@@ -153,6 +154,7 @@ public class MainActivity extends AppCompatActivity
         }
         //on remplace ici l'ancien fragment
         if(fragment != null){
+            MyObservable.getInstance().setFragment((Observateur) fragment);
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("detailFragment").commit();
         }
         droneListenerEvent.setUsingControlPanel(usingControlDrone);

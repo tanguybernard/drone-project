@@ -20,11 +20,13 @@ import java.util.List;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
 
 /**
  * Created by nduquesne on 18/03/16.
  */
-public class MoyenFragment extends Fragment {
+public class MoyenFragment extends Fragment implements Observateur {
 
     public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
 
@@ -243,5 +245,10 @@ public class MoyenFragment extends Fragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void actualiser(Observable o) {
+
     }
 }
