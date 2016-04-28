@@ -138,6 +138,11 @@ public class MeansItem {
         this.msMeanHFree = msMeanHFree;
     }
 
+    /**
+     * Get Default Local Image Resource for Means
+     * (USE IN DEV/TEST)
+     * @return
+     */
     public Integer getResource() {
         if (msMeanId.equals("1")) {
             return R.drawable.delete_24dp_rouge;
@@ -148,13 +153,12 @@ public class MeansItem {
 
 
     /**
-     * TODO: MICKAEL
      *
-     * @return
+     * @return Bitmap corresponding to Graphical Representation of Means
      */
-    public Bitmap getDashedBitmap(boolean dashed) {
+    public Bitmap getBitmap() {
         MeanGRAPHICALGen generator = new MeanGRAPHICALGen(msMeanCode, msMeanName, msColor);
-        Bitmap bitmap = generator.getDashedBitMap(dashed);
+        Bitmap bitmap = generator.getBitMap(this);
         return bitmap;
     }
 

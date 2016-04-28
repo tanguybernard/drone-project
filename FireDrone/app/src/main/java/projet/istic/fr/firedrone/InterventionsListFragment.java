@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
+import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
@@ -70,9 +71,9 @@ public class InterventionsListFragment extends Fragment {
                 Intervention newsData = (Intervention) o;
                 InterventionSingleton.getInstance().setIntervention(newsData);
 
-                DetailsInterventionFragment detailsInterventionFragment = new DetailsInterventionFragment();
+                TabMapFragment tabMapFragment = new TabMapFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, detailsInterventionFragment).commit();
+                transaction.replace(R.id.content_frame, tabMapFragment).commit();
             }
         });
 
