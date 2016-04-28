@@ -101,19 +101,15 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
         ListView listView = (ListView) parentRow.getParent();
         final int position = listView.getPositionForView(parentRow);
 
-        View vv = listView.getChildAt(position);
-
-        TextView tt = (TextView)vv.findViewById(R.id.moyen_quantity);
-        int quantity = Integer.parseInt(tt.getText().toString());
-
+        MoyenInterventionItem item = getItem(position);
 
         if(addSub){
-            tt.setText(Integer.toString(quantity + 1));
+            item.setQuantity(item.getQuantity()+1);
 
         }
         else{
-            if(quantity>0) {
-                tt.setText(Integer.toString(quantity - 1));
+            if(item.getQuantity()>0) {
+                item.setQuantity(item.getQuantity()-1);
             }
 
         }

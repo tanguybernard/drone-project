@@ -105,6 +105,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
         super.onCreate(savedInstanceState);
         getMapAsync(this);
+
     }
 
 
@@ -144,6 +145,9 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         //ajout du bouton de suppression et placement
         mapView.addView(suppressionMarker, new FrameLayout.LayoutParams(150, 150, Gravity.CENTER_HORIZONTAL));
 
+        if(googleMap != null) {
+            createSIG();
+        }
         button.setOnClickListener(this);
         return rootView;
     }
@@ -308,9 +312,9 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positionIntervention, 16));
 
         infoWindowContainer.setVisibility(View.VISIBLE);
-        if(listSIG != null) {
-            createSIG();
-        }
+
+        createSIG();
+
 
         createMoyenOnMap();
 
