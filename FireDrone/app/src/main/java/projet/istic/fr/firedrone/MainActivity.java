@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -24,11 +25,12 @@ import me.pushy.sdk.json.PushySingleton;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.synchro.MyObservable;
 import projet.istic.fr.firedrone.synchro.Observateur;
 import projet.istic.fr.firedrone.synchro.PushReceiver;
 
 public class MainActivity extends AppCompatActivity
-        implements TowerListener{
+        implements TowerListener,VisibilityMenu{
 
     //tower pour se connecter au drone et recevoir les évènements du drone
     private ControlTower controlTower;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity
 
     //fragment pour contrôler le drône
     private PanelControleDroneFragment droneControlFragment;
+
+    private   NavigationView navigationView;
 
     @Override
     protected void onStart() {
@@ -101,8 +105,16 @@ public class MainActivity extends AppCompatActivity
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+       navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+
+        navigationView.getMenu().setGroupVisible(R.id.group_1, false);
+        navigationView.getMenu().setGroupVisible(R.id.group_2, false);
+        navigationView.getMenu().setGroupVisible(R.id.group_3, false);
+
+
+
+
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -136,8 +148,6 @@ public class MainActivity extends AppCompatActivity
                 Log.d("TAG", "selectDrawerItem: ");
                 fragment = fragmentMoyen;
                 break;
-            case R.id.nav_directive:
-                break;
             case R.id.nav_parcours:
                 fragmentDrawPath = TabMapFragment.getInstance();
 
@@ -153,6 +163,7 @@ public class MainActivity extends AppCompatActivity
         }
         //on remplace ici l'ancien fragment
         if(fragment != null){
+            MyObservable.getInstance().setFragment((Observateur) fragment);
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("detailFragment").commit();
         }
         droneListenerEvent.setUsingControlPanel(usingControlDrone);
@@ -192,6 +203,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTowerDisconnected() {
 
+    }
+
+    @Override
+    public void showMenu() {
+        navigationView.setVisibility(View.VISIBLE);
     }
 
 

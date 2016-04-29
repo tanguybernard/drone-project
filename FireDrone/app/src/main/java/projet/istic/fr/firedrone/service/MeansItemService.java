@@ -18,6 +18,7 @@ import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 /**
@@ -56,8 +57,13 @@ public class MeansItemService {
     public static List<MeansItem> editMean(MeansItem meansItem,final Context context) {
         final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
         String sIntervId = oIntervention.getId();
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setClient(new OkClient())
+                .build();
         MeansAPI meansApi = restAdapter.create(MeansAPI.class);
+        Log.d("ID_INTERV", sIntervId);
         meansApi.EditMean(sIntervId, meansItem, new Callback<List<MeansItem>>() {
             @Override
             public void success(List<MeansItem> ploMeans, Response response) {
@@ -99,6 +105,7 @@ public class MeansItemService {
         for( DefaultWay defautWay : listDefaultWays){
             MeansItem meansItem = new MeansItem();
             meansItem.setMsMeanCode(defautWay.getAcronym());
+            meansItem.setMsMeanName(defautWay.getAcronym());
             meansItem.setMsColor(defautWay.getColor());
             listMeansItem.add(meansItem);
         }

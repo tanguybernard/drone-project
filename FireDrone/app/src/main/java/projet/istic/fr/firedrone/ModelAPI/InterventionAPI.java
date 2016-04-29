@@ -87,4 +87,6 @@ public interface InterventionAPI {
         @PATCH("/intervention/{id}/ressource")
         public void updateResource(@Path("id") String identifiant,@Body Resource resource, Callback<List<Resource>> response);
 
+        @DELETE("/intervention/{id}/ressource/{idRessource}")
+        public void deleteResource(@Path("id") String identifiantIntervention,@Path("idRessource") String identifiantRessource,Callback<Void> response);
 }

@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import projet.istic.fr.firedrone.map.MapDroneFragment;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
 
 /**
  * Created by ramage on 26/04/16.
  */
-public class PanelControleDroneFragment extends Fragment {
+public class PanelControleDroneFragment extends Fragment implements Observateur {
 
     //Instance
     private static PanelControleDroneFragment INSTANCE;
@@ -40,5 +42,10 @@ public class PanelControleDroneFragment extends Fragment {
 
     public MapDroneFragment getMapDrone(){
         return mapDrone;
+    }
+
+    @Override
+    public void actualiser(Observable o) {
+
     }
 }

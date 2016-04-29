@@ -94,7 +94,7 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
      * Decrease quantity of vehicle
      * @param v
      */
-    public void modifyQuantity(View v,boolean addSub){
+    public void modifyQuantity(View v,boolean addSub) {
 
         View parentRow = (View) v.getParent();
 
@@ -103,21 +103,18 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
 
         View vv = listView.getChildAt(position);
 
-        TextView tt = (TextView)vv.findViewById(R.id.moyen_quantity);
+        TextView tt = (TextView) vv.findViewById(R.id.moyen_quantity);
         int quantity = Integer.parseInt(tt.getText().toString());
 
-
-        if(addSub){
+        if (addSub) {
             tt.setText(Integer.toString(quantity + 1));
 
-        }
-        else{
-            if(quantity>0) {
+        } else {
+            if (quantity > 0) {
                 tt.setText(Integer.toString(quantity - 1));
+
             }
-
         }
-
     }
 
 

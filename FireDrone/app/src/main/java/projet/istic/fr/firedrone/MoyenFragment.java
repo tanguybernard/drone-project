@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +21,14 @@ import java.util.List;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.singleton.UserSingleton;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
 
 /**
  * Created by nduquesne on 18/03/16.
  */
-public class MoyenFragment extends Fragment {
+public class MoyenFragment extends Fragment implements Observateur {
 
     public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
 
@@ -92,13 +96,12 @@ public class MoyenFragment extends Fragment {
             textLayoutParams.setMargins(2, 5, 2, 5);
             tvColumn.setLayoutParams(textLayoutParams);
             if (iView == getResources().getInteger(R.integer.IDX_NAME) && !pbHeader) {
-                picture.setMinimumWidth(30);
-                picture.setMaxWidth(30);
                 picture.setMinimumHeight(30);
                 picture.setMaxHeight(30);
+                picture.setAdjustViewBounds(true);
                 picture.setBackgroundColor(Color.parseColor(psColor));
                 LinearLayout.LayoutParams imgLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-                imgLayoutParams.setMargins(3, 3, 3, 3);
+                imgLayoutParams.setMargins(0, 5, 3, 5);
                 picture.setLayoutParams(imgLayoutParams);
                 picture.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -120,6 +123,8 @@ public class MoyenFragment extends Fragment {
                     tvColumn.setTextColor(Color.BLACK);
                 }
             }
+            tvColumn.setWidth(200);
+            tvColumn.setHeight(30);
             outerLayout.addView(tvColumn);
             outerLayout.addView(picture);
             element.addView(outerLayout);
@@ -243,5 +248,10 @@ public class MoyenFragment extends Fragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void actualiser(Observable o) {
+
     }
 }

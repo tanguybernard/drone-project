@@ -1,5 +1,7 @@
 package projet.istic.fr.firedrone.synchro;
 
+import android.support.v4.app.Fragment;
+
 import java.util.ArrayList;
 
 /**
@@ -46,14 +48,30 @@ public class MyObservable implements Observable {
 
     }
 
+    private Observateur fragment;
+
+    public void setFragment(Observateur fragment){
+        this.fragment = fragment;
+
+    }
+
+    public Observateur getFragment(){
+        return this.fragment;
+    }
+
+
+
     @Override
     public void notifierObservateurs() {
 
-        for(int i=0;i<tabObservateur.size();i++)
+
+        fragment.actualiser(this);
+
+        /*for(int i=0;i<tabObservateur.size();i++)
         {
             Observateur o = (Observateur) tabObservateur.get(i);
             o.actualiser(this);// On utilise la méthode "tiré".
-        }
+        }*/
 
     }
 

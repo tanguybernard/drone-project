@@ -35,7 +35,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
     compile 'com.google.android.gms:play-services-vision:8.4.0'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
-
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
 
 }

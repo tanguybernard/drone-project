@@ -7,7 +7,7 @@
     <string name="Menu">Menu</string>
     <string name="controle">Contrôle du drône</string>
     <string name="image">Images du drône</string>
-    <string name="parcours">Définition de parcours</string>
+    <string name="parcours">Carte</string>
     <string name="planning">Planning</string>
     <string name="directive">Directives</string>
     <string name="rapport">Rapport de terrain</string>
