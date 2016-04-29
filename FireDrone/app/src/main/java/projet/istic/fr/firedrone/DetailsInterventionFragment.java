@@ -47,7 +47,6 @@ public class DetailsInterventionFragment extends Fragment {
         final View view = inflater.inflate(R.layout.intervention_details_fragment, container, false);
 
 
-
         fillDataDetails(view,intervention);
 
 
@@ -63,7 +62,6 @@ public class DetailsInterventionFragment extends Fragment {
         final TextView cosInformation = (TextView) view.findViewById(R.id.cosInformation);
 
         /** Set OnClickListener on the two Differents COS buttons **/
-
 
 
         buttondevenir.setOnClickListener(new View.OnClickListener() {
@@ -116,8 +114,7 @@ public class DetailsInterventionFragment extends Fragment {
 
         if(InterventionSingleton.getInstance().getIntervention().getCos()==null)
         {
-            //afficher le boutton devenirCos et masquer le bouton libererCos
-            //ajouter un listerner dessus
+            //rendre visible le boutton devenir CoS
             buttondevenir.setVisibility(View.VISIBLE);
         }
         else {
@@ -133,50 +130,6 @@ public class DetailsInterventionFragment extends Fragment {
                 buttonliberer.setVisibility(View.GONE);
             }
         }
-
-    /*
-
-        buttonliberer.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                if(buttonliberer.getText()=="DevenirCos" ){
-                    if(InterventionSingleton.getInstance().getIntervention().getCos().equals(null)){
-                        final InterventionAPI interventionAPI= restAdapter.create(InterventionAPI.class);
-                        interventionAPI.setInterventionCos(intervention.getId(), new Callback<Intervention>() {
-                            @Override
-                            public void success(Intervention intervention, Response response) {
-                                buttonliberer.setText("libererCos");
-                            }
-                            @Override
-                            public void failure(RetrofitError error) {
-                                System.out.print("Impossible de devenir Cos:" + error);
-                            }
-                        });
-                    }
-                    else{
-                        buttonliberer.setVisibility(view.GONE);
-                    }
-
-                }
-                else{
-                    final InterventionAPI interventionAPI= restAdapter.create(InterventionAPI.class);
-                    interventionAPI.deletenterventionCos(intervention.getId(), new Callback<Intervention>() {
-                        @Override
-                        public void success(Intervention intervention, Response response) {
-                            buttonliberer.setText("DevenirCos");
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            System.out.print("Impossible de liberer Cos:" + error);
-                        }
-                    });
-                }
-            }
-        });
-        */
 
         return view;
     }
