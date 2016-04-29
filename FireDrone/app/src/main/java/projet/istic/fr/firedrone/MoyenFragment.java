@@ -39,6 +39,8 @@ public class MoyenFragment extends Fragment implements Observateur {
 
     private InterventionSingleton oIntervention = InterventionSingleton.getInstance();
 
+    private UserSingleton oUser = UserSingleton.getInstance();
+
 
     //singleton, une seule instance du fragment moyen
     public static MoyenFragment getInstance() {
@@ -68,14 +70,16 @@ public class MoyenFragment extends Fragment implements Observateur {
 
         getMeans();
 
-        final Button addMeans = (Button) view.findViewById(R.id.btnAddMean);
-        addMeans.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                MoyenEditDialog popUp = new MoyenEditDialog();
-                popUp.setMiLine(-1, (TableLayout) mView.findViewById(R.id.tableMeans));
-                popUp.show(getFragmentManager(), "");
-            }
-        });
+        if (oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
+            final Button addMeans = (Button) view.findViewById(R.id.btnAddMean);
+            addMeans.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    MoyenEditDialog popUp = new MoyenEditDialog();
+                    popUp.setMiLine(-1, (TableLayout) mView.findViewById(R.id.tableMeans));
+                    popUp.show(getFragmentManager(), "");
+                }
+            });
+        }
     }
 
     private TableRow addRow(String[] plsValues, boolean pbHeader, final String psColor) {
@@ -103,14 +107,16 @@ public class MoyenFragment extends Fragment implements Observateur {
                 LinearLayout.LayoutParams imgLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
                 imgLayoutParams.setMargins(0, 5, 3, 5);
                 picture.setLayoutParams(imgLayoutParams);
-                picture.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MoyenColorDialog colorPopup = new MoyenColorDialog();
-                        colorPopup.setLine(iRowIdx, psColor, (TableLayout) mView.findViewById(R.id.tableMeans));
-                        colorPopup.show(getFragmentManager(), "");
-                    }
-                });
+                if (oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
+                    picture.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MoyenColorDialog colorPopup = new MoyenColorDialog();
+                            colorPopup.setLine(iRowIdx, psColor, (TableLayout) mView.findViewById(R.id.tableMeans));
+                            colorPopup.show(getFragmentManager(), "");
+                        }
+                    });
+                }
             }
             if (pbHeader) {
                 tvColumn.setBackgroundColor(Color.GRAY);
@@ -158,7 +164,7 @@ public class MoyenFragment extends Fragment implements Observateur {
 
         LinearLayout cellLayout = ((LinearLayout) (element.getChildAt(getResources().getInteger(R.integer.IDX_H_FREE))));
         TextView oLastTxt = (TextView) cellLayout.getChildAt(0);
-        if (oLastTxt.getText().toString().isEmpty()) {
+        if (oLastTxt.getText().toString().isEmpty() && oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
             element.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
