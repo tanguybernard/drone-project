@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import projet.istic.fr.firedrone.Interceptor.Interceptor;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
@@ -65,18 +66,17 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
 
         /** Set OnClickListener on the two Differents COS buttons **/
 
-
         buttondevenir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
-                interventionAPI.setInterventionCos(intervention.getId(), new Callback<Intervention>() {
+                final InterventionAPI interventionAPI = Interceptor.getInstance().getRestAdapter().create(InterventionAPI.class);
+                interventionAPI.setInterventionCos(intervention.getId(), "COS", new Callback<Intervention>() {
                     @Override
                     public void success(Intervention intervention, Response response) {
                         buttondevenir.setVisibility(View.GONE);
                         buttonliberer.setVisibility(View.VISIBLE);
 
-                        cosInformation.setText(UserSingleton.getInstance().getUser().getLastname() + " " + UserSingleton.getInstance().getUser().getFirstname());
+                        cosInformation.setText(intervention.getCos().getLastname() + " " + intervention.getCos().getFirstname());
 
                     }
 
@@ -92,7 +92,7 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
         buttonliberer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+                final InterventionAPI interventionAPI = Interceptor.getInstance().getRestAdapter().create(InterventionAPI.class);
                 interventionAPI.deletenterventionCos(intervention.getId(), new Callback<Intervention>() {
                     @Override
                     public void success(Intervention intervention, Response response) {

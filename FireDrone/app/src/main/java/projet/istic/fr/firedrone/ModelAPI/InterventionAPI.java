@@ -82,7 +82,7 @@ public interface InterventionAPI {
         public void deletenterventionCos(@Path("id") String identifiant, Callback<Intervention> response);
 
         @POST("/intervention/{id}/cos")
-        public void setInterventionCos(@Path("id") String identifiant, Callback<Intervention> response);
+        public void setInterventionCos(@Path("id") String identifiant, @Body String body, Callback<Intervention> response);
 
         @PATCH("/intervention/{id}/ressource")
         public void updateResource(@Path("id") String identifiant,@Body Resource resource, Callback<List<Resource>> response);
