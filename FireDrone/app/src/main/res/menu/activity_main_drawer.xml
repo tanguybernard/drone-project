@@ -47,5 +47,20 @@
 
         </menu>
     </group>
+    <group android:title="CODIS"
+        android:id="@+id/group_codis">
+        <menu>
+            <item
+                android:id="@+id/nav_validation_mean_codis"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="@string/validation_codis" />
+            <item
+                android:id="@+id/nav_close_intervention_codis"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="@string/close_intervention" />
+
+        </menu>
+    </group>
+
 
 </menu>

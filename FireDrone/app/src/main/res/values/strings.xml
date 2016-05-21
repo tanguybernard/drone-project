@@ -69,5 +69,7 @@
     <string name="liste">Liste des interventions</string>
     <string name="devenirCOS">Devenir COS</string>
     <string name="libererCOS">Libérer COS</string>
+    <string name="validation_codis">Validation moyen</string>
+    <string name="close_intervention">Clore intervention</string>
 
 </resources>
