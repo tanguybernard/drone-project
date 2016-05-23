@@ -302,7 +302,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        System.out.println("loldsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsds");
 
         this.googleMap =googleMap;
         googleMap.setOnMapClickListener(this);
@@ -318,11 +317,11 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
         createMoyenOnMap();
 
-        crateRessourceOnMap();
+        createRessourceOnMap();
 
     }
 
-    private void crateRessourceOnMap(){
+    private void createRessourceOnMap(){
         //récupération en base de données des ressources de l'intervention
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(FiredroneConstante.END_POINT).setLogLevel(RestAdapter.LogLevel.FULL).build();
         InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
@@ -603,20 +602,17 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     @Override
     public void actualiser(Observable o) {
         if(o instanceof MyObservable){
+            MapMoyenFragment myFragment = (MapMoyenFragment) getFragmentManager().findFragmentById(R.id.content_map_moyen);
+            if (myFragment != null && myFragment.isVisible()) {
+                //ICI ROMAIN
+                googleMap.clear();
+                mapMarkerItem.clear();
+                if (listSIG != null) {
+                    createSIG();
+                }
 
-
-                MapMoyenFragment myFragment = (MapMoyenFragment) getFragmentManager().findFragmentById(R.id.content_map_moyen);
-                if (myFragment != null && myFragment.isVisible()) {
-                    //ICI ROMAIN
-                    googleMap.clear();
-                    mapMarkerItem.clear();
-                    if (listSIG != null) {
-                        createSIG();
-                    }
-
-                    createMoyenOnMap();
-
-                    crateRessourceOnMap();
+                createMoyenOnMap();
+                createRessourceOnMap();
 
             }
         }

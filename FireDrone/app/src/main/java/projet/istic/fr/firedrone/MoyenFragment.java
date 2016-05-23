@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -258,6 +259,10 @@ public class MoyenFragment extends Fragment implements Observateur {
 
     @Override
     public void actualiser(Observable o) {
-
+        MoyenFragment myFragment = (MoyenFragment) getFragmentManager().findFragmentById(R.id.content_frame);
+        if (myFragment != null && myFragment.isVisible()) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.detach(this).attach(this).commit();
+        }
     }
 }
