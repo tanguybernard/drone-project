@@ -18,6 +18,7 @@ public class Way {
 	private String engaged_time;
 	private String release_time;
 	private String groupId;
+	private boolean redeployement;
 	
 	public Way(){}
 
@@ -125,6 +126,14 @@ public class Way {
 		this.groupId = groupId;
 	}
 
+	public boolean isRedeployement() {
+		return redeployement;
+	}
+
+	public void setRedeployement(boolean redeployement) {
+		this.redeployement = redeployement;
+	}
+
 	public void update(Way newWay){
 		if( !Validator.isEmpty(newWay.getLatitude()))
 			this.latitude  = newWay.getLatitude();
@@ -156,6 +165,10 @@ public class Way {
 		if( !Validator.isEmpty(newWay.getRequest_time()))
 			this.request_time = newWay.getRequest_time();
 
+		if( this.redeployement != newWay.isRedeployement()){
+			this.redeployement = newWay.isRedeployement();
+		}
+
 	}
 
 	@Override
@@ -172,6 +185,7 @@ public class Way {
 				", engaged_time='" + engaged_time + '\'' +
 				", release_time='" + release_time + '\'' +
 				", groupId='" + groupId + '\'' +
+				", redeployement=" + redeployement +
 				'}';
 	}
 }

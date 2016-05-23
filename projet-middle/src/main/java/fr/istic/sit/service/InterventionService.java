@@ -1,18 +1,21 @@
 package fr.istic.sit.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.istic.sit.dao.UserRepository;
-import fr.istic.sit.domain.Cos;
-import fr.istic.sit.domain.User;
-import fr.istic.sit.domain.Way;
+import fr.istic.sit.domain.*;
+import fr.istic.sit.notification.PushyAPI;
+import fr.istic.sit.notification.PushyPushRequest;
 import fr.istic.sit.util.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import fr.istic.sit.dao.InterventionRepository;
-import fr.istic.sit.domain.Intervention;
 
 /**
  * @author FireDroneTeam
@@ -20,6 +23,12 @@ import fr.istic.sit.domain.Intervention;
 
 @Component
 public class InterventionService {
+
+	private final Logger log = LoggerFactory.getLogger(InterventionService.class);
+
+	@Autowired
+	private NotificationSenderService sender;
+
 
 	@Autowired
 	private InterventionRepository repository;
@@ -88,8 +97,11 @@ public class InterventionService {
 
 	public Intervention deleteWay(String id, String idWay){
 		Intervention intervention = repository.findById(id);
-		intervention.getWays().removeIf(w -> w.getId().equalsIgnoreCase(idWay));
-		return repository.save(intervention);
+		if(intervention.getWays() != null && ! intervention.getWays().isEmpty()){
+			intervention.getWays().removeIf(w -> w.getId().equalsIgnoreCase(idWay));
+			return repository.save(intervention);
+		}
+		return intervention;
 	}
 
 	public Cos getCos(String id){
@@ -102,7 +114,7 @@ public class InterventionService {
 	public Intervention setCos(String id, String login){
 		Intervention intervention = repository.findById(id);
 		Cos cosObj = new Cos();
-		//e
+
 		//if (intervention.getCos()!=null)
 		User cos = userRepository.findByLogin(login);
 		if(cos != null){
@@ -115,13 +127,75 @@ public class InterventionService {
 		}
 
 		intervention.setCos(cosObj);
-		return repository.save(intervention);
+		Intervention saveIntervention = repository.save(intervention);
 
+		//Send notification
+		Map<String, String> payload = new HashMap<String, String>();
+		payload.put("idIntervention", id);
+		payload.put("cosIam", cos.getLogin());
+		try {
+			sender.sendNotification(payload);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Error send notification "+e.getMessage());
+		}
+
+		return saveIntervention;
 	}
 
 	public Intervention deleteCos(String id){
 		Intervention intervention = repository.findById(id);
+
+		//Send notification
+		Map<String, String> payload = new HashMap<String, String>();
+		payload.put("idIntervention", id);
+		payload.put("cosFree", intervention.getCos().getLogin());
+		try {
+			sender.sendNotification(payload);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Error send notification "+e.getMessage());
+		}
+
 		intervention.setCos(null);
 		return repository.save(intervention);
+	}
+
+	public Intervention addRessource(String id, Ressource ressource){
+		Intervention intervention = repository.findById(id);
+		if(intervention.getRessources() == null)
+			intervention.setRessources(new ArrayList<>());
+
+		if(intervention.getRessources().isEmpty()){
+			ressource.setId("1");
+		}else {
+			ressource.setId(Integer.toString(intervention.getRessources().size() + 1));
+		}
+
+		intervention.getRessources().add(ressource);
+		return repository.save(intervention);
+	}
+
+	public Intervention editRessource(String id, Ressource ressource){
+		Intervention intervention = repository.findById(id);
+
+		if(intervention.getRessources()!= null) {
+			intervention.getRessources()
+					.stream()
+					.filter(r -> r.getId().equalsIgnoreCase(ressource.getId()))
+					.forEach(r -> r.update(ressource));
+
+			return repository.save(intervention);
+		}
+		return intervention;
+	}
+
+	public Intervention deleteRessource(String id, String idRessource){
+		Intervention intervention = repository.findById(id);
+		if(intervention.getRessources() != null && ! intervention.getRessources().isEmpty()){
+			intervention.getRessources().removeIf(r -> r.getId().equalsIgnoreCase(idRessource));
+			return repository.save(intervention);
+		}
+		return intervention;
 	}
 }

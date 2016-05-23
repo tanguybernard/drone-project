@@ -45,6 +45,7 @@ public class Sinister {
         this.ways = ways;
     }
 
+
     @Override
     public String toString() {
         return "Sinister{" +
