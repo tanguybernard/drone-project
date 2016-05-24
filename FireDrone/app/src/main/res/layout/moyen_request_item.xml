@@ -20,17 +20,17 @@
 
 
     <Button
-        android:id="@+id/btn_req_refuse"
+        android:id="@+id/btn_req_valid"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:text="v"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/btn_req_valid"
-        android:layout_toStartOf="@+id/btn_req_valid" />
+        android:layout_toLeftOf="@+id/btn_req_refuse"
+        android:layout_toStartOf="@+id/btn_req_refuse" />
 
     <Button
-        android:id="@+id/btn_req_valid"
+        android:id="@+id/btn_req_refuse"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:text="x"
