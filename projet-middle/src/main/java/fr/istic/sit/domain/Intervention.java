@@ -19,6 +19,7 @@ public class Intervention {
     private String status;
     private Cos cos;
     private List<Way> ways;
+    private List <Ressource> ressources;
 
     public Intervention() {}
 
@@ -105,6 +106,14 @@ public class Intervention {
 	public void setWays(List<Way> ways) {
 		this.ways = ways;
 	}
+
+    public List<Ressource> getRessources() {
+        return ressources;
+    }
+
+    public void setRessources(List<Ressource> ressources) {
+        this.ressources = ressources;
+    }
 
     public void update(Intervention newData){
         if (!Validator.isEmpty(newData.getAddress()))

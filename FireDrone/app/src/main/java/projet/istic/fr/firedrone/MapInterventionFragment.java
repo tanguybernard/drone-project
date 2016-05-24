@@ -156,7 +156,12 @@ public class MapInterventionFragment extends SupportMapFragment implements
         this.listInter = listInter;
     }
 
-    //quand on clique sur le marker, on update la liste pour faire un focus sur l'intervention
+
+    /**
+     * When Click on Marker: update the list and set Focus on intervention
+     * @param marker
+     * @return
+     */
     @Override
     public boolean onMarkerClick(Marker marker) {
         String idInter = marker.getTitle();

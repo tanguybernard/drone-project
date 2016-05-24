@@ -25,6 +25,7 @@ import projet.istic.fr.firedrone.adapter.CustomListAdapter;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.singleton.UserSingleton;
 import projet.istic.fr.firedrone.synchro.Observable;
 import projet.istic.fr.firedrone.synchro.Observateur;
 import projet.istic.fr.firedrone.synchro.PushReceiver;
@@ -94,7 +95,14 @@ public class InterventionsListFragment extends Fragment implements Observateur {
             }
         });
 
+
+
         final Button btnAddIntervention = (Button) view.findViewById(R.id.btnAddIntervention);
+
+
+        if(!UserSingleton.getInstance().getUser().getRole().equals(FiredroneConstante.ROLE_CODIS)){
+            btnAddIntervention.setVisibility(view.INVISIBLE);
+        }
 
         btnAddIntervention.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +114,8 @@ public class InterventionsListFragment extends Fragment implements Observateur {
 
             }
         });
+
+
 
 
         return view;
