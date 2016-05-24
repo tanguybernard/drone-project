@@ -173,41 +173,28 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 /**  Button's Text  **/
                 switch (meansItem.getStatus()) {
                     case STATUS_DEMANDE:
-                        button.setText(MeansItemStatus.STATUS_VALIDE.description());
+                        button.setEnabled(false);
+                        button.setText(MeansItemStatus.STATUS_ARRIVE.description());
                         break;
                     case STATUS_VALIDE:
+                        button.setEnabled(true);
                         button.setText(MeansItemStatus.STATUS_ARRIVE.description());
                         break;
                     case STATUS_ARRIVE:
+                        button.setEnabled(true);
                         button.setText(MeansItemStatus.STATUS_ENGAGE.description());
                         break;
                     case STATUS_ENGAGE:
+                        button.setEnabled(true);
                         button.setText(MeansItemStatus.STATUS_LIBERE.description());
                         break;
                     case STATUS_ENTRANSIT:
+                        button.setEnabled(true);
                         button.setText(MeansItemStatus.STATUS_ARRIVE.description());
                         break;
                     case STATUS_LIBERE:
                         button.setEnabled(false);
                 }
-
-                /* TODO: DELETE THIS COMMENTED CODE
-                if (meansItem.getMsMeanHArriv() == null) {
-                    button.setText("Arrivé");
-                } else {
-                    if (meansItem.getMsMeanHEngaged() == null) {
-                        button.setText("Engagé");
-                    } else {
-                        if(meansItem.getStatus()){
-                            button.setText("Redéployé");
-                        }else {
-                            if (meansItem.getMsMeanHFree() == null) {
-                                button.setText("Libéré");
-                            }
-                        }
-                    }
-                }
-                */
             }
         }
         return true;
@@ -240,12 +227,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                         meansItem.setStatus(MeansItemStatus.STATUS_ENTRANSIT.state());
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
                     }
-
-                    /** TODO: DELETE THE COMMENTED CODE BELOW
-                     if (meansItem.getMsMeanHEngaged() != null ) {
-                     meansItem.setStatus(true);
-                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
-                     }*/
 
                     MeansItemService.editMean(meansItem,getContext());
                 }
@@ -474,6 +455,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             Date newDate = new Date();
             if(meansItemCloned.getMsMeanHCall() == null){
                 meansItemCloned.setMsMeanHCall(FiredroneConstante.DATE_FORMAT.format(newDate));
+                meansItemCloned.setStatus("D");
             }
 
 
@@ -482,7 +464,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                panelListFragment.removeItem(moyenItemSelected);
                 MeansItemService.editMean(meansItemCloned,getContext());
                 //on le met à nulle
-                moyenItemSelected = null;;
+                itemSelected = null;
             }
             else {
                 MeansItemService.addMean(meansItemCloned,getContext(),false);

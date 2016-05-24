@@ -158,9 +158,6 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_image:
                 break;
-            case R.id.nav_validation_mean_codis:
-                fragment = new MeansValidationFragment();
-                break;
         }
         //on remplace ici l'ancien fragment
         if(fragment != null){

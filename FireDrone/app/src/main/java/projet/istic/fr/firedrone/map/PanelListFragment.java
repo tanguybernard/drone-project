@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.Serializable;
@@ -115,7 +116,8 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
 
 
     private boolean isHeader(int position) {
-            return ((LinearLayout)getListView().getChildAt(position)).getChildAt(0).getId()==R.id.textSeparator;
+        View view = ((RelativeLayout)getListView().getChildAt(position)).getChildAt(0);
+        return view.getId()==R.id.imageView && view.getVisibility() == View.INVISIBLE ;
     }
 
     @Override

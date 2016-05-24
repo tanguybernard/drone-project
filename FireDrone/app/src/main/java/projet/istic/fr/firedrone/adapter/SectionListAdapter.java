@@ -1,6 +1,7 @@
 package projet.istic.fr.firedrone.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,36 +101,46 @@ public class SectionListAdapter extends BaseAdapter {
                 case TYPE_ITEM:
                     convertView = mInflater.inflate(R.layout.section_item, null);
                     holder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
+                    holder.textView = (TextView) convertView.findViewById(R.id.textSeparator);
+
                     break;
                 case TYPE_SEPARATOR:
-                    convertView = mInflater.inflate(R.layout.section_item_separator, null);
+                    convertView = mInflater.inflate(R.layout.section_item, null);
+                    holder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
                     holder.textView = (TextView) convertView.findViewById(R.id.textSeparator);
+
                     break;
             }
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
-            //cas d'une suppression d'un élément
-            if(object instanceof  String && holder.textView == null){
-                convertView = mInflater.inflate(R.layout.section_item_separator, null);
-                holder.textView = (TextView) convertView.findViewById(R.id.textSeparator);
-                convertView.setTag(holder);
-            }else if ((object instanceof MeansItem || object instanceof EnumPointType) && holder.imageView == null){
-                convertView = mInflater.inflate(R.layout.section_item, null);
-                holder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
-                convertView.setTag(holder);
-            }
         }
 
         if(object instanceof MeansItem) {
             holder.imageView.setImageBitmap(((MeansItem) object).getBitmap());
+            visibilityHolder(holder, TYPE_ITEM);
         }else if(object instanceof EnumPointType){
             holder.imageView.setImageResource(((EnumPointType) object).getResource());
+            visibilityHolder(holder,TYPE_ITEM);
         }else{
             holder.textView.setText(object.toString());
+            visibilityHolder(holder,TYPE_SEPARATOR);
         }
 
         return convertView;
+    }
+
+    private void visibilityHolder(ViewHolder holder,int type){
+        switch(type){
+            case TYPE_ITEM : holder.textView.setVisibility(View.INVISIBLE);
+                holder.imageView.setVisibility(View.VISIBLE);
+                break;
+
+            case TYPE_SEPARATOR: holder.imageView.setVisibility(View.INVISIBLE);
+                holder.textView.setVisibility(View.VISIBLE);
+                holder.textView.setBackgroundColor(Color.BLACK);
+                break;
+        }
     }
 
     public static class ViewHolder {
