@@ -11,6 +11,7 @@ import retrofit.http.GET;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 /**
  * Created by christophe on 21/04/16.
@@ -28,4 +29,7 @@ public interface MeansAPI {
 
     @GET("/way")
     void getWay(Callback<List<DefaultWay>> callback);
+
+    @GET("/intervention/{intervId}/way")
+    void getWayRequested(@Path("intervId") String psIntervQuery,@Query("status") String status, Callback<List<MeansItem>> callback);
 }

@@ -17,6 +17,10 @@
             android:id="@+id/nav_moyen"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/moyen" />
+        <item
+            android:id="@+id/nav_moyen_req"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Moyen demandé" />
 
     </group>
 
@@ -47,15 +51,5 @@
 
         </menu>
     </group>
-    <group android:title="CODIS"
-        android:id="@+id/group_codis">
-        <menu>
-            <item
-                android:id="@+id/nav_validation_mean_codis"
-                android:icon="@drawable/ic_menu_gallery"
-                android:title="@string/validation_codis" />
-        </menu>
-    </group>
-
 
 </menu>
