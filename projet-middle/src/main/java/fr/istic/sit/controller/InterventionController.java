@@ -38,8 +38,8 @@ public class InterventionController {
 
     @RequestMapping(value= "/{id}/way" , method = RequestMethod.GET)
     @ApiOperation(value = "Search ways of an intervention", nickname = "WaysOfIntervention", response = Way.class )
-    public List<Way> searchWaysOfIntervention(OAuth2Authentication authentication, @PathVariable String id) {
-        return service.getId(id).getWays();
+    public List<Way> searchWaysOfIntervention(OAuth2Authentication authentication, @PathVariable String id, @RequestParam (value = "status" , required = false) String status) {
+        return service.getWaysInterventions(id, status);
     }
 
     @RequestMapping(value="/{id}" , method = RequestMethod.GET)

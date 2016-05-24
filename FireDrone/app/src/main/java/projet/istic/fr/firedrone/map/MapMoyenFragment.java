@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -54,13 +55,11 @@ import retrofit.client.Response;
  */
 public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener,GoogleMap.OnMarkerClickListener,GoogleMap.OnCameraChangeListener,
-        View.OnClickListener,MethodCallWhenDrag, Observateur {
+        View.OnClickListener,MethodCallWhenDrag, Observateur,Serializable {
 
 
     //item sélectionné dans le panel
-    private MeansItem moyenItemSelected;
-
-    private EnumPointType enumPointTypeSelected;
+    private Object itemSelected;
 
     //l'item sélectionné est a supprimé du panel une fois placé
     private boolean itemToRemove;
@@ -91,14 +90,14 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     //liste des Sig sur la carte
     private List<Sig> listSIG;
 
-    private PanelMapMoyenFragment panelMapMoyenFragment;
+    private PanelListFragment panelListFragment;
 
 
     public MapMoyenFragment(){}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        panelMapMoyenFragment = (PanelMapMoyenFragment) getArguments().getSerializable("panel");
+        panelListFragment = (PanelListFragment) getArguments().getSerializable("panel");
 
         super.onCreate(savedInstanceState);
         getMapAsync(this);
@@ -172,43 +171,30 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 markerSelected = marker;
 
                 /**  Button's Text  **/
-                switch (MeansItemStatus.getStatus(meansItem.getStatus())) {
+                switch (meansItem.getStatus()) {
                     case STATUS_DEMANDE:
-                        button.setText(MeansItemStatus.STATUS_VALIDE.description());
+                        button.setEnabled(false);
+                        button.setText(MeansItemStatus.STATUS_ARRIVE.description());
                         break;
                     case STATUS_VALIDE:
+                        button.setEnabled(true);
                         button.setText(MeansItemStatus.STATUS_ARRIVE.description());
                         break;
                     case STATUS_ARRIVE:
+                        button.setEnabled(true);
                         button.setText(MeansItemStatus.STATUS_ENGAGE.description());
                         break;
                     case STATUS_ENGAGE:
+                        button.setEnabled(true);
                         button.setText(MeansItemStatus.STATUS_LIBERE.description());
                         break;
                     case STATUS_ENTRANSIT:
+                        button.setEnabled(true);
                         button.setText(MeansItemStatus.STATUS_ARRIVE.description());
                         break;
                     case STATUS_LIBERE:
                         button.setEnabled(false);
                 }
-
-                /* TODO: DELETE THIS COMMENTED CODE
-                if (meansItem.getMsMeanHArriv() == null) {
-                    button.setText("Arrivé");
-                } else {
-                    if (meansItem.getMsMeanHEngaged() == null) {
-                        button.setText("Engagé");
-                    } else {
-                        if(meansItem.getStatus()){
-                            button.setText("Redéployé");
-                        }else {
-                            if (meansItem.getMsMeanHFree() == null) {
-                                button.setText("Libéré");
-                            }
-                        }
-                    }
-                }
-                */
             }
         }
         return true;
@@ -237,16 +223,10 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                     meansItem.setMsLatitude(String.valueOf(marker.getPosition().latitude));
 
                     //**   If Mean is : ENGAGED and User move it, its status goes to : ENTRANSIT   **//
-                    if (MeansItemStatus.getStatus(meansItem.getStatus()) == MeansItemStatus.STATUS_ENGAGE) {
+                    if (meansItem.getStatus() == MeansItemStatus.STATUS_ENGAGE) {
                         meansItem.setStatus(MeansItemStatus.STATUS_ENTRANSIT.state());
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
                     }
-
-                    /** TODO: DELETE THE COMMENTED CODE BELOW
-                     if (meansItem.getMsMeanHEngaged() != null ) {
-                     meansItem.setStatus(true);
-                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
-                     }*/
 
                     MeansItemService.editMean(meansItem,getContext());
                 }
@@ -365,7 +345,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         interventionAPI.getResources(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Resource>>() {
             @Override
             public void success(List<Resource> resources, Response response) {
-                if(resources!=null) {
+                if (resources != null) {
                     for (Resource r : resources) {
                         EnumPointType enumPointType = EnumPointType.valueOf(r.getType());
                         Marker marker = addResourceOnMap(enumPointType, new LatLng(r.getLatitude(), r.getLongitude()));
@@ -444,19 +424,9 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         });
     }
 
-    public void setMoyenItemSelected(MeansItem pMoyenItemSelected) {
-        moyenItemSelected =  pMoyenItemSelected;
-        itemToRemove = false;
-    }
-
-    public void setMoyenItemAddSelected(MeansItem pMoyenItemSelected) {
-        moyenItemSelected =  pMoyenItemSelected;
-        itemToRemove = true;
-    }
-
-    public void setPointAddSelected(EnumPointType pEnumPolintTypeSelected) {
-        enumPointTypeSelected =  pEnumPolintTypeSelected;
-        moyenItemSelected = null;
+    public void setItemSelected(Object item,boolean toRemove) {
+        itemSelected =  item;
+        itemToRemove = toRemove;
     }
 
     private Marker addMeansOnMap(MeansItem meansItem,LatLng latLng){
@@ -474,7 +444,8 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     @Override
     public void onMapClick(LatLng latLng) {
         //si un moyen a été sélectionné
-        if(moyenItemSelected != null) {
+        if(itemSelected instanceof MeansItem) {
+            MeansItem moyenItemSelected = (MeansItem) itemSelected;
             MeansItem meansItemCloned = moyenItemSelected.clone();
             Marker marker =addMeansOnMap(meansItemCloned,latLng );
             mapMarkerItem.put(marker, meansItemCloned);
@@ -484,20 +455,22 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             Date newDate = new Date();
             if(meansItemCloned.getMsMeanHCall() == null){
                 meansItemCloned.setMsMeanHCall(FiredroneConstante.DATE_FORMAT.format(newDate));
+                meansItemCloned.setStatus("D");
             }
 
 
             //on supprime l'item du panel après l'avoir ajouté
             if(itemToRemove){
-                panelMapMoyenFragment.removeItem(moyenItemSelected);
+               panelListFragment.removeItem(moyenItemSelected);
                 MeansItemService.editMean(meansItemCloned,getContext());
                 //on le met à nulle
-                moyenItemSelected = null;;
+                itemSelected = null;
             }
             else {
                 MeansItemService.addMean(meansItemCloned,getContext(),false);
             }
-        } else if(enumPointTypeSelected != null){
+        }else if(itemSelected instanceof EnumPointType){
+            EnumPointType enumPointTypeSelected = (EnumPointType) itemSelected;
             //ajout du marker sur la carte
             Marker marker = addResourceOnMap(enumPointTypeSelected,latLng);
 
@@ -557,7 +530,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             Date newDate = new Date();
 
             /**  texte du bouton  **/
-            switch (MeansItemStatus.getStatus(meansItem.getStatus())) {
+            switch (meansItem.getStatus()) {
                 case STATUS_DEMANDE:
                     button.setText(MeansItemStatus.STATUS_VALIDE.description());
                     break;

@@ -42,7 +42,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ajouter un moyen"
+                android:text="Demander un moyen"
                 android:id="@+id/btnAddMean"
                 android:onClick="addMean"
                 android:layout_gravity="center_horizontal" />

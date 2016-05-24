@@ -12,6 +12,7 @@ public enum MeansItemStatus {
     /** **/
     STATUS_DEMANDE("D", "Demandé"),
     STATUS_VALIDE("V", "Validé"),
+    STATUS_REFUSE("R", "Refusé"),
     STATUS_ARRIVE("A", "Arrivé"),
     STATUS_ENGAGE("E", "Engagé"),
     STATUS_ENTRANSIT("T", "En Transit"),

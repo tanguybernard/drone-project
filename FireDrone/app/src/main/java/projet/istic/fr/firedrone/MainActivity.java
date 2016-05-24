@@ -20,15 +20,12 @@ import java.net.URL;
 import java.util.Collection;
 
 import me.pushy.sdk.Pushy;
-import me.pushy.sdk.config.PushyAPI;
-import me.pushy.sdk.json.PushySingleton;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
 import projet.istic.fr.firedrone.synchro.MyObservable;
 import projet.istic.fr.firedrone.synchro.Observateur;
-import projet.istic.fr.firedrone.synchro.PushReceiver;
 
 public class MainActivity extends AppCompatActivity
         implements TowerListener,VisibilityMenu{
@@ -115,11 +112,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().setGroupVisible(R.id.group_2, false);
         navigationView.getMenu().setGroupVisible(R.id.group_3, false);
 
+
         if(!UserSingleton.getInstance().getUser().getRole().equals(FiredroneConstante.ROLE_CODIS)){
             navigationView.getMenu().findItem(R.id.nav_moyen_req).setEnabled(false);
 
         }
-
 
     }
 

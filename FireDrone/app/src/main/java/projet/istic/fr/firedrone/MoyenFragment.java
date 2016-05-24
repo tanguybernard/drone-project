@@ -20,6 +20,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import projet.istic.fr.firedrone.model.MeansItem;
+import projet.istic.fr.firedrone.model.MeansItemStatus;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
@@ -83,7 +84,7 @@ public class MoyenFragment extends Fragment implements Observateur {
         }
     }
 
-    private TableRow addRow(String[] plsValues, boolean pbHeader, final String psColor) {
+    private TableRow addRow(String[] plsValues, boolean pbHeader, final String psColor, String psStatus) {
         TableRow element = new TableRow(getContext());
 
         final int iRowIdx = ((TableLayout) mView.findViewById(R.id.tableMeans)).getChildCount();
@@ -100,23 +101,39 @@ public class MoyenFragment extends Fragment implements Observateur {
             LinearLayout.LayoutParams textLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
             textLayoutParams.setMargins(2, 5, 2, 5);
             tvColumn.setLayoutParams(textLayoutParams);
-            if (iView == getResources().getInteger(R.integer.IDX_NAME) && !pbHeader) {
-                picture.setMinimumHeight(30);
-                picture.setMaxHeight(30);
-                picture.setAdjustViewBounds(true);
-                picture.setBackgroundColor(Color.parseColor(psColor));
-                LinearLayout.LayoutParams imgLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-                imgLayoutParams.setMargins(0, 5, 3, 5);
-                picture.setLayoutParams(imgLayoutParams);
-                if (oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
-                    picture.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            MoyenColorDialog colorPopup = new MoyenColorDialog();
-                            colorPopup.setLine(iRowIdx, psColor, (TableLayout) mView.findViewById(R.id.tableMeans));
-                            colorPopup.show(getFragmentManager(), "");
-                        }
-                    });
+            if (!pbHeader) {
+                if (iView == getResources().getInteger(R.integer.IDX_NAME)) {
+                    picture.setMinimumHeight(30);
+                    picture.setMaxHeight(30);
+                    picture.setAdjustViewBounds(true);
+                    picture.setBackgroundColor(Color.parseColor(psColor));
+                    LinearLayout.LayoutParams imgLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+                    imgLayoutParams.setMargins(0, 5, 3, 5);
+                    picture.setLayoutParams(imgLayoutParams);
+                    if (oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
+                        picture.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                MoyenColorDialog colorPopup = new MoyenColorDialog();
+                                colorPopup.setLine(iRowIdx, psColor, (TableLayout) mView.findViewById(R.id.tableMeans));
+                                colorPopup.show(getFragmentManager(), "");
+                            }
+                        });
+                    }
+                } else if (iView == getResources().getInteger(R.integer.IDX_H_CALL) && !psStatus.isEmpty()) {
+                    picture.setMinimumHeight(30);
+                    picture.setMaxHeight(30);
+                    picture.setAdjustViewBounds(true);
+                    if (MeansItemStatus.STATUS_DEMANDE.state().equals(psStatus)) {
+                        picture.setImageResource(R.drawable.icon_dmd);
+                    } else if (MeansItemStatus.STATUS_REFUSE.state().equals(psStatus)) {
+                        picture.setImageResource(R.drawable.icon_ref);
+                    } else {
+                        picture.setImageResource(R.drawable.icon_val);
+                    }
+                    LinearLayout.LayoutParams imgLayoutParams = new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+                    imgLayoutParams.setMargins(0, 5, 3, 5);
+                    picture.setLayoutParams(imgLayoutParams);
                 }
             }
             if (pbHeader) {
@@ -143,13 +160,13 @@ public class MoyenFragment extends Fragment implements Observateur {
         final String [] columnHeaders = {"", "", "Moyens", "Demandé à", "Arrivé à", "Engagé à", "Libéré à"};
 
         TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
-        TableRow element = addRow(columnHeaders, true, "#OOOOOO");
+        TableRow element = addRow(columnHeaders, true, "#OOOOOO", "");
         table.addView(element);
         table.setColumnCollapsed(0, true);
         table.setColumnCollapsed(1, true);
     }
 
-    public void addMean(String[] psHours, boolean pbSend, String psColor) {
+    public void addMean(String[] psHours, boolean pbSend, String psColor, String psStatus) {
         if (psColor == null || psColor.isEmpty()) {
             psColor = "#000000";
         }
@@ -160,12 +177,17 @@ public class MoyenFragment extends Fragment implements Observateur {
         }
 
         final TableLayout table = (TableLayout) this.mView.findViewById(R.id.tableMeans);
-        TableRow element = addRow(psHours, false, psColor);
+        TableRow element = addRow(psHours, false, psColor, psStatus);
         final int rowIdx = table.getChildCount();
 
         LinearLayout cellLayout = ((LinearLayout) (element.getChildAt(getResources().getInteger(R.integer.IDX_H_FREE))));
         TextView oLastTxt = (TextView) cellLayout.getChildAt(0);
-        if (oLastTxt.getText().toString().isEmpty() && oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
+        if (oLastTxt.getText().toString().isEmpty()
+                && oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)
+                && (MeansItemStatus.STATUS_VALIDE.state().equals(psStatus)
+                    || MeansItemStatus.STATUS_ARRIVE.state().equals(psStatus)
+                    || MeansItemStatus.STATUS_ENGAGE.state().equals(psStatus)
+                    || MeansItemStatus.STATUS_ENTRANSIT.state().equals(psStatus))) {
             element.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -187,6 +209,7 @@ public class MoyenFragment extends Fragment implements Observateur {
             oNewMean.setMsMeanHEngaged(psHours[getResources().getInteger(R.integer.IDX_H_ENGAGED)]);
             oNewMean.setMsMeanHFree(psHours[getResources().getInteger(R.integer.IDX_H_FREE)]);
             oNewMean.setMsColor(psColor);
+            oNewMean.setStatus(MeansItemStatus.STATUS_DEMANDE.state());
             MeansItemService.addMean(oNewMean,getContext(),true);
         }
     }
@@ -212,25 +235,29 @@ public class MoyenFragment extends Fragment implements Observateur {
                 oMean.setMsMeanName(oColValue.getText().toString());
             } else if (colIdx == getResources().getInteger(R.integer.IDX_H_CALL)) {
                 oMean.setMsMeanHCall(oColValue.getText().toString());
+                oMean.setStatus(MeansItemStatus.STATUS_DEMANDE.state());
             } else if (colIdx == getResources().getInteger(R.integer.IDX_H_ARRIV)) {
                 oMean.setMsMeanHArriv(oColValue.getText().toString());
+                oMean.setStatus(MeansItemStatus.STATUS_ARRIVE.state());
             } else if (colIdx == getResources().getInteger(R.integer.IDX_H_ENGAGED)) {
                 oMean.setMsMeanHEngaged(oColValue.getText().toString());
+                oMean.setStatus(MeansItemStatus.STATUS_ENGAGE.state());
             } else if (colIdx == getResources().getInteger(R.integer.IDX_H_FREE)) {
                 oMean.setMsMeanHFree(oColValue.getText().toString());
+                oMean.setStatus(MeansItemStatus.STATUS_LIBERE.state());
             }
             if (bEmpty) {
                 colIdx = element.getChildCount() + 1;
             }
         }
-        MeansItemService.editMean(oMean,getContext());
+        MeansItemService.editMean(oMean, getContext());
     }
 
     public void changeColor(String psId, String psColor) {
         MeansItem oMean = new MeansItem();
         oMean.setMsMeanId(psId);
         oMean.setMsColor(psColor);
-        MeansItemService.editMean(oMean,getContext());
+        MeansItemService.editMean(oMean, getContext());
     }
 
     public void getMeans() {
@@ -244,6 +271,7 @@ public class MoyenFragment extends Fragment implements Observateur {
                 table.removeAllViews();
                 loadTable();
                 for (MeansItem oMean : loMeans) {
+                    String sStatus = oMean.getStatus().state();
                     String[] sHours = {oMean.getMsMeanId(),
                             oMean.getMsMeanCode(),
                             oMean.getMsMeanName(),
@@ -251,7 +279,7 @@ public class MoyenFragment extends Fragment implements Observateur {
                             oMean.getMsMeanHArriv(),
                             oMean.getMsMeanHEngaged(),
                             oMean.getMsMeanHFree()};
-                    addMean(sHours, false, oMean.getMsColor());
+                    addMean(sHours, false, oMean.getMsColor(), sStatus);
                 }
             }
         }
