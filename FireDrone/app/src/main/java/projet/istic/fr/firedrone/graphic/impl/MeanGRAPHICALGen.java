@@ -67,7 +67,7 @@ public class MeanGRAPHICALGen implements BITMAPGen {
 
         textPaint.setFakeBoldText(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        textPaint.setTextSize(30);
+        textPaint.setTextSize(23);
 
         float[] text = new float[fullNAME.length()];
 
