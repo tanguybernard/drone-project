@@ -40,20 +40,6 @@ public enum MeansItemStatus {
     public String description(){
         return this.description;
     }
-
-
-    /**
-     * Get/Match a MeansItemStatus from the single character 'state'
-     * @param state
-     * @return
-     */
-    public static MeansItemStatus getStatus(String state){
-        if(state != "" )
-            for (MeansItemStatus s : MeansItemStatus.values()) {
-                if(s.state.equalsIgnoreCase(state))
-                    return s;
-            }
-        return MeansItemStatus.STATUS_DEFAULT;
-    }
+    
 
 }

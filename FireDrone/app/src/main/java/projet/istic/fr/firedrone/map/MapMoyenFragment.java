@@ -171,7 +171,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 markerSelected = marker;
 
                 /**  Button's Text  **/
-                switch (MeansItemStatus.getStatus(meansItem.getStatus())) {
+                switch (meansItem.getStatus()) {
                     case STATUS_DEMANDE:
                         button.setText(MeansItemStatus.STATUS_VALIDE.description());
                         break;
@@ -236,7 +236,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                     meansItem.setMsLatitude(String.valueOf(marker.getPosition().latitude));
 
                     //**   If Mean is : ENGAGED and User move it, its status goes to : ENTRANSIT   **//
-                    if (MeansItemStatus.getStatus(meansItem.getStatus()) == MeansItemStatus.STATUS_ENGAGE) {
+                    if (meansItem.getStatus() == MeansItemStatus.STATUS_ENGAGE) {
                         meansItem.setStatus(MeansItemStatus.STATUS_ENTRANSIT.state());
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
                     }
@@ -548,7 +548,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
             Date newDate = new Date();
 
             /**  texte du bouton  **/
-            switch (MeansItemStatus.getStatus(meansItem.getStatus())) {
+            switch (meansItem.getStatus()) {
                 case STATUS_DEMANDE:
                     button.setText(MeansItemStatus.STATUS_VALIDE.description());
                     break;

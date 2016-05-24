@@ -31,7 +31,7 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
     private List<MeansItem> meansItemListDemande;
     private SectionListAdapter mAdapter;
     private static final String MOYEN_DEMANDE = "Moyen demandé";
-    private static final String MOYEN_ = "Moyen demandé";
+    private static final String MOYEN_AJOUTABLE = "Moyen ajoutable";
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
 
 
 
-        mAdapter.addSectionHeaderItem("Moyen ajoutable");
+        mAdapter.addSectionHeaderItem(MOYEN_AJOUTABLE);
         List<MeansItem> listMoyens = MeansItemService.getListDefaultMeansItem();
         for(MeansItem meansItem : listMoyens){
             mAdapter.addItem(meansItem);
@@ -91,7 +91,7 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
             }
 
 
-            mapMoyenFragment.setItemSelected(mAdapter.getItem(position), position<mAdapter.getPosition(MOYEN_DEMANDE));
+            mapMoyenFragment.setItemSelected(mAdapter.getItem(position), position<mAdapter.getPosition(MOYEN_AJOUTABLE));
         }
     }
 

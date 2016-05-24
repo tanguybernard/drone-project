@@ -9,6 +9,7 @@ import android.graphics.Rect;
 
 import projet.istic.fr.firedrone.graphic.BITMAPGen;
 import projet.istic.fr.firedrone.model.MeansItem;
+import projet.istic.fr.firedrone.model.MeansItemStatus;
 
 
 /**
@@ -93,7 +94,7 @@ public class MeanGRAPHICALGen implements BITMAPGen {
 
         dashPaint.setStyle(Paint.Style.STROKE);
         dashPaint.setStrokeWidth(8);
-        if(mean.getMsMeanHEngaged() == null || mean.isRedeployement()) {
+        if(mean.getMsMeanHEngaged() == null || mean.getStatus() == MeansItemStatus.STATUS_ENTRANSIT) {
             dashPaint.setPathEffect(new DashPathEffect(new float[]{10, 10}, 0));
         }
 
