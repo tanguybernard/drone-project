@@ -25,6 +25,7 @@ import me.pushy.sdk.json.PushySingleton;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.singleton.UserSingleton;
 import projet.istic.fr.firedrone.synchro.MyObservable;
 import projet.istic.fr.firedrone.synchro.Observateur;
 import projet.istic.fr.firedrone.synchro.PushReceiver;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     private TabMapFragment fragmentDrawPath;
     private InterventionsListFragment fragmentFiche;
     private DetailsInterventionFragment detailsFragment;
+    private MoyenRequestFragment moyenReqFragment;
 
     private MoyenFragment fragmentMoyen;
 
@@ -108,11 +110,15 @@ public class MainActivity extends AppCompatActivity
        navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
+        //dont show navigation until choice an intervention
         navigationView.getMenu().setGroupVisible(R.id.group_1, false);
         navigationView.getMenu().setGroupVisible(R.id.group_2, false);
         navigationView.getMenu().setGroupVisible(R.id.group_3, false);
 
+        if(!UserSingleton.getInstance().getUser().getRole().equals(FiredroneConstante.ROLE_CODIS)){
+            navigationView.getMenu().findItem(R.id.nav_moyen_req).setEnabled(false);
 
+        }
 
 
     }
@@ -158,6 +164,12 @@ public class MainActivity extends AppCompatActivity
                 usingControlDrone = true;
                 fragment= droneControlFragment;
                 break;
+            case R.id.nav_moyen_req:
+                moyenReqFragment = MoyenRequestFragment.getInstance();
+                fragment= moyenReqFragment;
+                break;
+
+
             case R.id.nav_image:
                 break;
         }

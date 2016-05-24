@@ -153,6 +153,7 @@ public class CreateInterventionFragment extends Fragment {
                 MeansItem meansItem = new MeansItem();
                 meansItem.setMsMeanName((String) t.getText()+q);
                 meansItem.setMsColor(ColorNameService.getColor(spinner1.getSelectedItem().toString()));
+                meansItem.setStatus("D");
                 meansItemList.add(meansItem);
             }
 

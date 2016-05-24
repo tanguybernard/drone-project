@@ -10,11 +10,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import projet.istic.fr.firedrone.R;
-import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MoyenInterventionItem;
 import projet.istic.fr.firedrone.service.ColorNameService;
 
@@ -45,8 +43,8 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final Button subQuantity = (Button) convertView.findViewById(R.id.btn_q_sub);
-        final Button addQuantity = (Button) convertView.findViewById(R.id.btn_q_add);
+        final Button subQuantity = (Button) convertView.findViewById(R.id.btn_req_refuse);
+        final Button addQuantity = (Button) convertView.findViewById(R.id.btn_req_valid);
 
 
         final Spinner spinner = (Spinner) convertView.findViewById(R.id.colorMeanSpinner);
@@ -120,12 +118,6 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
         }
         }
     }
-
-
-
-
-
-
 
     static class ViewHolder {
         TextView myName;
