@@ -64,33 +64,33 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     //l'item sélectionné est a supprimé du panel une fois placé
     private boolean itemToRemove;
 
-    private GoogleMap googleMap;
-    private ImageButton suppressionMarker;
-    private AbsoluteLayout.LayoutParams overlayLayoutParams;
+    private transient GoogleMap googleMap;
+    private transient ImageButton suppressionMarker;
+    private transient AbsoluteLayout.LayoutParams overlayLayoutParams;
 
-    private Map<Marker,Object> mapMarkerItem = new HashMap<>();
-    private ViewTreeObserver.OnGlobalLayoutListener infoWindowLayoutListener;
+    private transient Map<Marker,Object> mapMarkerItem = new HashMap<>();
+    private transient ViewTreeObserver.OnGlobalLayoutListener infoWindowLayoutListener;
 
-    private View infoWindowContainer;
-    private FrameLayout containerMap;
-    private View viewFront;
+    private transient View infoWindowContainer;
+    private transient FrameLayout containerMap;
+    private transient View viewFront;
 
-    private TextView textView;
-    private TextView button;
-    private LatLng trackedPosition;
-    private Marker markerSelected;
+    private transient TextView textView;
+    private transient TextView button;
+    private transient LatLng trackedPosition;
+    private transient Marker markerSelected;
 
-    private int popupXOffset;
-    private int popupYOffset;
+    private transient int popupXOffset;
+    private transient int popupYOffset;
 
-    private Handler handler;
+    private transient Handler handler;
 
-    private Runnable positionUpdaterRunnable;
+    private transient Runnable positionUpdaterRunnable;
 
     //liste des Sig sur la carte
-    private List<Sig> listSIG;
+    private transient List<Sig> listSIG;
 
-    private PanelListFragment panelListFragment;
+    private transient PanelListFragment panelListFragment;
 
 
     public MapMoyenFragment(){}
@@ -538,6 +538,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                     break;
 
                 case STATUS_ARRIVE:
+                    meansItem.setStatus(MeansItemStatus.STATUS_ENGAGE.state());
                     meansItem.setMsMeanHEngaged(FiredroneConstante.DATE_FORMAT.format(newDate));
                     MeansItemService.editMean(meansItem, getContext() );
                     //**  Refresh the MEAN'S ICON  **/

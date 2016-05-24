@@ -29,9 +29,9 @@ import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 public class PanelListFragment extends ListFragment implements AbsListView.OnScrollListener,Serializable {
 
     private View viewSelected;
-    private MapMoyenFragment mapMoyenFragment;
-    private List<MeansItem> meansItemListDemande;
-    private SectionListAdapter mAdapter;
+    private transient MapMoyenFragment mapMoyenFragment;
+    private transient List<MeansItem> meansItemListDemande;
+    private transient SectionListAdapter mAdapter;
     private static final String MOYEN_DEMANDE = "Moyen demandé";
     private static final String MOYEN_AJOUTABLE = "Moyen ajoutable";
 
