@@ -93,7 +93,7 @@ public class MeansItem {
     //**  -  -  -   Getter & Setters   -  -  -  **//
 
     public MeansItemStatus getStatus() {
-       return MeansItemStatus.valueOf(status);
+       return MeansItemStatus.getStatus(status);
     }
 
     public void setStatus(String status) {

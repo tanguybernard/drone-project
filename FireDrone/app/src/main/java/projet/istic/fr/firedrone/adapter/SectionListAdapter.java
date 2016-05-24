@@ -51,6 +51,10 @@ public class SectionListAdapter extends BaseAdapter {
         sectionHeader.remove(position);
     }
 
+    public void removeItem(MeansItem meansItem){
+        mData.remove(meansItem);
+    }
+
     public void addSectionHeaderItem(final String item) {
         mData.add(item);
         sectionHeader.add(mData.size() - 1);
@@ -89,7 +93,7 @@ public class SectionListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         int rowType = getItemViewType(position);
-
+        Object object = mData.get(position);
         if (convertView == null) {
             holder = new ViewHolder();
             switch (rowType) {
@@ -105,9 +109,18 @@ public class SectionListAdapter extends BaseAdapter {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
+            //cas d'une suppression d'un élément
+            if(object instanceof  String && holder.textView == null){
+                convertView = mInflater.inflate(R.layout.section_item_separator, null);
+                holder.textView = (TextView) convertView.findViewById(R.id.textSeparator);
+                convertView.setTag(holder);
+            }else if ((object instanceof MeansItem || object instanceof EnumPointType) && holder.imageView == null){
+                convertView = mInflater.inflate(R.layout.section_item, null);
+                holder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
+                convertView.setTag(holder);
+            }
         }
 
-        Object object = mData.get(position);
         if(object instanceof MeansItem) {
             holder.imageView.setImageBitmap(((MeansItem) object).getBitmap());
         }else if(object instanceof EnumPointType){

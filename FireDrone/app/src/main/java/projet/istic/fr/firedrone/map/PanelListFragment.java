@@ -96,7 +96,7 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
     }
 
     public void removeItem(MeansItem meansItem){
-        meansItemListDemande.remove(meansItem);
+        mAdapter.removeItem(meansItem);
         if(meansItemListDemande.size() == 0){
             mAdapter.removeSectionHeaderItem(MOYEN_DEMANDE, 0);
         }
