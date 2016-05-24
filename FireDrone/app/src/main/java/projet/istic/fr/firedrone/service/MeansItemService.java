@@ -54,7 +54,7 @@ public class MeansItemService {
         return oIntervention.getWays();
     }
 
-    public static List<MeansItem> editMean(MeansItem meansItem,final Context context) {
+    public static List<MeansItem> editMean(MeansItem meansItem, final Context context) {
         final Intervention oIntervention = InterventionSingleton.getInstance().getIntervention();
         String sIntervId = oIntervention.getId();
         RestAdapter restAdapter = new RestAdapter.Builder()

@@ -4,7 +4,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,11 +32,10 @@ import java.util.Map;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
-import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
 import projet.istic.fr.firedrone.R;
-import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
+import projet.istic.fr.firedrone.model.MeansItemStatus;
 import projet.istic.fr.firedrone.model.Resource;
 import projet.istic.fr.firedrone.model.Sig;
 import projet.istic.fr.firedrone.service.MeansItemService;
@@ -174,14 +171,35 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 setFrontMap(false);
                 markerSelected = marker;
 
-                //texte du bouton
+                /**  Button's Text  **/
+                switch (MeansItemStatus.getStatus(meansItem.getStatus())) {
+                    case STATUS_DEMANDE:
+                        button.setText(MeansItemStatus.STATUS_VALIDE.description());
+                        break;
+                    case STATUS_VALIDE:
+                        button.setText(MeansItemStatus.STATUS_ARRIVE.description());
+                        break;
+                    case STATUS_ARRIVE:
+                        button.setText(MeansItemStatus.STATUS_ENGAGE.description());
+                        break;
+                    case STATUS_ENGAGE:
+                        button.setText(MeansItemStatus.STATUS_LIBERE.description());
+                        break;
+                    case STATUS_ENTRANSIT:
+                        button.setText(MeansItemStatus.STATUS_ARRIVE.description());
+                        break;
+                    case STATUS_LIBERE:
+                        button.setEnabled(false);
+                }
+
+                /* TODO: DELETE THIS COMMENTED CODE
                 if (meansItem.getMsMeanHArriv() == null) {
                     button.setText("Arrivé");
                 } else {
                     if (meansItem.getMsMeanHEngaged() == null) {
                         button.setText("Engagé");
                     } else {
-                        if(meansItem.isRedeployement()){
+                        if(meansItem.getStatus()){
                             button.setText("Redéployé");
                         }else {
                             if (meansItem.getMsMeanHFree() == null) {
@@ -190,11 +208,16 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                         }
                     }
                 }
+                */
             }
         }
         return true;
     }
 
+    /**
+     *
+     * @param marker
+     */
     public void dragEnd(final Marker marker){
         for(Marker markerSet : mapMarkerItem.keySet()){
             if(markerSet.getId().equals(marker.getId())){
@@ -202,7 +225,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 if(object instanceof MeansItem) {
                     MeansItem meansItem = (MeansItem) object;
                     if(meansItem.getMsMeanId().equals("")){
-                       //si l'identifiant est nulle, on recherche l'identifiant dans la liste des identifiants
+                        // Si l'identifiant est nulle, on recherche l'identifiant dans la liste des identifiants
                         for(MeansItem moyenInter : InterventionSingleton.getInstance().getIntervention().getWays()){
                             if(moyenInter.getMsLongitude().equals(meansItem.getMsLongitude()) && moyenInter.getMsLatitude().equals(meansItem.getMsLatitude())){
                                 meansItem.setMsMeanId(moyenInter.getMsMeanId());
@@ -212,14 +235,22 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                     }
                     meansItem.setMsLongitude(String.valueOf(marker.getPosition().longitude));
                     meansItem.setMsLatitude(String.valueOf(marker.getPosition().latitude));
-                    //cas ou le moyen était déjà engagé, après le déplacement on le passe en mode redéploiement
-                    if(meansItem.getMsMeanHEngaged() != null ) {
-                        meansItem.setRedeployement(true);
+
+                    //**   If Mean is : ENGAGED and User move it, its status goes to : ENTRANSIT   **//
+                    if (MeansItemStatus.getStatus(meansItem.getStatus()) == MeansItemStatus.STATUS_ENGAGE) {
+                        meansItem.setStatus(MeansItemStatus.STATUS_ENTRANSIT.state());
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
                     }
 
+                    /** TODO: DELETE THE COMMENTED CODE BELOW
+                     if (meansItem.getMsMeanHEngaged() != null ) {
+                     meansItem.setStatus(true);
+                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
+                     }*/
+
                     MeansItemService.editMean(meansItem,getContext());
-                }else if (object instanceof Resource){
+                }
+                else if (object instanceof Resource){
                     final Resource resource = (Resource) object;
                     RestAdapter restAdapter = new RestAdapter.Builder()
                             .setEndpoint(FiredroneConstante.END_POINT)
@@ -300,6 +331,11 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         }
     }
 
+
+    /**
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -315,7 +351,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         createSIG();
 
 
-        createMoyenOnMap();
+        createMeansOnMap();
 
         createRessourceOnMap();
 
@@ -345,29 +381,26 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         });
     }
 
-    private void createMoyenOnMap(){
-        //placement des moyens qui sont sur la carte
+    /**
+     * Put every MEANS on the map
+     */
+    private void createMeansOnMap(){
         List<MeansItem> moyens = InterventionSingleton.getInstance().getIntervention().getWays();
         if(moyens != null) {
-            //parcours de tous les moyens pour trouvés ceux déjà positionné sur la carte
+            // Check every MEANS in order to find those which are ALREADY PRINTED on the MAP
             for (MeansItem moyen : moyens) {
                 if (moyen.getMsLatitude() != null && moyen.getMsLongitude() != null  && moyen.getMsMeanHFree() == null) {
-                    //on ajoute le moyen à la carte
-
                     if (!moyen.getMsLatitude().equals("") && !moyen.getMsLongitude().equals("")) {
                         Marker marker = addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
                         mapMarkerItem.put(marker, moyen);
-
                     }
-
                 }
             }
         }
     }
 
+
     private void createSIG(){
-
-
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
@@ -376,7 +409,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
         final SIGAPI sigApi = restAdapter.create(SIGAPI.class);
 
-        //récupération des Sig en base de données
+        // récupération des Sig en base de données
         sigApi.getSIGs(new Callback<List<Sig>>() {
             @Override
             public void success(List<Sig> sigs, Response response) {
@@ -430,7 +463,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         return googleMap.addMarker(new MarkerOptions()
                 .position(latLng).draggable(true)
                 .icon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap())));
-                //.icon(BitmapDescriptorFactory.fromResource(meansItem.getResource())));
+        //.icon(BitmapDescriptorFactory.fromResource(meansItem.getResource())));
     }
 
     private Marker addResourceOnMap(EnumPointType enumPointType,LatLng latLng){
@@ -456,14 +489,15 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
             //on supprime l'item du panel après l'avoir ajouté
             if(itemToRemove){
-               panelMapMoyenFragment.removeItem(moyenItemSelected);
+                panelMapMoyenFragment.removeItem(moyenItemSelected);
                 MeansItemService.editMean(meansItemCloned,getContext());
                 //on le met à nulle
                 moyenItemSelected = null;;
-            }else{
+            }
+            else {
                 MeansItemService.addMean(meansItemCloned,getContext(),false);
             }
-        }else if(enumPointTypeSelected != null){
+        } else if(enumPointTypeSelected != null){
             //ajout du marker sur la carte
             Marker marker = addResourceOnMap(enumPointTypeSelected,latLng);
 
@@ -489,7 +523,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 }
             });
         }
-       setFrontMap(true);
+        setFrontMap(true);
     }
 
     @Override
@@ -508,44 +542,96 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
     }
 
-    //au clique sur le bouton
+
+    /**
+     * OnClick Listener for the BUTTON
+     * This button has different behaviour regarding the MEAN'S STATUS
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         Object object = mapMarkerItem.get(markerSelected);
 
         if(object instanceof MeansItem) {
-            MeansItem moyenItem = (MeansItem) object;
+            MeansItem meansItem = (MeansItem) object;
             Date newDate = new Date();
-            if (moyenItem.getMsMeanHArriv() == null) {
-                moyenItem.setMsMeanHArriv(FiredroneConstante.DATE_FORMAT.format(newDate));
-                MeansItemService.editMean(moyenItem,getContext());
-                setFrontMap(true);
-            } else {
-                if (moyenItem.getMsMeanHEngaged() == null) {
-                    moyenItem.setMsMeanHEngaged(FiredroneConstante.DATE_FORMAT.format(newDate));
-                    MeansItemService.editMean(moyenItem,getContext());
-                    // Refresh Mean's icon
-                    markerSelected.setIcon(BitmapDescriptorFactory.fromBitmap(moyenItem.getBitmap()));
+
+            /**  texte du bouton  **/
+            switch (MeansItemStatus.getStatus(meansItem.getStatus())) {
+                case STATUS_DEMANDE:
+                    button.setText(MeansItemStatus.STATUS_VALIDE.description());
+                    break;
+                case STATUS_VALIDE:
+                    meansItem.setMsMeanHArriv(FiredroneConstante.DATE_FORMAT.format(newDate));
+                    meansItem.setStatus(MeansItemStatus.STATUS_ARRIVE.state());
+                    MeansItemService.editMean(meansItem, getContext() );
+                    setFrontMap(true);
+                    break;
+
+                case STATUS_ARRIVE:
+                    meansItem.setMsMeanHEngaged(FiredroneConstante.DATE_FORMAT.format(newDate));
+                    MeansItemService.editMean(meansItem, getContext() );
+                    //**  Refresh the MEAN'S ICON  **/
+                    markerSelected.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
 
                     setFrontMap(true);
-                } else {
-                    if(moyenItem.isRedeployement()){
-                        moyenItem.setRedeployement(false);
-                        MeansItemService.editMean(moyenItem,getContext());
-                        // Refresh Mean's icon
-                        markerSelected.setIcon(BitmapDescriptorFactory.fromBitmap(moyenItem.getBitmap()));
+                    break;
+
+                case STATUS_ENGAGE:
+
+                    meansItem.setMsMeanHFree(FiredroneConstante.DATE_FORMAT.format(newDate));
+                    meansItem.setStatus(MeansItemStatus.STATUS_LIBERE.state());
+                    MeansItemService.editMean(meansItem, getContext());
+
+                    setFrontMap(true);
+                    markerSelected.remove();
+                    mapMarkerItem.remove(meansItem);
+                    break;
+
+                case STATUS_ENTRANSIT:
+                    meansItem.setStatus(MeansItemStatus.STATUS_ARRIVE.state());
+                    MeansItemService.editMean(meansItem, getContext());
+                    //**  Refresh the MEAN'S ICON  **/
+                    markerSelected.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
+                    setFrontMap(true);
+
+                    break;
+            }
+
+            /** TODO: DELETE THE COMMENTED CODE BELOW
+            if ( meansItem.getMsMeanHArriv() == null ) {
+                meansItem.setMsMeanHArriv(FiredroneConstante.DATE_FORMAT.format(newDate));
+                MeansItemService.editMean(meansItem, getContext() );
+                setFrontMap(true);
+            }
+            else {
+                if (meansItem.getMsMeanHEngaged() == null) {
+                    meansItem.setMsMeanHEngaged(FiredroneConstante.DATE_FORMAT.format(newDate));
+                    MeansItemService.editMean(meansItem, getContext() );
+                    // Refresh Mean's icon
+                    markerSelected.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
+
+                    setFrontMap(true);
+                }
+                else {
+                    if( meansItem.getStatus() == MeansItemStatus.STATUS_ENTRANSIT ) {
+                        meansItem.setStatus(false);
+                        MeansItemService.editMean(meansItem, getContext());
+                        // Refresh Mean's Icon
+                        markerSelected.setIcon(BitmapDescriptorFactory.fromBitmap(meansItem.getBitmap()));
                         setFrontMap(true);
-                    }else {
-                        if (moyenItem.getMsMeanHFree() == null) {
-                            moyenItem.setMsMeanHFree(FiredroneConstante.DATE_FORMAT.format(newDate));
-                            MeansItemService.editMean(moyenItem,getContext());
+                    }
+                    else {
+                        if (meansItem.getMsMeanHFree() == null) {
+                            meansItem.setMsMeanHFree(FiredroneConstante.DATE_FORMAT.format(newDate));
+                            MeansItemService.editMean(meansItem,getContext());
                             setFrontMap(true);
                             markerSelected.remove();
-                            mapMarkerItem.remove(moyenItem);
+                            mapMarkerItem.remove(meansItem);
                         }
                     }
                 }
-            }
+            }**/
         }
     }
 
@@ -611,7 +697,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                     createSIG();
                 }
 
-                createMoyenOnMap();
+                createMeansOnMap();
                 createRessourceOnMap();
 
             }

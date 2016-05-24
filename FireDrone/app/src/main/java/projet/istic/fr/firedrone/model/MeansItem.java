@@ -1,25 +1,10 @@
 package projet.istic.fr.firedrone.model;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
-import android.view.View;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
-import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.graphic.impl.MeanGRAPHICALGen;
-import projet.istic.fr.firedrone.singleton.InterventionSingleton;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by christophe on 19/04/16.
@@ -48,8 +33,12 @@ public class MeansItem {
     private String msColor;
     @SerializedName("groupId")
     private String msGroupeId = "";
-    @SerializedName("redeployement")
-    private boolean redeployement;
+
+    /**
+     * STATUS : See MeansItemStatus
+     */
+    @SerializedName("status")
+    private String status;
 
     @Override
     public boolean equals(Object o) {
@@ -58,7 +47,7 @@ public class MeansItem {
 
         MeansItem meansItem = (MeansItem) o;
 
-        if (redeployement != meansItem.redeployement) return false;
+        if (status != meansItem.status) return false;
         if (msMeanId != null ? !msMeanId.equals(meansItem.msMeanId) : meansItem.msMeanId != null)
             return false;
         if (msMeanCode != null ? !msMeanCode.equals(meansItem.msMeanCode) : meansItem.msMeanCode != null)
@@ -96,16 +85,19 @@ public class MeansItem {
         result = 31 * result + (msLatitude != null ? msLatitude.hashCode() : 0);
         result = 31 * result + (msColor != null ? msColor.hashCode() : 0);
         result = 31 * result + (msGroupeId != null ? msGroupeId.hashCode() : 0);
-        result = 31 * result + (redeployement ? 1 : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
 
-    public boolean isRedeployement() {
-        return redeployement;
+
+    //**  -  -  -   Getter & Setters   -  -  -  **//
+
+    public String getStatus() {
+        return status;
     }
 
-    public void setRedeployement(boolean redeployement) {
-        this.redeployement = redeployement;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void setMsMeanId(String msMeanId) {
