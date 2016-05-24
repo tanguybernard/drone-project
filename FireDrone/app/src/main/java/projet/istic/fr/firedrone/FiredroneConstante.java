@@ -17,6 +17,10 @@ public class FiredroneConstante {
     public static final String ROLE_COS = "ROLE_COS";
     public static final String ROLE_SIT = "ROLE_SIT";
 
+    public static final String MEAN_DEMANDED = "D";
+    public static final String MEAN_VALIDATED = "V";
+    public static final String MEAN_REFUSED = "R";
+
     public static Toast getToastError(Context context){
         return Toast.makeText(context,"Impossible d'accéder au serveur",Toast.LENGTH_LONG);
     }

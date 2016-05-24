@@ -197,7 +197,7 @@ public class MoyenEditDialog extends DialogFragment {
                     sNewHour = dFormat.format(hDate) + " " + sNewHour;
                     tsHours[miType] = sNewHour;
                     if (miLine == -1) {
-                        moyen.addMean(tsHours, true, iMeanColor);
+                        moyen.addMean(tsHours, true, iMeanColor, FiredroneConstante.MEAN_DEMANDED);
                     } else {
                         moyen.editMean(sNewHour, miLine);
                     }
