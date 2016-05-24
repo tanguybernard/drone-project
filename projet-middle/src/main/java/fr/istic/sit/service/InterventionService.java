@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import fr.istic.sit.dao.UserRepository;
 import fr.istic.sit.domain.*;
 import fr.istic.sit.notification.PushyAPI;
 import fr.istic.sit.notification.PushyPushRequest;
 import fr.istic.sit.util.Validator;
+import fr.istic.sit.util.WayStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,5 +199,32 @@ public class InterventionService {
 			return repository.save(intervention);
 		}
 		return intervention;
+	}
+
+
+	public List<Way> getWaysInterventions(String id, String status) {
+		Intervention intervention = repository.findById(id);
+		List<Way> waysFilter = new ArrayList<>();
+		try {
+			if (!Validator.isEmpty(status)) {
+				//Si on a une valeur pour le status on filtre les moyens par cet donnée
+				log.info("getWaysInterventions "+ status);
+				waysFilter =intervention.getWays().stream()
+						.filter(w -> w.getStatus().equalsIgnoreCase(status))
+						.collect(Collectors.toList())
+						;
+			} else{
+				waysFilter = intervention.getWays();
+			}
+			log.debug("Ways filter-->" + waysFilter.size());
+
+			//avant renvoyer le résultat, on reemplace le status par son définition
+			waysFilter.forEach(wf -> wf.setStatus(WayStatus.getDescription(wf.getStatus())));
+			return waysFilter;
+		}catch (Exception e){
+			log.error("ERROR getWaysInterventions"+e.getMessage());
+			e.printStackTrace();
+		}
+		return  null;
 	}
 }

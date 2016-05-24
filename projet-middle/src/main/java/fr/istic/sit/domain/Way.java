@@ -18,13 +18,11 @@ public class Way {
 	private String engaged_time;
 	private String release_time;
 	private String groupId;
-	private boolean redeployement;
-	
+	private String status;
+
 	public Way(){}
 
-	public Way(String id, String code, String name, String color, String longitude, String latitude,
-			String request_time, String arriving_time, String engaged_time, String release_time, String groupId) {
-		super();
+	public Way(String id, String code, String name, String color, String longitude, String latitude, String request_time, String arriving_time, String engaged_time, String release_time, String groupId, boolean redeployement, String status) {
 		this.id = id;
 		this.code = code;
 		this.name = name;
@@ -36,6 +34,7 @@ public class Way {
 		this.engaged_time = engaged_time;
 		this.release_time = release_time;
 		this.groupId = groupId;
+		this.status = status;
 	}
 
 	public String getId() {
@@ -126,12 +125,14 @@ public class Way {
 		this.groupId = groupId;
 	}
 
-	public boolean isRedeployement() {
-		return redeployement;
+	public String getStatus() {
+		if(status!=null)
+			return status;
+		return "";
 	}
 
-	public void setRedeployement(boolean redeployement) {
-		this.redeployement = redeployement;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public void update(Way newWay){
@@ -165,10 +166,8 @@ public class Way {
 		if( !Validator.isEmpty(newWay.getRequest_time()))
 			this.request_time = newWay.getRequest_time();
 
-		if( this.redeployement != newWay.isRedeployement()){
-			this.redeployement = newWay.isRedeployement();
-		}
-
+		if( !Validator.isEmpty(newWay.getStatus()))
+			this.status = newWay.getStatus();
 	}
 
 	@Override
@@ -185,7 +184,7 @@ public class Way {
 				", engaged_time='" + engaged_time + '\'' +
 				", release_time='" + release_time + '\'' +
 				", groupId='" + groupId + '\'' +
-				", redeployement=" + redeployement +
+				", status='" + status + '\'' +
 				'}';
 	}
 }
