@@ -33,17 +33,31 @@ public class PushReceiver extends BroadcastReceiver  {
         String notificationTitle = "Pushy";
         String myMessage = "Test notification";
 
+        String cosIam ="";
+        String cosFree="";
+        String idIntervention="";
+
         // Attempt to grab the message property from the payload
         if ( intent.getStringExtra("message") != null )
         {
             myMessage = intent.getStringExtra("message");
         }
+        if(intent.getStringExtra("cosIam") != null){
+            cosIam = intent.getStringExtra("cosIam");
+        }
+        if(intent.getStringExtra("cosFree") != null){
+            cosFree = intent.getStringExtra("cosFree");
+
+        }
+        if(intent.getStringExtra("idIntervention") != null){
+            idIntervention = intent.getStringExtra("idIntervention");
+        }
 
 
-        /*InterventionSingleton.getInstance().getIntervention().getId()
+        /*InterventionSingleton.getInstance().getIntervention().getId();
         if(myMessage.equals()){
 
-            notifyApp(context);
+            notifyApp(context,"Mise à Jour Intervention");
 
         }
         else{
@@ -51,18 +65,20 @@ public class PushReceiver extends BroadcastReceiver  {
         }*/
 
 
-        notifyApp(context);//bouchon
+        notifyApp(context,"Mise à Jour Intervention");//bouchon
 
     }
 
 
-    public void notifyApp(Context context) {
+
+
+    public void notifyApp(Context context,String message) {
 
 
         NotificationCompat.Builder builder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_menu_send)
-                        .setContentTitle("Mise à Jour Intervention")
+                        .setContentTitle(message)
                         //.setDefaults(Notification.DEFAULT_VIBRATE)
 
                         .setAutoCancel(true)
@@ -93,8 +109,8 @@ public class PushReceiver extends BroadcastReceiver  {
                         @Override
                         public void success(Intervention intervention, Response response) {
 
-                            InterventionSingleton.getInstance().setIntervention(intervention);
-                            MyObservable.getInstance().notifierObservateurs();
+                            InterventionSingleton.getInstance().setIntervention(intervention);//maj data intervention
+                            MyObservable.getInstance().notifierObservateurs();//notify
                         }
 
                         @Override

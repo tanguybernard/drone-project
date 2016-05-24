@@ -44,7 +44,6 @@
                 android:layout_height="wrap_content"
                 android:text="Demander un moyen"
                 android:id="@+id/btnAddMean"
-                android:onClick="addMean"
                 android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
