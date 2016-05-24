@@ -19,6 +19,7 @@ import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.adapter.SectionListAdapter;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
+import projet.istic.fr.firedrone.model.MeansItemStatus;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
@@ -51,7 +52,7 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
         meansItemListDemande = new ArrayList<>();
         if(intervention.getWays() != null) {
             for (MeansItem moyenInter : intervention.getWays()) {
-                if ((moyenInter.getMsLongitude() == null || moyenInter.getMsLatitude() == null ) && moyenInter.getMsMeanHFree() == null) {
+                if ((moyenInter.getMsLongitude() == null || moyenInter.getMsLatitude() == null ) &&  moyenInter.getStatus() != MeansItemStatus.STATUS_LIBERE &&  moyenInter.getStatus() != MeansItemStatus.STATUS_REFUSE) {
                     meansItemListDemande.add(moyenInter);
                 }
             }

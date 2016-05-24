@@ -24,6 +24,7 @@ import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
 import com.o3dr.services.android.lib.drone.connection.ConnectionType;
 import com.o3dr.services.android.lib.drone.mission.Mission;
 import com.o3dr.services.android.lib.drone.mission.item.MissionItem;
+import com.o3dr.services.android.lib.drone.mission.item.command.DoJump;
 import com.o3dr.services.android.lib.drone.mission.item.spatial.Waypoint;
 import com.o3dr.services.android.lib.drone.property.Altitude;
 import com.o3dr.services.android.lib.drone.property.Gps;
@@ -209,7 +210,7 @@ public class ControleFragment extends Fragment {
                 waypoint.setCoordinate(new LatLongAlt(point.latitude, point.longitude, 0));
                 mission.addMissionItem(waypoint);
             }
-
+            //retour
             if(positions.size()>1) {
 
                 for (int i = positions.size() - 2; i >= 0; i--) {
@@ -220,17 +221,17 @@ public class ControleFragment extends Fragment {
                 }
             }
             Waypoint waypoint = new Waypoint();
-            waypoint.setCoordinate(((Home)drone.getAttribute(AttributeType.HOME)).getCoordinate());
+            waypoint.setCoordinate(((Home) drone.getAttribute(AttributeType.HOME)).getCoordinate());
             mission.addMissionItem(waypoint);
 
             //on envoi le drône en mission
-
 
             ((Mission)drone.getAttribute(AttributeType.MISSION)).clear();
             MissionApi.getApi(drone).setMission(mission, true);
             MissionApi.getApi(drone).startMission(true, true, new AbstractCommandListener() {
                 @Override
                 public void onSuccess() {
+
                 }
 
                 @Override

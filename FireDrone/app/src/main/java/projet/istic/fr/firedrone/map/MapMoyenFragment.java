@@ -329,12 +329,8 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         infoWindowContainer.setVisibility(View.VISIBLE);
 
         createSIG();
-
-
         createMeansOnMap();
-
         createRessourceOnMap();
-
     }
 
     private void createRessourceOnMap(){
@@ -369,7 +365,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         if(moyens != null) {
             // Check every MEANS in order to find those which are ALREADY PRINTED on the MAP
             for (MeansItem moyen : moyens) {
-                if (moyen.getMsLatitude() != null && moyen.getMsLongitude() != null  && moyen.getMsMeanHFree() == null) {
+                if (moyen.getMsLatitude() != null && moyen.getMsLongitude() != null  &&  moyen.getStatus() != MeansItemStatus.STATUS_LIBERE &&  moyen.getStatus() != MeansItemStatus.STATUS_REFUSE) {
                     if (!moyen.getMsLatitude().equals("") && !moyen.getMsLongitude().equals("")) {
                         Marker marker = addMeansOnMap(moyen, new LatLng(Double.parseDouble(moyen.getMsLatitude()), Double.parseDouble(moyen.getMsLongitude())));
                         mapMarkerItem.put(marker, moyen);
