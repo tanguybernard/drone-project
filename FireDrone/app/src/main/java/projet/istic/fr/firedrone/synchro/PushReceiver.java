@@ -28,44 +28,48 @@ import retrofit.client.Response;
  */
 public class PushReceiver extends BroadcastReceiver  {
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
+    public void onReceive(Context context, Intent intent) {
         String notificationTitle = "Pushy";
         String myMessage = "Test notification";
 
-        String cosIam ="";
-        String cosFree="";
-        String idIntervention="";
+        String cosIam = null;
+        String cosFree = null;
+        String idIntervention = null;
 
         // Attempt to grab the message property from the payload
-        if ( intent.getStringExtra("message") != null )
-        {
+        if (intent.getStringExtra("message") != null) {
             myMessage = intent.getStringExtra("message");
         }
-        if(intent.getStringExtra("cosIam") != null){
+        if (intent.getStringExtra("cosIam") != null) {
             cosIam = intent.getStringExtra("cosIam");
         }
-        if(intent.getStringExtra("cosFree") != null){
+        if (intent.getStringExtra("cosFree") != null) {
             cosFree = intent.getStringExtra("cosFree");
 
         }
-        if(intent.getStringExtra("idIntervention") != null){
+        if (intent.getStringExtra("idIntervention") != null) {
             idIntervention = intent.getStringExtra("idIntervention");
         }
 
 
-        /*InterventionSingleton.getInstance().getIntervention().getId();
-        if(myMessage.equals()){
+        Intervention inter = InterventionSingleton.getInstance().getIntervention();
+        if (inter != null) {
+            System.out.println(idIntervention);
+            System.out.println(inter.getId());
 
-            notifyApp(context,"Mise à Jour Intervention");
+            if (idIntervention.equals(inter.getId())) {
+                if (cosFree != null) {
+                    notifyApp(context, "Liberation COS : " + cosFree);
+                } else if (cosIam != null) {
+                    notifyApp(context, "Affectation COS : " + cosIam);
+                } else {
+                    notifyApp(context, "Mise à Jour Intervention");
+                }
+
+            }
 
         }
-        else{
-
-        }*/
-
-
-        notifyApp(context,"Mise à Jour Intervention");//bouchon
+        //notifyApp(context,"Mise à Jour Intervention");//bouchon
 
     }
 
