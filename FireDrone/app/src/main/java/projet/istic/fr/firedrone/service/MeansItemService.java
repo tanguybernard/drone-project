@@ -36,6 +36,7 @@ public class MeansItemService {
                 setLogLevel(RestAdapter.LogLevel.FULL).
                 build();
         MeansAPI meansApi = restAdapter.create(MeansAPI.class);
+        Log.d("STATUS", meansItem.getStatus().description());
         meansApi.AddMean(sIntervId, meansItem, new Callback<List<MeansItem>>() {
             @Override
             public void success(List<MeansItem> ploMeans, Response response) {

@@ -120,7 +120,7 @@ public class MoyenFragment extends Fragment implements Observateur {
                             }
                         });
                     }
-                } else if (iView == getResources().getInteger(R.integer.IDX_H_CALL) && psStatus.isEmpty()) {
+                } else if (iView == getResources().getInteger(R.integer.IDX_H_CALL) && !psStatus.isEmpty()) {
                     picture.setMinimumHeight(30);
                     picture.setMaxHeight(30);
                     picture.setAdjustViewBounds(true);
@@ -182,7 +182,12 @@ public class MoyenFragment extends Fragment implements Observateur {
 
         LinearLayout cellLayout = ((LinearLayout) (element.getChildAt(getResources().getInteger(R.integer.IDX_H_FREE))));
         TextView oLastTxt = (TextView) cellLayout.getChildAt(0);
-        if (oLastTxt.getText().toString().isEmpty() && oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
+        if (oLastTxt.getText().toString().isEmpty()
+                && oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)
+                && (MeansItemStatus.STATUS_VALIDE.state().equals(psStatus)
+                    || MeansItemStatus.STATUS_ARRIVE.state().equals(psStatus)
+                    || MeansItemStatus.STATUS_ENGAGE.state().equals(psStatus)
+                    || MeansItemStatus.STATUS_ENTRANSIT.state().equals(psStatus))) {
             element.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
