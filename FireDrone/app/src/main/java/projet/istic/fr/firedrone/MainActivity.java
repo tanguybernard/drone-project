@@ -161,9 +161,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_validation_mean_codis:
                 fragment = new MeansValidationFragment();
                 break;
-            case R.id.nav_close_intervention_codis:
-
-                break;
         }
         //on remplace ici l'ancien fragment
         if(fragment != null){

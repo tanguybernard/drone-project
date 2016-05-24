@@ -4,7 +4,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,10 +33,8 @@ import java.util.Map;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
-import projet.istic.fr.firedrone.ModelAPI.MeansAPI;
 import projet.istic.fr.firedrone.ModelAPI.SIGAPI;
 import projet.istic.fr.firedrone.R;
-import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.Resource;
 import projet.istic.fr.firedrone.model.Sig;
@@ -57,13 +54,11 @@ import retrofit.client.Response;
  */
 public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener,GoogleMap.OnMarkerClickListener,GoogleMap.OnCameraChangeListener,
-        View.OnClickListener,MethodCallWhenDrag, Observateur {
+        View.OnClickListener,MethodCallWhenDrag, Observateur,Serializable {
 
 
     //item sélectionné dans le panel
-    private MeansItem moyenItemSelected;
-
-    private EnumPointType enumPointTypeSelected;
+    private Object itemSelected;
 
     //l'item sélectionné est a supprimé du panel une fois placé
     private boolean itemToRemove;
@@ -94,14 +89,14 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     //liste des Sig sur la carte
     private List<Sig> listSIG;
 
-    private PanelMapMoyenFragment panelMapMoyenFragment;
+    private PanelListFragment panelListFragment;
 
 
     public MapMoyenFragment(){}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        panelMapMoyenFragment = (PanelMapMoyenFragment) getArguments().getSerializable("panel");
+        panelListFragment = (PanelListFragment) getArguments().getSerializable("panel");
 
         super.onCreate(savedInstanceState);
         getMapAsync(this);
@@ -330,7 +325,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         interventionAPI.getResources(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Resource>>() {
             @Override
             public void success(List<Resource> resources, Response response) {
-                if(resources!=null) {
+                if (resources != null) {
                     for (Resource r : resources) {
                         EnumPointType enumPointType = EnumPointType.valueOf(r.getType());
                         Marker marker = addResourceOnMap(enumPointType, new LatLng(r.getLatitude(), r.getLongitude()));
@@ -412,19 +407,9 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         });
     }
 
-    public void setMoyenItemSelected(MeansItem pMoyenItemSelected) {
-        moyenItemSelected =  pMoyenItemSelected;
-        itemToRemove = false;
-    }
-
-    public void setMoyenItemAddSelected(MeansItem pMoyenItemSelected) {
-        moyenItemSelected =  pMoyenItemSelected;
-        itemToRemove = true;
-    }
-
-    public void setPointAddSelected(EnumPointType pEnumPolintTypeSelected) {
-        enumPointTypeSelected =  pEnumPolintTypeSelected;
-        moyenItemSelected = null;
+    public void setItemSelected(Object item,boolean toRemove) {
+        itemSelected =  item;
+        itemToRemove = toRemove;
     }
 
     private Marker addMeansOnMap(MeansItem meansItem,LatLng latLng){
@@ -442,7 +427,8 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     @Override
     public void onMapClick(LatLng latLng) {
         //si un moyen a été sélectionné
-        if(moyenItemSelected != null) {
+        if(itemSelected instanceof MeansItem) {
+            MeansItem moyenItemSelected = (MeansItem) itemSelected;
             MeansItem meansItemCloned = moyenItemSelected.clone();
             Marker marker =addMeansOnMap(meansItemCloned,latLng );
             mapMarkerItem.put(marker, meansItemCloned);
@@ -457,14 +443,16 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
             //on supprime l'item du panel après l'avoir ajouté
             if(itemToRemove){
-               panelMapMoyenFragment.removeItem(moyenItemSelected);
+               panelListFragment.removeItem(moyenItemSelected);
                 MeansItemService.editMean(meansItemCloned,getContext());
                 //on le met à nulle
                 moyenItemSelected = null;;
             }else{
                 MeansItemService.addMean(meansItemCloned,getContext(),false);
             }
-        }else if(enumPointTypeSelected != null){
+        }else if(itemSelected instanceof EnumPointType){
+            EnumPointType enumPointTypeSelected = (EnumPointType) itemSelected;
+
             //ajout du marker sur la carte
             Marker marker = addResourceOnMap(enumPointTypeSelected,latLng);
 
