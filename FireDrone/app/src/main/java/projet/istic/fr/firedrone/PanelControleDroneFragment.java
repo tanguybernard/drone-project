@@ -34,7 +34,7 @@ public class PanelControleDroneFragment extends Fragment implements Observateur 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_panel_controle_drone, container, false);
 
-        getChildFragmentManager().beginTransaction().replace(R.id.controle_map,ControleFragmentNEW.getInstance()).addToBackStack("controle").commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.controle_map,ControleFragmentBoucle.getInstance()).addToBackStack("controle").commit();
         mapDrone = new MapDroneFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.content_map, mapDrone).addToBackStack("mapDrone").commit();
         return view;
