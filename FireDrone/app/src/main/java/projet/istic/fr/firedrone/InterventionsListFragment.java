@@ -233,11 +233,6 @@ public class InterventionsListFragment extends Fragment implements Observateur {
                 tr.commit();
             }
 
-
-
-
-
-
         }
 
 

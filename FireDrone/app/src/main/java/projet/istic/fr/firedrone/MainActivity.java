@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity
     private InterventionsListFragment fragmentFiche;
     private DetailsInterventionFragment detailsFragment;
     private MoyenRequestFragment moyenReqFragment;
-
     private MoyenFragment fragmentMoyen;
+    private ImageFragment imageFragment;
 
     //fragment pour contrôler le drône
     private PanelControleDroneFragment droneControlFragment;
@@ -165,9 +165,9 @@ public class MainActivity extends AppCompatActivity
                 moyenReqFragment = MoyenRequestFragment.getInstance();
                 fragment= moyenReqFragment;
                 break;
-
-
             case R.id.nav_image:
+                imageFragment = ImageFragment.getInstance();
+                fragment= imageFragment;
                 break;
         }
         //on remplace ici l'ancien fragment

@@ -2,6 +2,7 @@ package projet.istic.fr.firedrone.ModelAPI;
 
 import java.util.List;
 
+import projet.istic.fr.firedrone.model.Image;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.Resource;
 import retrofit.Callback;
@@ -89,4 +90,13 @@ public interface InterventionAPI {
 
         @DELETE("/intervention/{id}/ressource/{idRessource}")
         public void deleteResource(@Path("id") String identifiantIntervention,@Path("idRessource") String identifiantRessource,Callback<Void> response);
+
+        /**
+         *
+         * @param identifiant
+         * @param response
+         */
+        @GET("/intervention/{id}/image")
+        public void getImages(@Path("id") String identifiant, Callback<List<Image>> response);
+
 }
