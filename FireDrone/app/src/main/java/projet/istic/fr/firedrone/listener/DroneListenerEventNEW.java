@@ -1,8 +1,6 @@
 package projet.istic.fr.firedrone.listener;
 
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.interfaces.DroneListener;
@@ -15,35 +13,35 @@ import com.o3dr.services.android.lib.drone.mission.MissionItemType;
 import com.o3dr.services.android.lib.drone.mission.item.MissionItem;
 import com.o3dr.services.android.lib.drone.mission.item.spatial.Waypoint;
 import com.o3dr.services.android.lib.drone.property.Gps;
-import com.o3dr.services.android.lib.drone.property.Home;
-import com.o3dr.services.android.lib.drone.property.Speed;
 import com.o3dr.services.android.lib.drone.property.Type;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import projet.istic.fr.firedrone.ControleFragment;
 import projet.istic.fr.firedrone.ControleFragmentNEW;
 
 /**
- * Created by ramage on 20/03/16.
+ * @author Group A
+ *
  */
-public class DroneListenerEvent implements DroneListener {
+public class DroneListenerEventNEW implements DroneListener {
 
-    //référence vers le fragment de contrôle du drone
-    private ControleFragment controlFragement;
+    /** Control Drone Fragment **/
+    private ControleFragmentNEW controlFragment;
+
+    /**   Last time the drone moved   **/
     private long lastDateTimeDroneMove;
 
-    //variable indiquant si on est dans le panel de contrôle du drone
+    /**  FLAG : indicates if we're in the Drone Control Panel **/
     private boolean usingControlPanel;
 
     //listener qui va être appelé par le fragment map quand le drône a effectué certaines actions
     private DroneActionMapListener droneMoveListener;
 
-    public DroneListenerEvent(ControleFragment pDroneControlFragment){
-        controlFragement = pDroneControlFragment;
-        controlFragement.setDroneListenerEvent(this);
+    public DroneListenerEventNEW(ControleFragmentNEW pDroneControlFragment){
+        controlFragment = pDroneControlFragment;
+        controlFragment.setDroneListenerEvent(this);
     }
 
     public void setUsingControlPanel(boolean pUsingControlPanel){
@@ -63,21 +61,21 @@ public class DroneListenerEvent implements DroneListener {
             case AttributeEvent.STATE_CONNECTED:
                 //lorsqu'on est connecté au drône
                 if(usingControlPanel) {
-                    controlFragement.alertUser("Drone Connected");
-                    controlFragement.updateConnectedButton();
-                    controlFragement.updateArmButton();
-                    controlFragement.updateScreenShotButton();
+                    controlFragment.alertUser("Drone Connected");
+                    controlFragment.updateConnectedButton();
+                    controlFragment.updateArmButton();
+                    controlFragment.updateScreenShotButton();
                 }
                 break;
 
             case AttributeEvent.STATE_DISCONNECTED:
                 //lorsque on est déconnecté du drône
                 if(usingControlPanel) {
-                    controlFragement.alertUser("Drone Disconnected");
+                    controlFragment.alertUser("Drone Disconnected");
                     //mise à jour des boutons
-                    controlFragement.updateConnectedButton();
-                    controlFragement.updateArmButton();
-                    controlFragement.updateScreenShotButton();
+                    controlFragment.updateConnectedButton();
+                    controlFragment.updateArmButton();
+                    controlFragment.updateScreenShotButton();
                 }
                 break;
 
@@ -86,20 +84,20 @@ public class DroneListenerEvent implements DroneListener {
                 //lorsque le drone a changé son armement
                 if(usingControlPanel) {
                     //mise à jour du bouton arm
-                    controlFragement.updateArmButton();
+                    controlFragment.updateArmButton();
                     //mise à jour du boutn screenshot
-                    controlFragement.updateScreenShotButton();
+                    controlFragment.updateScreenShotButton();
                 }
                 break;
 
             case AttributeEvent.TYPE_UPDATED:
                 //lorsque la liste des types disponible a changé
-                Type newDroneType = controlFragement.getDrone().getAttribute(AttributeType.TYPE);
-                if (newDroneType.getDroneType() != controlFragement.getDroneType()) {
-                   controlFragement.setDroneType(newDroneType.getDroneType());
+                Type newDroneType = controlFragment.getDrone().getAttribute(AttributeType.TYPE);
+                if (newDroneType.getDroneType() != controlFragment.getDroneType()) {
+                   controlFragment.setDroneType(newDroneType.getDroneType());
                     if(usingControlPanel) {
                         //mise à jour des types de mode
-                        controlFragement.updateVehicleModesForType(controlFragement.getDroneType());
+                        controlFragment.updateVehicleModesForType(controlFragment.getDroneType());
                     }
                 }
                 break;
@@ -108,7 +106,7 @@ public class DroneListenerEvent implements DroneListener {
                 //lorsque le drône a changé de mode
                 if(usingControlPanel) {
                     //mise à jour du mode du drône
-                    controlFragement.updateVehicleMode();
+                    controlFragment.updateVehicleMode();
                 }
                 break;
 
@@ -117,9 +115,9 @@ public class DroneListenerEvent implements DroneListener {
                 //lorsque la vitesse du drône a changé
                 if(usingControlPanel) {
                     //mise à jour de l'altitude du drone
-                    controlFragement.updateAltitude();
+                    controlFragment.updateAltitude();
                     //mise à jour de la vitesse du drône
-                    controlFragement.updateSpeed();
+                    controlFragment.updateSpeed();
                 }
                 break;
             case AttributeEvent.GPS_POSITION:
@@ -127,7 +125,7 @@ public class DroneListenerEvent implements DroneListener {
                 long time = new Date().getTime();
                 if(droneMoveListener != null ){
                     //on récupère la position du drône
-                    Gps gps = controlFragement.getDrone().getAttribute(AttributeType.GPS);
+                    Gps gps = controlFragment.getDrone().getAttribute(AttributeType.GPS);
                     LatLong position = gps.getPosition();
 
                     if(position != null && (time - lastDateTimeDroneMove > 1000)) {
@@ -141,7 +139,7 @@ public class DroneListenerEvent implements DroneListener {
             case AttributeEvent.HOME_UPDATED:
                 //lorsque la position de la maison à été modifié
                 //mise à jour de la position de la maison
-                controlFragement.updateDistanceFromHome();
+                controlFragment.updateDistanceFromHome();
                 break;
             case AttributeEvent.MISSION_UPDATED:
                 //lorsqu'une missuion vient d'être reçu
@@ -151,7 +149,7 @@ public class DroneListenerEvent implements DroneListener {
                     List<LatLng> pointsMissions = new ArrayList<LatLng>();
 
                     //on récupère la mission recu
-                    Mission mission = controlFragement.getDrone().getAttribute(AttributeType.MISSION);
+                    Mission mission = controlFragment.getDrone().getAttribute(AttributeType.MISSION);
 
                     //parcours de tous les missions items
                     for(MissionItem item :mission.getMissionItems()){
@@ -167,7 +165,7 @@ public class DroneListenerEvent implements DroneListener {
                 break;
 
             default:
-                Log.i("DRONE_EVENT", event);
+                //Log.i("DRONE_EVENT", event);
                 break;
         }
     }
@@ -182,7 +180,7 @@ public class DroneListenerEvent implements DroneListener {
         this.droneMoveListener = droneMoveListener;
     }
 
-    //interface pour gérer les écènement du drone
+    /**  Interface: Handles Drone's movements  **/
     public interface DroneActionMapListener{
         /**
          * Méthode appelé quand le drone a changé de position.

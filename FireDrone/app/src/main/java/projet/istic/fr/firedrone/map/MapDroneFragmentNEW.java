@@ -43,30 +43,40 @@ import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
 
-public class MapDroneFragment extends SupportMapFragment implements
+/**
+ * @author Group A
+ * MapDroneFragment modified
+ */
+public class MapDroneFragmentNEW extends SupportMapFragment implements
         GoogleMap.OnMapClickListener,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline, Serializable {
 
+    /**   Google Map    **/
     private GoogleMap myMap;
-    //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
+
+    /**  Ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur  **/
     private Map<String, Marker> listMarkers = null;
 
-    private PolylineOptions polylineOptions;//add lines bettwen markers
+    /** Delete Marker Button **/
+    private ImageButton buttonDeleteMarker;
 
+    /** Marker of the Drone **/
+    Marker markerDrone;
+
+    /**  -  -  -  -  -  -  -    SEGMENTS    -  -  -  -  -  -  -  **/
+    /** Segment  **/
     private Polyline polyline;
 
-    //options polyline du drone
+    /**  Segment Options  **/
+    private PolylineOptions polylineOptions;//add lines bettwen markers
+
+    /**  Options polyline du drone  **/
     private PolylineOptions polylineOptionsDrone;
     private Polyline polylineDrone;
-    //dernier point atteint par le drône
-    private LatLng dernierPoint;
 
-    //bouton de suppression de marqueur
-    private ImageButton suppressionMarker;
-
-    //marqueur du drône
-    Marker markerDrone;
+    /** Last point reached by the Drone **/
+    private LatLng lastPoint;
 
 
     @Override
@@ -117,19 +127,18 @@ public class MapDroneFragment extends SupportMapFragment implements
         FrameLayout mapView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
 
         //création du bouton de suppression des marqueurs
-        suppressionMarker = new ImageButton(getContext());
-        suppressionMarker.setPadding(5, 5, 5, 5);
-        suppressionMarker.setBackgroundColor(DragRemoveOnMapListener.COLOR_BUTTON);
-        suppressionMarker.setImageResource(R.drawable.delete_24dp_rouge);
-        suppressionMarker.setVisibility(View.INVISIBLE);
+        buttonDeleteMarker = new ImageButton(getContext());
+        buttonDeleteMarker.setPadding(5, 5, 5, 5);
+        buttonDeleteMarker.setBackgroundColor(DragRemoveOnMapListener.COLOR_BUTTON);
+        buttonDeleteMarker.setImageResource(R.drawable.delete_24dp_rouge);
+        buttonDeleteMarker.setVisibility(View.INVISIBLE);
 
         //ajout du bouton de suppression et placement
-        mapView.addView(suppressionMarker, new FrameLayout.LayoutParams(150,150, Gravity.CENTER_HORIZONTAL));
-
+        mapView.addView(buttonDeleteMarker, new FrameLayout.LayoutParams(150,150, Gravity.CENTER_HORIZONTAL));
 
         if(myMap != null){
             //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
-            myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this,null));
+            myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(buttonDeleteMarker, myMap, this,null));
         }
         return mapView;
     }
@@ -161,7 +170,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         initPolylineDrone();
 
         //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
-        myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this, null));
+        myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(buttonDeleteMarker, myMap, this, null));
     }
 
 
@@ -187,7 +196,6 @@ public class MapDroneFragment extends SupportMapFragment implements
                         .position(clickedPosition)
                         .title(Integer.toString(num)).draggable(true));
         addPolyline(marker);
-
     }
 
 
@@ -209,8 +217,11 @@ public class MapDroneFragment extends SupportMapFragment implements
     }
 
 
-
-
+    /**
+     *
+     * @param latLng
+     * @return
+     */
     private Location convertLatLngToLocation(LatLng latLng) {
         Location location = new Location("someLoc");
         location.setLatitude(latLng.latitude);
@@ -219,8 +230,12 @@ public class MapDroneFragment extends SupportMapFragment implements
     }
 
 
-
-
+    /**
+     *
+     * @param myMap
+     * @param directionPoint
+     * @param bitmap
+     */
     public void setAnimation(GoogleMap myMap, final List<LatLng> directionPoint, final Bitmap bitmap) {
 
 
@@ -235,6 +250,13 @@ public class MapDroneFragment extends SupportMapFragment implements
     }
 
 
+    /**
+     *
+     * @param myMap
+     * @param marker
+     * @param directionPoint
+     * @param hideMarker
+     */
     private void animateMarker(GoogleMap myMap, final Marker marker, final List<LatLng> directionPoint,
                                       final boolean hideMarker) {
         final Handler handler = new Handler();
@@ -272,6 +294,11 @@ public class MapDroneFragment extends SupportMapFragment implements
         });
     }
 
+
+    /**
+     *
+     * @return
+     */
     private List<LatLng> getListPoint(){
         List<LatLng> listPoint = new ArrayList<>();
         for(Marker marker: listMarkers.values()){
@@ -315,10 +342,10 @@ public class MapDroneFragment extends SupportMapFragment implements
 
 
     private void addPolylineDrone(LatLng point){
-        if(dernierPoint != null) {
-            polylineDrone = myMap.addPolyline(polylineOptionsDrone.add(dernierPoint, point));
+        if(lastPoint != null) {
+            polylineDrone = myMap.addPolyline(polylineOptionsDrone.add(lastPoint, point));
         }
-        dernierPoint = point;
+        lastPoint = point;
     }
 
 

@@ -5,7 +5,6 @@
     android:descendantFocusability="blocksDescendants"
     >
 
-
     <TextView android:id="@+id/idLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
