@@ -2,6 +2,7 @@ package projet.istic.fr.firedrone.listener;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.o3dr.android.client.interfaces.DroneListener;
@@ -23,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import projet.istic.fr.firedrone.ControleFragment;
+import projet.istic.fr.firedrone.ControleFragmentNEW;
 
 /**
  * Created by ramage on 20/03/16.
@@ -165,7 +167,7 @@ public class DroneListenerEvent implements DroneListener {
                 break;
 
             default:
-                //Log.i("DRONE_EVENT", event);
+                Log.i("DRONE_EVENT", event);
                 break;
         }
     }

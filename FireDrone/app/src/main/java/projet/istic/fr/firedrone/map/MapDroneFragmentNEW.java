@@ -39,6 +39,7 @@ import java.util.Map;
 import projet.istic.fr.firedrone.MainActivity;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
+import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
 
@@ -86,7 +87,7 @@ public class MapDroneFragmentNEW extends SupportMapFragment implements
             getMapAsync(this);
         }
 
-        ((MainActivity) getActivity()).setDroneMoveListener(new DroneListenerEvent.DroneActionMapListener() {
+        ((MainActivity) getActivity()).setDroneMoveListener(new DroneListenerEventNEW.DroneActionMapListener() {
             @Override
             public void onDroneMove(LatLng point) {
 
