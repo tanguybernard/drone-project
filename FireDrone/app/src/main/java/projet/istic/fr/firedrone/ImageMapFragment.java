@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import projet.istic.fr.firedrone.model.Image;
+import projet.istic.fr.firedrone.model.ImageItem;
 import projet.istic.fr.firedrone.model.Intervention;
 
 /**
@@ -33,7 +33,7 @@ public class ImageMapFragment extends SupportMapFragment implements
     //ensemble des marqueurs, clé : identifiant du marqueur, valeur : marqueur
     private Map<String, Marker> listMarkers = null;
 
-    private List<Image> listImage = new ArrayList<Image>();
+    private List<ImageItem> listImage = new ArrayList<ImageItem>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,11 +146,11 @@ public class ImageMapFragment extends SupportMapFragment implements
     public void onCameraChange(CameraPosition cameraPosition) {
     }
 
-    public List<Image> getListImage() {
+    public List<ImageItem> getListImage() {
         return listImage;
     }
 
-    public void setListImage(List<Image> listImage) {
+    public void setListImage(List<ImageItem> listImage) {
         this.listImage = listImage;
     }
 

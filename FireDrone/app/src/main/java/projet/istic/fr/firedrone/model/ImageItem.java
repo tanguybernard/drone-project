@@ -1,11 +1,13 @@
 package projet.istic.fr.firedrone.model;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by tbernard on 25/05/16.
  */
-public class Image {
+public class ImageItem {
 
 
     @SerializedName("longitude")
@@ -19,6 +21,9 @@ public class Image {
 
     @SerializedName("latitude")
     private String latitude;
+
+    @SerializedName("image")
+    private Bitmap image;
 
 
 
@@ -52,4 +57,14 @@ public class Image {
     public void setDate(String date) {
         this.date = date;
     }
+
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
 }
