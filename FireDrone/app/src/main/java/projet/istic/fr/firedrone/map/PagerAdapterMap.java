@@ -118,6 +118,7 @@ public class PagerAdapterMap extends FragmentPagerAdapter {
                 return null;
             }
         };
-        //return mapDroneFragment.getListMarkers();
+
+       // return mapDroneFragment.getgetListMarkers();
     }
 }

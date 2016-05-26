@@ -25,13 +25,13 @@ public class PanelMapDroneFragment extends Fragment {
         mapDroneFragment = new MapDroneFragment();
         panelListDroneFragment = new PanelListDroneFragment();
 
-       /* Bundle argsMap = new Bundle();
+        Bundle argsMap = new Bundle();
         argsMap.putSerializable("panel", panelListDroneFragment);
-        MapDroneFragment.setArguments(argsMap);
+        mapDroneFragment.setArguments(argsMap);
 
         Bundle argsPanel = new Bundle();
         argsPanel.putSerializable("map", mapDroneFragment);
-        PanelListDroneFragment.setArguments(argsPanel);*/
+        panelListDroneFragment.setArguments(argsPanel);
 
         getChildFragmentManager().beginTransaction().replace(R.id.content_map_drone, mapDroneFragment).commit();
         getChildFragmentManager().beginTransaction().replace(R.id.panel_map_drone,panelListDroneFragment ).commit();
