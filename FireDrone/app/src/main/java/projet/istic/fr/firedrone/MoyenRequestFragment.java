@@ -85,7 +85,6 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
 
             @Override
             public void success(List<MeansItem> meansItems, Response response) {
-                System.out.println("YOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 results.addAll(meansItems);
 
                 lv1 = (ListView) view.findViewById(R.id.moyenListView2);
@@ -93,7 +92,6 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
                 listAdapter = new MoyenReqListAdapter(getContext(), results);
 
                 lv1.setAdapter(listAdapter);
-                System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
 
             }
 

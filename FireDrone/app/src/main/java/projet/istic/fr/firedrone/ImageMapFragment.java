@@ -85,7 +85,7 @@ public class ImageMapFragment extends SupportMapFragment implements
                         LatLng coordonnees = new LatLng(latitude, longitude);
 
                         //On récupère la référence pour l'afficher dans l'infobulle du marqueur
-                        String idInter = listImage.get(i).getId();
+                        String idImage = listImage.get(i).getId();
                         String dateInter = listImage.get(i).getDate();
 
                         String snippet = listImage.get(i).getLatitude()+"; "+listImage.get(i).getLongitude();
@@ -93,7 +93,7 @@ public class ImageMapFragment extends SupportMapFragment implements
 
 
                         //Définition du marqueur
-                        MarkerOptions marker = new MarkerOptions().position(coordonnees).title(idInter).snippet(snippet);
+                        MarkerOptions marker = new MarkerOptions().position(coordonnees).title(idImage).snippet(snippet);
 
                         //Ajout du marqueur
                         myMap.addMarker(marker);
@@ -156,15 +156,15 @@ public class ImageMapFragment extends SupportMapFragment implements
 
 
     /**
-     * When Click on Marker: update the list and set Focus on intervention
+     * When Click on Marker: update the list
      * @param marker
      * @return
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
-        String idInter = marker.getTitle();
+        LatLng markerPosition = marker.getPosition();
 
-        imageFragment.updateListImage(idInter);
+        imageFragment.updateListImage(markerPosition);
 
         return false;
     }

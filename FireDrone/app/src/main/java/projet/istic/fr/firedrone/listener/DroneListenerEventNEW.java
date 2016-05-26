@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import projet.istic.fr.firedrone.ControleFragmentNEW;
+import projet.istic.fr.firedrone.ControleFragmentBoucle;
 
 /**
  * @author Group A
@@ -28,7 +28,7 @@ import projet.istic.fr.firedrone.ControleFragmentNEW;
 public class DroneListenerEventNEW implements DroneListener {
 
     /** Control Drone Fragment **/
-    private ControleFragmentNEW controlFragment;
+    private ControleFragmentBoucle controlFragment;
 
     /**   Last time the drone moved   **/
     private long lastDateTimeDroneMove;
@@ -39,7 +39,7 @@ public class DroneListenerEventNEW implements DroneListener {
     //listener qui va être appelé par le fragment map quand le drône a effectué certaines actions
     private DroneActionMapListener droneMoveListener;
 
-    public DroneListenerEventNEW(ControleFragmentNEW pDroneControlFragment){
+    public DroneListenerEventNEW(ControleFragmentBoucle pDroneControlFragment){
         controlFragment = pDroneControlFragment;
         controlFragment.setDroneListenerEvent(this);
     }

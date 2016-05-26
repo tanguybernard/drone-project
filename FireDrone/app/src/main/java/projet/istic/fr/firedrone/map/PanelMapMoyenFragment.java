@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
@@ -32,7 +33,7 @@ public class PanelMapMoyenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_map_panel_moyen, container, false);
-        if(UserSingleton.getInstance().getUser().getRole().equals("ROLE_SIT")){
+        if(!UserSingleton.getInstance().getUser().getRole().equals(FiredroneConstante.ROLE_COS)){
             view.findViewById(R.id.panel_map_moyen).setVisibility(View.INVISIBLE);
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
