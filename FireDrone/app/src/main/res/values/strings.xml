@@ -72,5 +72,6 @@
     <string name="validation_codis">Validation moyen</string>
     <string name="close_intervention">Clore intervention</string>
     <string name="back">Retour</string>
+    <string name="moyens_demand_s">Moyens demandés</string>
 
 </resources>

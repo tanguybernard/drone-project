@@ -19,6 +19,8 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,6 +136,13 @@ public class ImageFragment extends Fragment implements Observateur {
             //Replace de la frame par google map
             ImageMapFragment imageMapFragment = new ImageMapFragment();
 
+            Image tmp = new Image();
+            tmp.setId("dfksmlklfllmsdfkmlsdml");
+            tmp.setLatitude("48.2292016");
+            tmp.setLongitude("-1.5300694999999678");
+            tmp.setDate("12/12/12");
+            imageList.add(tmp);
+
             //On envoi la liste des interventions que l'on a récupérée de la base
             imageMapFragment.setListImage(imageList);
 
@@ -167,7 +176,12 @@ public class ImageFragment extends Fragment implements Observateur {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public void updateListImage(String coordinate){
+    /**
+     * refresh list image with only image at markerPosition
+     * @param markerPosition
+     */
+    public void updateListImage(LatLng markerPosition){
+
 
     }
 
