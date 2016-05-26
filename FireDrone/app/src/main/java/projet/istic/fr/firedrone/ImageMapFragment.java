@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import projet.istic.fr.firedrone.model.Image;
+import projet.istic.fr.firedrone.model.ImageItem;
 import projet.istic.fr.firedrone.model.Intervention;
 
 /**
@@ -33,7 +33,7 @@ public class ImageMapFragment extends SupportMapFragment implements
     //ensemble des marqueurs, clé : identifiant du marqueur, valeur : marqueur
     private Map<String, Marker> listMarkers = null;
 
-    private List<Image> listImage = new ArrayList<Image>();
+    private List<ImageItem> listImage = new ArrayList<ImageItem>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +85,7 @@ public class ImageMapFragment extends SupportMapFragment implements
                         LatLng coordonnees = new LatLng(latitude, longitude);
 
                         //On récupère la référence pour l'afficher dans l'infobulle du marqueur
-                        String idInter = listImage.get(i).getId();
+                        String idImage = listImage.get(i).getId();
                         String dateInter = listImage.get(i).getDate();
 
                         String snippet = listImage.get(i).getLatitude()+"; "+listImage.get(i).getLongitude();
@@ -93,7 +93,7 @@ public class ImageMapFragment extends SupportMapFragment implements
 
 
                         //Définition du marqueur
-                        MarkerOptions marker = new MarkerOptions().position(coordonnees).title(idInter).snippet(snippet);
+                        MarkerOptions marker = new MarkerOptions().position(coordonnees).title(idImage).snippet(snippet);
 
                         //Ajout du marqueur
                         myMap.addMarker(marker);
@@ -146,25 +146,25 @@ public class ImageMapFragment extends SupportMapFragment implements
     public void onCameraChange(CameraPosition cameraPosition) {
     }
 
-    public List<Image> getListImage() {
+    public List<ImageItem> getListImage() {
         return listImage;
     }
 
-    public void setListImage(List<Image> listImage) {
+    public void setListImage(List<ImageItem> listImage) {
         this.listImage = listImage;
     }
 
 
     /**
-     * When Click on Marker: update the list and set Focus on intervention
+     * When Click on Marker: update the list
      * @param marker
      * @return
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
-        String idInter = marker.getTitle();
+        LatLng markerPosition = marker.getPosition();
 
-        imageFragment.updateListImage(idInter);
+        imageFragment.updateListImage(markerPosition);
 
         return false;
     }

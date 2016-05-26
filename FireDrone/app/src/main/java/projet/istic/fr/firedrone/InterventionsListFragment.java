@@ -160,16 +160,15 @@ public class InterventionsListFragment extends Fragment implements Observateur {
         FrameLayout frame = (FrameLayout) view.findViewById(R.id.interventionMapAddress);
 
         //Test de la connexion de la tablette au réseau
-        if (isOnline() == true) {
+        if (isOnline()) {
             //Replace de la frame par google map
             MapInterventionFragment mapInterventionFragment = new MapInterventionFragment();
 
             //On envoi la liste des interventions que l'on a récupérée de la base
             mapInterventionFragment.setListInter(listInter);
 
-            View layoutId = view.findViewById(R.id.interventionMapAddress);
 
-            if (layoutId.getVisibility() == View.VISIBLE) {
+            if (frame.getVisibility() == View.VISIBLE) {
                 // Its visible
                 FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
                 transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();

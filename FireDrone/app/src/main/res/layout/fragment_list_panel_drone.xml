@@ -51,7 +51,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Zone"
+        android:text="Exclusion"
         android:id="@+id/Bexclusion"
         android:layout_below="@+id/Bzone"
         android:layout_alignParentLeft="true"

@@ -72,8 +72,12 @@ public class MoyenFragment extends Fragment implements Observateur {
 
         getMeans();
 
-        if (oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
-            final Button addMeans = (Button) view.findViewById(R.id.btnAddMean);
+        final Button addMeans = (Button) view.findViewById(R.id.btnAddMean);
+        addMeans.setVisibility(View.GONE);
+
+        //if (oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
+        if(InterventionSingleton.getInstance().getIntervention().getCos().getId().equals(oUser.getUser().getId())){
+            addMeans.setVisibility(View.VISIBLE);
             addMeans.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     MoyenEditDialog popUp = new MoyenEditDialog();

@@ -32,4 +32,6 @@ public interface MeansAPI {
 
     @GET("/intervention/{intervId}/way")
     void getWayRequested(@Path("intervId") String psIntervQuery,@Query("status") String status, Callback<List<MeansItem>> callback);
+
+
 }

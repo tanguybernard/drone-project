@@ -76,6 +76,19 @@ public class MapDroneFragment extends SupportMapFragment implements
             listMarkers = new LinkedHashMap<String, Marker>();
             getMapAsync(this);
         }
+        PanelListDroneFragment panelListDroneFragment = (PanelListDroneFragment) getArguments().getSerializable("panel");
+
+        if(panelListDroneFragment!=null){
+            System.out.println("==============================");
+            System.out.println(panelListDroneFragment.getBoucle());
+            System.out.println(panelListDroneFragment.getSegment());
+            System.out.println(panelListDroneFragment.getZone());
+            System.out.println("==============================");
+        }
+        else{
+            System.out.println("============ null ==================");
+        }
+
 
         ((MainActivity) getActivity()).setDroneMoveListener(new DroneListenerEventNEW.DroneActionMapListener() {
             @Override
@@ -94,15 +107,15 @@ public class MapDroneFragment extends SupportMapFragment implements
             @Override
             public void droneReceivedMissionPoint(List<LatLng> pointsMissions) {
                 //on cherche à trouver tous les marqueurs proche des points (à moins de 1 mètres) reçues par le drône
-                for(Marker marker : listMarkers.values()){
+                for (Marker marker : listMarkers.values()) {
 
                     //pour tous les points recues par le drône
-                    for(LatLng point:pointsMissions) {
+                    for (LatLng point : pointsMissions) {
                         float[] result = new float[1];
                         //calcul de la distance entre le marqueur et le point
                         Location.distanceBetween(marker.getPosition().latitude, marker.getPosition().longitude, point.latitude, point.longitude, result);
                         //si on est à moins de 1 mètre on change la couleur de l'icône
-                        if (result[0]<1) {
+                        if (result[0] < 1) {
                             marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                         }
                     }

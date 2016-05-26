@@ -25,6 +25,9 @@ public class User {
     @SerializedName("role")
     String role;
 
+    @SerializedName("id")
+    String id;
+
     public User(String lastname, String login, String firstname, String phone, String email,String role) {
         this.lastname = lastname;
         this.login = login;
@@ -58,6 +61,10 @@ public class User {
         return role;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public void setLogin(String login) {
         this.login = login;
     }
@@ -81,4 +88,11 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
+
 }
