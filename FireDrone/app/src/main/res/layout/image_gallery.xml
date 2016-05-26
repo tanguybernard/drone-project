@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:id="@+id/imageSide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/girdPicture"
+            android:layout_width="304dp"
+            android:layout_height="248dp"
+            android:columnWidth="90dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:layout_above="@+id/btnAddIntervention" />
+
+        <Button android:id="@+id/btnAddIntervention" style="?android:attr/buttonStyleSmall"
+            android:layout_width="fill_parent" android:layout_height="wrap_content"
+            android:text="@string/back"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/pictureMapLocation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        >
+
+    </FrameLayout>
+
+</LinearLayout>

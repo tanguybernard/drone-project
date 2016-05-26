@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import me.pushy.sdk.Pushy;
 import projet.istic.fr.firedrone.listener.DroneListenerEvent;
+import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
@@ -36,14 +37,14 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout myDrawer;
 
     //listener qui va écouter tout les évènements envoyés par le drone
-    private DroneListenerEvent droneListenerEvent;
+    private DroneListenerEventNEW droneListenerEvent;
 
     private TabMapFragment fragmentDrawPath;
     private InterventionsListFragment fragmentFiche;
     private DetailsInterventionFragment detailsFragment;
     private MoyenRequestFragment moyenReqFragment;
-
     private MoyenFragment fragmentMoyen;
+    private ImageFragment imageFragment;
 
     //fragment pour contrôler le drône
     private PanelControleDroneFragment droneControlFragment;
@@ -59,11 +60,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if ( ControleFragment.getInstance().getDrone().isConnected()) {
-            ControleFragment.getInstance().getDrone().disconnect();
+        if ( ControleFragmentNEW.getInstance().getDrone().isConnected()) {
+            ControleFragmentNEW.getInstance().getDrone().disconnect();
         }
         //on supprime le drône de la tower
-        controlTower.unregisterDrone(ControleFragment.getInstance().getDrone());
+        controlTower.unregisterDrone(ControleFragmentNEW.getInstance().getDrone());
         //on se déconnecte de la tower
         controlTower.disconnect();
     }
@@ -92,9 +93,9 @@ public class MainActivity extends AppCompatActivity
         //instanciation du fragment de contrôle du drône
         droneControlFragment = PanelControleDroneFragment.getInstance();
         //on crée le drône içi
-        ControleFragment.getInstance().setDrone(new Drone(getApplicationContext()));;
+        ControleFragmentNEW.getInstance().setDrone(new Drone(getApplicationContext()));;
         //création du listener qui écoute le drône
-        droneListenerEvent = new DroneListenerEvent( ControleFragment.getInstance());
+        droneListenerEvent = new DroneListenerEventNEW( ControleFragmentNEW.getInstance());
         //fragmentMoyen = MoyenFragment.getInstance();
 
         //instanciation du contrôle tower
@@ -165,9 +166,9 @@ public class MainActivity extends AppCompatActivity
                 moyenReqFragment = MoyenRequestFragment.getInstance();
                 fragment= moyenReqFragment;
                 break;
-
-
             case R.id.nav_image:
+                imageFragment = ImageFragment.getInstance();
+                fragment= imageFragment;
                 break;
         }
         //on remplace ici l'ancien fragment
@@ -185,7 +186,7 @@ public class MainActivity extends AppCompatActivity
         droneListenerEvent.setUsingControlPanel(false);
     }
 
-    public void setDroneMoveListener(DroneListenerEvent.DroneActionMapListener droneMoveListener){
+    public void setDroneMoveListener(DroneListenerEventNEW.DroneActionMapListener droneMoveListener){
         if(droneListenerEvent != null) {
             droneListenerEvent.setDroneMoveListener(droneMoveListener);
         }
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTowerConnected() {
         //quand la tower est connecté, on enregistre le drône
-        controlTower.registerDrone(ControleFragment.getInstance().getDrone(), ControleFragment.getInstance().getHandler());
+        controlTower.registerDrone(ControleFragmentNEW.getInstance().getDrone(), ControleFragmentNEW.getInstance().getHandler());
     }
 
     public Collection<LatLng> getArrayPointsForMission(){
