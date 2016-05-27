@@ -49,8 +49,6 @@ public class MapDroneFragment extends SupportMapFragment implements
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline, Serializable {
 
 
-    /**   CurrentDrone   **/
-    private Drone currentDrone;
 
     private transient GoogleMap myMap;
     //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
@@ -70,7 +68,11 @@ public class MapDroneFragment extends SupportMapFragment implements
     //bouton de suppression de marqueur
     private ImageButton suppressionMarker;
 
-    //marqueur du drône
+
+
+    /**   CurrentDrone   **/
+    private Drone currentDrone;
+    /** marqueur du drône **/
     transient Marker markerDrone;
 
 
@@ -94,7 +96,7 @@ public class MapDroneFragment extends SupportMapFragment implements
             System.out.println("============ null ==================");
         }
 
-
+        //**   Listener OnDroneMove   **//
         ((MainActivity) getActivity()).setDroneMoveListener(new DroneListenerEventNEW.DroneActionMapListener() {
             @Override
             public void onDroneMove(LatLng point) {
@@ -147,7 +149,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         if(myMap != null){
             //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
-            myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this,null));
+            myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this, null));
         }
         return mapView;
     }
@@ -365,4 +367,20 @@ public class MapDroneFragment extends SupportMapFragment implements
     public void setCurrentDrone(Drone currentDrone) {
         this.currentDrone = currentDrone;
     }
+
+    /**
+     * Initialize and Put the DRONE on the MAP when the Drone is asked for the first time
+     */
+    public void initPositionDroneOnMap() {
+        if (markerDrone != null) {
+            Double latString = Double.parseDouble(currentDrone.getLatitude());
+            Double lngString = Double.parseDouble(currentDrone.getLongitude());
+            LatLng point = new LatLng(latString, lngString);
+            markerDrone.setPosition(point);
+            markerDrone.setVisible(true);
+            addPolylineDrone(point);
+        }
+    }
+
+
 }
