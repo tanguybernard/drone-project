@@ -28,6 +28,16 @@ public class Drone {
 
     //**  -  -  -   Constructor   -  -  -  **//
 
+    public Drone() {
+        this.id = "";
+        this.idUser = "";
+        this.idIntervention = "";
+        this.longitude = "";
+        this.latitude = "";
+        this.addressip = "";
+        this.port = "";
+    }
+
     public Drone(String id, String idUser, String idIntervention, String longitude, String latitude, String addressip, String port) {
         this.id = id;
         this.idUser = idUser;
