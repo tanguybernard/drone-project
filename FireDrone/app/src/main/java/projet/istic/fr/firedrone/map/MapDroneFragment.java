@@ -38,7 +38,6 @@ import java.util.Map;
 
 import projet.istic.fr.firedrone.MainActivity;
 import projet.istic.fr.firedrone.R;
-import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
@@ -80,9 +79,9 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         if(panelListDroneFragment!=null){
             System.out.println("==============================");
-            System.out.println(panelListDroneFragment.getBoucle());
-            System.out.println(panelListDroneFragment.getSegment());
-            System.out.println(panelListDroneFragment.getZone());
+            System.out.println(panelListDroneFragment.isLoopMode());
+            System.out.println(panelListDroneFragment.isSegmentMode());
+            System.out.println(panelListDroneFragment.isZoneMode());
             System.out.println("==============================");
         }
         else{

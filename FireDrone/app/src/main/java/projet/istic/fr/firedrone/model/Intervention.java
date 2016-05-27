@@ -32,6 +32,9 @@ public class Intervention {
     @SerializedName("ways")
     private List<MeansItem> ways;
 
+    @SerializedName("drones")
+    private List<Drone> drones;
+
     @SerializedName("cos")
     private User cos;
 
@@ -94,6 +97,18 @@ public class Intervention {
         return ways;
     }
 
+    public List<Drone> getDrones() {
+        return drones;
+    }
+
+    public void setDrones(List<Drone> drones) {
+        this.drones = drones;
+    }
+
+    public void addDrone(Drone drone) {
+        this.drones.add(drone);
+    }
+
     public Intervention(){
 
     }
@@ -105,5 +120,14 @@ public class Intervention {
         this.address = address;
         this.status = status;
 
+    }
+
+    public Drone getDroneByUserID(String userID) {
+        for (Drone drone: drones) {
+            if(drone.getIdUser().equals(userID)) {
+                return drone;
+            }
+        }
+        return null;
     }
 }
