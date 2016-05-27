@@ -86,7 +86,7 @@ public class ImageMapFragment extends SupportMapFragment implements
 
                         //On récupère la référence pour l'afficher dans l'infobulle du marqueur
                         String idImage = listImage.get(i).getId();
-                        String dateInter = listImage.get(i).getDate();
+                        //String dateInter = listImage.get(i).getDate();
 
                         String snippet = listImage.get(i).getLatitude()+"; "+listImage.get(i).getLongitude();
 

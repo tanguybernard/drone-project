@@ -29,8 +29,7 @@ public interface InterventionAPI {
         public void getInterventionById(@Path("queryId") String queryParam,retrofit.Callback<Intervention> response);
 
         @GET("/intervention")
-        public void getIntervention(
-                @Query("status") String status, Callback<List<Intervention>> response);
+        public void getIntervention(@Query("status") String status, Callback<List<Intervention>> response);
 
 
         /**

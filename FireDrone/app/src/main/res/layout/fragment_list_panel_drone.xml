@@ -1,96 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="wrap_content"
-    android:orientation="vertical" android:padding="6dip"
-    android:descendantFocusability="blocksDescendants"
-    >
-    <TextView android:id="@+id/label"
-        android:layout_width="wrap_content"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scrollView"
+    android:focusable="true"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/layout_"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="Trajectoire du drône: "
-        android:layout_marginBottom="20dp"
-        android:textColor="#0041c4"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical"
+        android:padding="10dip"
+        android:descendantFocusability="blocksDescendants"
+        android:gravity="center">
 
+        <Button
+            android:id="@+id/buttonAskADrone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_ask_drone"
+            android:layout_marginBottom="20dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Segment"
-        android:id="@+id/Bsegment"
-        android:layout_below="@+id/label"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/label"
-        android:layout_alignEnd="@+id/label" />
+        <TextView android:id="@+id/label_menu_trajectoire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_trajectoire_drone"
+            android:layout_marginBottom="10dp"
+            android:textColor="#0041C4"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:enabled="false"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Boucle"
-        android:id="@+id/Bboucle"
-        android:layout_below="@+id/Bsegment"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/Bsegment"
-        android:layout_alignEnd="@+id/Bsegment" />
+        <Button
+            android:id="@+id/Bsegment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trajectoire_buttonitem_segment"
+            android:enabled="false"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Zone"
-        android:id="@+id/Bzone"
-        android:layout_below="@+id/Bboucle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/Bboucle"
-        android:layout_alignEnd="@+id/Bboucle" />
+        <Button
+            android:id="@+id/Bboucle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trajectoire_buttonitem_boucle"
+            android:enabled="false"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Exclusion"
-        android:id="@+id/Bexclusion"
-        android:layout_below="@+id/Bzone"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/Bzone"
-        android:layout_alignEnd="@+id/Bzone" />
+        <Button
+            android:id="@+id/Bzone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trajectoire_buttonitem_zone"
+            android:enabled="false"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Valider"
-        android:id="@+id/Bvalider"
-        android:layout_marginTop="120dp"
-        android:layout_below="@+id/Bexclusion"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/Bexclusion"
-        android:layout_alignEnd="@+id/Bexclusion" />
+        <Button
+            android:id="@+id/buttonExclusion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trajectoire_buttonitem_exclusion"
+            android:enabled="false"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Arrêter"
-        android:id="@+id/Bstop"
-        android:layout_below="@+id/Bvalider"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/Bvalider"
-        android:layout_alignEnd="@+id/Bvalider" />
+        <Button
+            android:id="@+id/buttonStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trajectoire_button_start"
+            android:layout_marginTop="120dp"
+            android:enabled="false"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Effacer"
-        android:id="@+id/Beffacer"
-        android:layout_below="@+id/Bstop"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/Bstop"
-        android:layout_alignEnd="@+id/Bstop" />
+        <Button
+            android:id="@+id/buttonStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trajectoire_button_stop"
+            android:enabled="false"/>
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/buttonFreeDrone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_free_drone"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
+
+</ScrollView>

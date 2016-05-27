@@ -28,7 +28,7 @@ public interface DroneAPI {
     void getDroneByInterventionById(@Path("intervId") String psIntervQuery,retrofit.Callback<List<Drone>> response);
 
     @POST("/intervention/{intervId}/drone")
-    void createDrone(@Path("intervId") String psIntervQuery, @Body Drone drone, retrofit.Callback<List<Drone>> response);
+    void addDrone(@Path("intervId") String psIntervQuery, @Body Drone drone, retrofit.Callback<Drone> response);
 
     @PATCH("/intervention/{intervId}/drone")
     void editDrone(@Path("intervId") String psIntervQuery, @Body Drone drone, retrofit.Callback<List<Drone>> response);

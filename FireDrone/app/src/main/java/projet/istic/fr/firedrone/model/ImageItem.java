@@ -19,6 +19,9 @@ public class ImageItem {
     @SerializedName("id")
     private String id;
 
+    @SerializedName("idIntervention")
+    private String idIntervention;
+
     @SerializedName("latitude")
     private String latitude;
 
@@ -34,6 +37,15 @@ public class ImageItem {
     public void setId(String id) {
         this.id = id;
     }
+
+    public String getIdIntervention() {
+        return idIntervention;
+    }
+
+    public void setIdIntervention(String idIntervention) {
+        this.idIntervention = idIntervention;
+    }
+
     public String getLatitude() {
         return latitude;
     }

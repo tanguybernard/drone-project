@@ -38,7 +38,6 @@ import java.util.Map;
 
 import projet.istic.fr.firedrone.MainActivity;
 import projet.istic.fr.firedrone.R;
-import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
@@ -48,25 +47,25 @@ public class MapDroneFragment extends SupportMapFragment implements
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline, Serializable {
 
-    private GoogleMap myMap;
+    private transient GoogleMap myMap;
     //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
-    private Map<String, Marker> listMarkers = null;
+    private transient Map<String, Marker> listMarkers = null;
 
-    private PolylineOptions polylineOptions;//add lines bettwen markers
+    private transient PolylineOptions polylineOptions;//add lines bettwen markers
 
-    private Polyline polyline;
+    private transient Polyline polyline;
 
     //options polyline du drone
-    private PolylineOptions polylineOptionsDrone;
-    private Polyline polylineDrone;
+    private transient PolylineOptions polylineOptionsDrone;
+    private transient Polyline polylineDrone;
     //dernier point atteint par le drône
-    private LatLng dernierPoint;
+    private transient LatLng dernierPoint;
 
     //bouton de suppression de marqueur
     private ImageButton suppressionMarker;
 
     //marqueur du drône
-    Marker markerDrone;
+    transient Marker markerDrone;
 
 
     @Override
@@ -80,9 +79,9 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         if(panelListDroneFragment!=null){
             System.out.println("==============================");
-            System.out.println(panelListDroneFragment.getBoucle());
-            System.out.println(panelListDroneFragment.getSegment());
-            System.out.println(panelListDroneFragment.getZone());
+            System.out.println(panelListDroneFragment.isLoopMode());
+            System.out.println(panelListDroneFragment.isSegmentMode());
+            System.out.println(panelListDroneFragment.isZoneMode());
             System.out.println("==============================");
         }
         else{

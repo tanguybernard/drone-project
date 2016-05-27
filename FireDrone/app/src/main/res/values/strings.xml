@@ -73,5 +73,14 @@
     <string name="close_intervention">Clore intervention</string>
     <string name="back">Retour</string>
     <string name="moyens_demand_s">Moyens demandés</string>
+    <string name="menu_trajectoire_drone">Trajectoire du drône:</string>
+    <string name="trajectoire_buttonitem_segment">Segment</string>
+    <string name="trajectoire_buttonitem_boucle">Boucle</string>
+    <string name="trajectoire_buttonitem_zone">Zone</string>
+    <string name="trajectoire_buttonitem_exclusion">Exclusion</string>
+    <string name="trajectoire_button_start">Start !</string>
+    <string name="trajectoire_button_stop">Stop</string>
+    <string name="button_ask_drone">Contrôler un Drone</string>
+    <string name="button_free_drone">Libérer le Drone</string>
 
 </resources>
