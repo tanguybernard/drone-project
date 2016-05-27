@@ -356,6 +356,8 @@ public class MapDroneFragment extends SupportMapFragment implements
         updatePolyline();
     }
 
+
+    /**  - Getter and Setter Current Drone -  **/
     public Drone getCurrentDrone() {
         return currentDrone;
     }

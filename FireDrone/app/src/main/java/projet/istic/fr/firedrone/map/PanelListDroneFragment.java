@@ -23,8 +23,6 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
     /**   Reference to the Map Fragment   **/
     private transient MapDroneFragment mapDroneFragment;
 
-    /**   CurrentDrone   **/
-    private Drone currentDrone;
 
     //**   -   -  -    MODE Flag    -  -   -  **//
     /**  SEGMENT MODE Boolean Flag  **/
@@ -233,10 +231,12 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
         buttonAskADrone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentDrone = DroneService.askNewDrone(v.getContext());
+                Drone currentDrone = DroneService.askNewDrone(v.getContext());
 
                 if(currentDrone != null) {
-                    ((MapDroneFragment) getArguments().getSerializable("map")).setCurrentDrone(currentDrone);
+
+                    mapDroneFragment.setCurrentDrone(currentDrone);
+
                     buttonFreeDrone.setVisibility(View.VISIBLE);
                     buttonAskADrone.setVisibility(View.INVISIBLE);
                     buttonExclusion.setEnabled(true);
@@ -262,7 +262,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentDrone= ((MapDroneFragment) getArguments().getSerializable("map")).getCurrentDrone();
+                Drone currentDrone = mapDroneFragment.getCurrentDrone();
                 DroneService.stopDrone(currentDrone, v.getContext());
                 buttonStop.setEnabled(false);
             }
