@@ -104,5 +104,5 @@ def listener(self, attr_name, value):
     #response = requests.get(url, data=data)
     print " GlobalRelative: %s" % value.global_relative_frame
 
-while vehicle.mode.name == 'AUTO' and vehicle.cmds != None:
+while vehicle.mode.name == 'AUTO' and vehicle.commands != None:
     time.sleep(0.1)
