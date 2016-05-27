@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import projet.istic.fr.firedrone.ModelAPI.ImageAPI;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
 import projet.istic.fr.firedrone.adapter.GridViewAdapter;
@@ -75,12 +76,11 @@ public class ImageFragment extends Fragment implements Observateur {
 
 
         //Création de la liste et affichage dans la gridView
-        listImage = getData();
-        this.generateMap(listImage,view);//bouchon
+        listImage = getListData(view);
 
 
         GridView gridview = (GridView) view.findViewById(R.id.girdPicture);
-        GridViewAdapter gridAdapter = new GridViewAdapter(this.getContext(), R.layout.image_grid_item_layout, getData());
+        GridViewAdapter gridAdapter = new GridViewAdapter(this.getContext(), R.layout.image_grid_item_layout, listImage);
         gridview.setAdapter(gridAdapter);
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -128,30 +128,24 @@ public class ImageFragment extends Fragment implements Observateur {
      */
     private List<ImageItem> getListData(final View view) {
 
-        final List<ImageItem> results2 = new ArrayList<ImageItem>();//bouchon
-        generateMap(results2,view);//bouchon
-
-        return results2;
+        final List<ImageItem> imageItems = new ArrayList<ImageItem>();
 
 
-
-        /**RestAdapter restAdapter = new RestAdapter.Builder()
+        RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
 
-        InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+        ImageAPI imageAPI = restAdapter.create(ImageAPI.class);
 
-        final List<Image> results = new ArrayList<Image>();
 
-        String id= InterventionSingleton.getInstance().getIntervention().getId();
+        String idIntervention= InterventionSingleton.getInstance().getIntervention().getId();
 
-        interventionAPI.getImages(id, new Callback<List<Image>>() {
+        imageAPI.getImagesByIntervention(idIntervention, new Callback<List<ImageItem>>() {
 
             @Override
-            public void success(List<Image> images, Response response) {
-                results.addAll(images);
-                //Si success, appel de méthode de génération de la map avec la liste des interventions
+            public void success(List<ImageItem> images, Response response) {
+                imageItems.addAll(images);
                 generateMap(images,view);
             }
 
@@ -161,8 +155,9 @@ public class ImageFragment extends Fragment implements Observateur {
             }
         });
 
-        return results;*/
-    }
+         return imageItems;
+
+         }
 
     //Méthode de génération de la google map à la place du FrameLayout de la liste d'intervention
     public void generateMap(List<ImageItem> imageList, View view){
