@@ -2,6 +2,10 @@ package projet.istic.fr.firedrone;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -21,14 +25,18 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.adapter.CustomListAdapter;
+import projet.istic.fr.firedrone.adapter.GridViewAdapter;
 import projet.istic.fr.firedrone.adapter.ImageAdapter;
 import projet.istic.fr.firedrone.map.TabMapFragment;
-import projet.istic.fr.firedrone.model.Image;
+import projet.istic.fr.firedrone.model.ImageItem;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
@@ -52,7 +60,7 @@ public class ImageFragment extends Fragment implements Observateur {
         }
         return INSTANCE;
     }
-    List<Image> listImage;
+    List<ImageItem> listImage;
     ListView lv1 = null;
     ArrayAdapter<Intervention> listAdapter;
     //Map<String, Intervention> mapIntervention;
@@ -66,31 +74,61 @@ public class ImageFragment extends Fragment implements Observateur {
         view = inflater.inflate(R.layout.image_gallery, container, false);
 
 
+        //Création de la liste et affichage dans la gridView
+        listImage = getData();
+        this.generateMap(listImage,view);//bouchon
+
+
         GridView gridview = (GridView) view.findViewById(R.id.girdPicture);
-        gridview.setAdapter(new ImageAdapter(this.getContext()));
+        GridViewAdapter gridAdapter = new GridViewAdapter(this.getContext(), R.layout.image_grid_item_layout, getData());
+        gridview.setAdapter(gridAdapter);
 
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                                                ImageItem item = (ImageItem) parent.getItemAtPosition(position);
+                                                //Create intent
+                                                Intent myIntent = new Intent(getActivity(), ImageFullScreenActivity.class);
+                                                getActivity().startActivity(myIntent);
 
-        //Création de la liste et affichage dans la listview
-        listImage = getListData(view);
+                                                myIntent.putExtra("date", item.getDate());
+                                                myIntent.putExtra("image", item.getImage());
 
-        //lv1 = (ListView) view.findViewById(R.id.interventionList);
+                                                //Start fullscreen activity
+                                                getActivity().startActivity(myIntent);
+                                            }
+        });
 
-        //listAdapter = new CustomListAdapter(this.getContext(), listIntervention);
-
-        //lv1.setAdapter(listAdapter);
-
-        //Un clic sur une intervention de la liste permet de la sélectionner
 
         return view;
+    }
+
+
+    // Prepare some dummy data for gridview
+    private ArrayList<ImageItem> getData() {
+        final ArrayList<ImageItem> imageItems = new ArrayList<>();
+        /**for (int i = 0; i < imgs.length(); i++) {
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), imgs.getResourceId(i, -1));
+            imageItems.add(new ImageItem(bitmap, "Image#" + i));
+        }
+         return imageItems;*/
+        Bitmap bitmap=null;
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.accident_rouge);
+        ImageItem i = new ImageItem();
+        i.setImage(largeIcon);
+        i.setDate("Osef3");
+        i.setLatitude("48.2292016");
+        i.setLongitude("-1.5300694999999678");
+        imageItems.add(i);
+        return imageItems;
     }
 
     /**
      *
      * @return list data of in progress interventions
      */
-    private List<Image> getListData(final View view) {
+    private List<ImageItem> getListData(final View view) {
 
-        final List<Image> results2 = new ArrayList<Image>();//bouchon
+        final List<ImageItem> results2 = new ArrayList<ImageItem>();//bouchon
         generateMap(results2,view);//bouchon
 
         return results2;
@@ -127,26 +165,20 @@ public class ImageFragment extends Fragment implements Observateur {
     }
 
     //Méthode de génération de la google map à la place du FrameLayout de la liste d'intervention
-    public void generateMap(List<Image> imageList, View view){
+    public void generateMap(List<ImageItem> imageList, View view){
 
-        FrameLayout frame = (FrameLayout) view.findViewById(R.id.pictureMapLocation);
+        FrameLayout layoutId = (FrameLayout) view.findViewById(R.id.pictureMapLocation);
+
 
         //Test de la connexion de la tablette au réseau
-        if (isOnline() == true) {
+        if (isOnline()) {
             //Replace de la frame par google map
             ImageMapFragment imageMapFragment = new ImageMapFragment();
-
-            Image tmp = new Image();
-            tmp.setId("dfksmlklfllmsdfkmlsdml");
-            tmp.setLatitude("48.2292016");
-            tmp.setLongitude("-1.5300694999999678");
-            tmp.setDate("12/12/12");
-            imageList.add(tmp);
-
             //On envoi la liste des interventions que l'on a récupérée de la base
             imageMapFragment.setListImage(imageList);
 
-            View layoutId = view.findViewById(R.id.pictureMapLocation);
+            System.out.println(imageList.get(0).getLongitude());
+
 
             if (layoutId.getVisibility() == View.VISIBLE) {
                 // Its visible
@@ -165,7 +197,7 @@ public class ImageFragment extends Fragment implements Observateur {
             TextView notConnected = new TextView(getActivity());
             notConnected.setText("Vous n'avez pas de connexion internet, la map ne peut pas s'afficher");
 
-            frame.addView(notConnected);
+            //layoutId.add(notConnected);
         }
     }
 

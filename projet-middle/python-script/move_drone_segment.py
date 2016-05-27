@@ -8,6 +8,9 @@ parser = argparse.ArgumentParser(description='Print out vehicle state informatio
 parser.add_argument('--connect',default='tcp:127.0.0.1:5760',
                    help="vehicle connection target string. If not specified, SITL automatically started and used.")
 parser.add_argument('--mission',help='Mission')
+parser.add_argument('--idDrone',help='Identifiant du drone')
+parser.add_argument('--idIntervention',help='Identifiant de l\'intervention')
+
 args = parser.parse_args()
 
 vehicle = connect(args.connect, wait_ready=True)
@@ -54,12 +57,25 @@ if args.mission != None:
     # Get commands object from Vehicle.
     cmds = vehicle.commands
 
-    # Call clear() on Vehicle.commands and upload the command to the vehicle.
     cmds.clear()
+
+    #ajout d'un point qui ne sert a rien pour ne pas sauter la premiere mission
+    cmds.add(Command( 0, 0, 0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0, 10, 10, 10))
+    vehicle.flush() # Send commands
+    #aller
     for missionitem in dataMission['mission']:
         cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,missionitem['lattitude'], missionitem['longitude'], 0)
         cmds.add(cmd)
+
+    #retour
+    if len(dataMission['mission']) > 1 :
+        for i in reversed(range(1, len(dataMission['mission']) - 1)):
+            cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,dataMission['mission'][i]['lattitude'], dataMission['mission'][i]['longitude'], 0)
+            cmds.add(cmd)
+        cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_DO_JUMP, 0, 0, 1, -1, 0, 0, 0, 0, 0)
+        cmds.add(cmd)
     cmds.upload() # Send commands
+
 
     # Reset mission set to first (0) waypoint
     vehicle.commands.next=0
@@ -70,3 +86,14 @@ while not vehicle.mode.name=='AUTO':  #Wait until mode has changed
     # Set the vehicle into auto mode
     vehicle.mode = VehicleMode("AUTO")
     time.sleep(1)
+
+@vehicle.on_attribute('location')
+def listener(self, attr_name, value):
+    import requests
+    #url = 'http://http://m2gla-drone.istic.univ-rennes1.fr:8080/intervention/' + args.idIntervention + '/drone'
+    #data = '{"query":{"bool":{"must":[{"text":{"record.document":"SOME_JOURNAL"}},{"text":{"record.articleTitle":"farmers"}}],"must_not":[],"should":[]}},"from":0,"size":50,"sort":[],"facets":{}}'
+    #response = requests.get(url, data=data)
+    print " GlobalRelative: %s" % value.global_relative_frame
+
+while vehicle.mode.name == 'AUTO':
+    time.sleep(0.1)

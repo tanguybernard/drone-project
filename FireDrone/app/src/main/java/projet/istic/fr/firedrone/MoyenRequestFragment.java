@@ -76,16 +76,20 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
 
-        MeansAPI meansAPI = restAdapter.create(MeansAPI.class);
+        InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+
 
         final List<MeansItem> results = new ArrayList<MeansItem>();
 
-        String idInter = InterventionSingleton.getInstance().getIntervention().getId();
-        meansAPI.getWayRequested(idInter,"D", new Callback<List<MeansItem>>() {
+        interventionAPI.getAllWayRequested("D", new Callback<List<Intervention>>() {
 
             @Override
-            public void success(List<MeansItem> meansItems, Response response) {
-                results.addAll(meansItems);
+            public void success(List<Intervention> interventions, Response response) {
+                for (Intervention a:
+                        interventions) {
+                    results.addAll(a.getWays());
+                }
+
 
                 lv1 = (ListView) view.findViewById(R.id.moyenListView2);
 
@@ -111,7 +115,6 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
     @Override
     public void actualiser(Observable o) {
 
-        System.out.println("LOLIIDFSDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 
         if(o instanceof MyObservable){
 

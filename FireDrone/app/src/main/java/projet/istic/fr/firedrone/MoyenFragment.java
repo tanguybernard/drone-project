@@ -74,8 +74,7 @@ public class MoyenFragment extends Fragment implements Observateur {
 
         final Button addMeans = (Button) view.findViewById(R.id.btnAddMean);
         addMeans.setVisibility(View.GONE);
-        System.out.println(InterventionSingleton.getInstance().getIntervention().getCos().getId());
-        System.out.println(oUser.getUser().getId());
+
         //if (oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
         if(InterventionSingleton.getInstance().getIntervention().getCos().getId().equals(oUser.getUser().getId())){
             addMeans.setVisibility(View.VISIBLE);

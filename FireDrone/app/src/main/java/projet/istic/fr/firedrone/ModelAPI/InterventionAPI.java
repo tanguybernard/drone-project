@@ -2,8 +2,9 @@ package projet.istic.fr.firedrone.ModelAPI;
 
 import java.util.List;
 
-import projet.istic.fr.firedrone.model.Image;
+import projet.istic.fr.firedrone.model.ImageItem;
 import projet.istic.fr.firedrone.model.Intervention;
+import projet.istic.fr.firedrone.model.MeansItem;
 import projet.istic.fr.firedrone.model.Resource;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -96,6 +97,14 @@ public interface InterventionAPI {
          * @param response
          */
         @GET("/intervention/{id}/image")
-        public void getImages(@Path("id") String identifiant, Callback<List<Image>> response);
+        public void getImages(@Path("id") String identifiant, Callback<List<ImageItem>> response);
+
+
+
+        @GET("/intervention/way")
+        public void getAllWayRequested(@Query("statusWay") String status, Callback<List<Intervention>> callback);
+
+
+
 
 }
