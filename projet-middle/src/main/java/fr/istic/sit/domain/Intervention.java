@@ -2,6 +2,7 @@ package fr.istic.sit.domain;
 
 import java.util.List;
 
+import fr.istic.sit.model.InterventionWay;
 import fr.istic.sit.util.Validator;
 import org.springframework.data.annotation.Id;
 
@@ -20,11 +21,11 @@ public class Intervention {
     private Cos cos;
     private List<Way> ways;
     private List <Ressource> ressources;
+    private List <Drone>  drones;
 
     public Intervention() {}
 
-    public Intervention(String id, String sinisterCode, String date, String address, Double latitude,
-                        Double longitude, String status, List<Way> ways) {
+    public Intervention(String id, String sinisterCode, String date, String address, Double latitude, Double longitude, String status, Cos cos, List<Way> ways, List<Ressource> ressources, List<Drone> drones) {
         this.id = id;
         this.sinisterCode = sinisterCode;
         this.date = date;
@@ -32,7 +33,10 @@ public class Intervention {
         this.latitude = latitude;
         this.longitude = longitude;
         this.status = status;
-        this.setWays(ways);
+        this.cos = cos;
+        this.ways = ways;
+        this.ressources = ressources;
+        this.drones = drones;
     }
 
     public String getId() {
@@ -115,6 +119,14 @@ public class Intervention {
         this.ressources = ressources;
     }
 
+    public List<Drone> getDrones() {
+        return drones;
+    }
+
+    public void setDrones(List<Drone> drones) {
+        this.drones = drones;
+    }
+
     public void update(Intervention newData){
         if (!Validator.isEmpty(newData.getAddress()))
             this.address = newData.getAddress();
@@ -153,6 +165,17 @@ public class Intervention {
         }
     }
 
+    public InterventionWay toInterventionWay() {
+        InterventionWay intWay = new InterventionWay();
+        intWay.setId(this.id);
+        intWay.setAddress(this.address);
+        intWay.setDate(this.date);
+        intWay.setSinisterCode(this.sinisterCode);
+        intWay.setWays(this.ways);
+
+        return intWay;
+    }
+
     @Override
     public String toString() {
         return "Intervention{" +
@@ -163,8 +186,10 @@ public class Intervention {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", status='" + status + '\'' +
-                ", cos='" + cos + '\'' +
+                ", cos=" + cos +
                 ", ways=" + ways +
+                ", ressources=" + ressources +
+                ", drones=" + drones +
                 '}';
     }
 }

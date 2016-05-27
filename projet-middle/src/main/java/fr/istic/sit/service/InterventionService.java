@@ -1,15 +1,10 @@
 package fr.istic.sit.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import fr.istic.sit.dao.InterventionRepository;
 import fr.istic.sit.dao.UserRepository;
 import fr.istic.sit.domain.*;
-import fr.istic.sit.notification.PushyAPI;
-import fr.istic.sit.notification.PushyPushRequest;
+import fr.istic.sit.exception.CustomException;
+import fr.istic.sit.model.InterventionWay;
 import fr.istic.sit.util.Validator;
 import fr.istic.sit.util.WayStatus;
 import org.slf4j.Logger;
@@ -17,7 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import fr.istic.sit.dao.InterventionRepository;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author FireDroneTeam
@@ -76,11 +72,13 @@ public class InterventionService {
 		if(intervention.getWays() == null)
 			intervention.setWays(new ArrayList<Way>());
 
-		if(intervention.getWays().isEmpty()){
-			way.setId("1");
+		//On cree l'id du moyen.
+		way.setId((new Date()).toString());
+		/*if(intervention.getWays().isEmpty()){
+			way.setId((new Date()).toString());
 		}else {
 			way.setId(Integer.toString(intervention.getWays().size() + 1));
-		}
+		}*/
 
 		intervention.getWays().add(way);
 		return repository.save(intervention);
@@ -227,4 +225,124 @@ public class InterventionService {
 		}
 		return  null;
 	}
+
+	public List<Drone> getDrones(String id){
+		return repository.findById(id).getDrones();
+	}
+
+	public Drone addDrone(String id, Drone drone){
+		Intervention intervention = repository.findById(id);
+
+		if(!userHasDrone(intervention.getDrones(), drone)){
+			drone.setId((new Date()).toString());
+
+			if(intervention.getDrones() == null)
+				intervention.setDrones(new ArrayList<>());
+
+			intervention.getDrones().add(drone);
+			repository.save(intervention);
+
+			return drone;
+		}
+
+		throw new CustomException("D-0001","Impossible d'associer plus d'un drone à un utilisateur");
+	}
+
+	public Drone editDrone(String id, Drone drone){
+		Intervention intervention = repository.findById(id);
+		//Intervention newIntervention  = null;
+		if(!userHasDrone(intervention.getDrones(), drone)) {
+			intervention.getDrones()
+					.stream()
+					.filter(d -> d.getId().equalsIgnoreCase(drone.getId()))
+					.forEach(df -> df.update(drone));
+
+			repository.save(intervention);
+
+			if(drone.getBattery()<= 20){
+				sendBatteryNotification(intervention.getId(),drone.getId(),drone.getBattery());
+			}
+
+			return drone;
+
+		}
+		throw new CustomException("D-0001","Impossible d'associer plus d'un drone à un utilisateur");
+	}
+
+	public Intervention deleteDrone(String id, String idDrone){
+		Intervention intervention = repository.findById(id);
+		if(intervention.getDrones() != null && ! intervention.getDrones().isEmpty()){
+			intervention.getDrones().removeIf(d -> d.getId().equalsIgnoreCase(idDrone));
+			return repository.save(intervention);
+		}
+		return intervention;
+	}
+
+	private boolean userHasDrone(List<Drone> drones, Drone drone){
+		if(drones.isEmpty())
+			return false;
+
+		long count = drones.stream()
+				.filter(d -> d.getIdUser().equalsIgnoreCase(drone.getIdUser()))
+				.count();
+
+		if(count > 0)
+			return true;
+
+		return false;
+	}
+
+	private void sendBatteryNotification(String id, String idDrone, Double battery){
+		//Send notification
+		Map<String, String> payload = new HashMap<>();
+		payload.put("idIntervention", id);
+		payload.put("message", "Batterie faible Drone: "+idDrone+" % batterie"+battery);
+
+		try {
+			sender.sendNotification(payload);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Error sendBatteryNotification "+e.getMessage());
+		}
+
+	}
+
+	public List<InterventionWay> getWaysAllInterventions(String statusWay) {
+		List<Intervention> allInte = repository.findAll();
+		List<InterventionWay> intervResponse = new ArrayList<>();
+		try {
+
+			if(!Validator.isEmpty(statusWay)) {
+				allInte.removeIf(
+						i -> i.getWays()
+								.stream()
+								.filter(w -> w.getStatus().equalsIgnoreCase(statusWay))
+								.count() <= 0
+				);
+
+				allInte.forEach(
+								i -> i.getWays()
+										.removeIf(
+												w -> !w.getStatus().equalsIgnoreCase(statusWay)
+										)
+						);
+			}
+
+
+
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		allInte.forEach(i -> {
+			//i.setStatus(WayStatus.getDescription(i.getStatus()));
+			i.getWays().forEach(w -> w.setStatus(WayStatus.getDescription(w.getStatus())));
+			intervResponse.add(i.toInterventionWay());
+			}
+		);
+
+		return intervResponse;
+	}
+
 }
