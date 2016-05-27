@@ -39,6 +39,7 @@ import java.util.Map;
 import projet.istic.fr.firedrone.MainActivity;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
+import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
 
@@ -47,6 +48,10 @@ public class MapDroneFragment extends SupportMapFragment implements
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline, Serializable {
 
+
+    /**   CurrentDrone   **/
+    private Drone currentDrone;
+
     private transient GoogleMap myMap;
     //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
     private transient Map<String, Marker> listMarkers = null;
@@ -54,6 +59,7 @@ public class MapDroneFragment extends SupportMapFragment implements
     private transient PolylineOptions polylineOptions;//add lines bettwen markers
 
     private transient Polyline polyline;
+
 
     //options polyline du drone
     private transient PolylineOptions polylineOptionsDrone;
@@ -348,5 +354,13 @@ public class MapDroneFragment extends SupportMapFragment implements
         listMarkers.put(marker.getId(), marker);
         //mise à jour des polylines
         updatePolyline();
+    }
+
+    public Drone getCurrentDrone() {
+        return currentDrone;
+    }
+
+    public void setCurrentDrone(Drone currentDrone) {
+        this.currentDrone = currentDrone;
     }
 }

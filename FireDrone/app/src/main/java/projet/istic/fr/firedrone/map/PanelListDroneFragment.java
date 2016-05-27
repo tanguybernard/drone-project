@@ -14,7 +14,6 @@ import java.io.Serializable;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.service.DroneService;
-import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
 /**
  * Created by Mamadian
@@ -235,7 +234,9 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
             @Override
             public void onClick(View v) {
                 currentDrone = DroneService.askNewDrone(v.getContext());
+
                 if(currentDrone != null) {
+                    ((MapDroneFragment) getArguments().getSerializable("map")).setCurrentDrone(currentDrone);
                     buttonFreeDrone.setVisibility(View.VISIBLE);
                     buttonAskADrone.setVisibility(View.INVISIBLE);
                     buttonExclusion.setEnabled(true);
@@ -249,6 +250,21 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
                 else {
                     Toast.makeText(v.getContext(), "Vous n'avez pas pu avoir de Drone", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+    }
+
+
+    /**
+     * STOP the current DRONE  for this INTERVENTION
+     */
+    private void initStopDroneButton(){
+        buttonStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentDrone= ((MapDroneFragment) getArguments().getSerializable("map")).getCurrentDrone();
+                DroneService.stopDrone(currentDrone, v.getContext());
+                buttonStop.setEnabled(false);
             }
         });
     }

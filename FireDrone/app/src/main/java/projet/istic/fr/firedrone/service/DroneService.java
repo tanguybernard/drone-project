@@ -5,6 +5,7 @@ import android.content.Context;
 
 
 import projet.istic.fr.firedrone.FiredroneConstante;
+import projet.istic.fr.firedrone.Interceptor.Interceptor;
 import projet.istic.fr.firedrone.ModelAPI.DroneAPI;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.Intervention;
@@ -49,6 +50,29 @@ public class DroneService {
         return intervention.getDroneByUserID(UserSingleton.getInstance().getUser().getId());
     }
 
+
+    public static void stopDrone(Drone drone, final Context context){
+        //  Intervention  //
+        final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
+        String sIntervId = intervention.getId();
+
+        // Rest Adapter Retrofit  //
+        RestAdapter restAdapter = Interceptor.getInstance().getRestAdapter();
+        DroneAPI droneAPI = restAdapter.create(DroneAPI.class);
+
+        droneAPI.stopDrone(sIntervId, drone, new Callback<Drone>() {
+            @Override
+            public void success(Drone drone, Response response) {
+                intervention.deleteDrone(drone);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                FiredroneConstante.getToastError(context).show();
+            }
+        });
+
+    }
 
 
 }
