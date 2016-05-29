@@ -231,10 +231,14 @@ public class InterventionService {
 	}
 
 	public Drone addDrone(String id, Drone drone){
-		Intervention intervention = repository.findById(id);
 
+		//TODO changer la validation, seuelement un drone par intervention
+		//TODO ajouter l'execution du programme python
+		Intervention intervention = repository.findById(id);
+		Date now = new Date();
+		Long idDrone = now.getTime();
 		if(!userHasDrone(intervention.getDrones(), drone)){
-			drone.setId((new Date()).toString());
+			drone.setId( idDrone.toString());
 
 			if(intervention.getDrones() == null)
 				intervention.setDrones(new ArrayList<>());

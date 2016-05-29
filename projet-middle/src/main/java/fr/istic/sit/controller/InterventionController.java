@@ -8,6 +8,7 @@ import fr.istic.sit.service.InterventionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -96,7 +97,7 @@ public class InterventionController {
     }
 
     @Notification
-    @RequestMapping(value= "/{id}/drone" , method = RequestMethod.POST)
+    @RequestMapping(value= "/{id}/drone" , method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Add a drone of an intervention", nickname = "AddDroneOfIntervention", response = Drone.class )
     public Drone addDroneToIntervention(OAuth2Authentication authentication, @ParamNotification @PathVariable String id, @RequestBody Drone drone) {
         if(authentication != null)
