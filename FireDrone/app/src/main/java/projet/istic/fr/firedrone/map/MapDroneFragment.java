@@ -381,6 +381,4 @@ public class MapDroneFragment extends SupportMapFragment implements
             addPolylineDrone(point);
         }
     }
-
-
 }

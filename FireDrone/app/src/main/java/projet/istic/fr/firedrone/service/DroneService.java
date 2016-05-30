@@ -54,6 +54,8 @@ public class DroneService {
         });
         Log.d("error", " - - - - - -- - - - - - > LISTE DE TOUS LES DRONES DE L'INTERVENTION EN COURS");
         System.out.println(intervention.getDrones());
+
+
         return intervention.getDroneByUserID(UserSingleton.getInstance().getUser().getId());
     }
 
@@ -81,5 +83,28 @@ public class DroneService {
 
     }
 
+    public static void free(Drone drone, final Context context){
+
+        final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
+        String sIntervId = intervention.getId();
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
+                .build();
+        DroneAPI droneAPI = restAdapter.create(DroneAPI.class);
+
+        droneAPI.freeDrone(sIntervId, drone.getId(), new Callback<Drone>() {
+            @Override
+            public void success(Drone drone, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                FiredroneConstante.getToastError(context).show();
+            }
+        });
+    }
 
 }
