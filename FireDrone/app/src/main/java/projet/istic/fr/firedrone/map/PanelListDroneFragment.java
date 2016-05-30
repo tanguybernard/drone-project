@@ -14,7 +14,6 @@ import java.io.Serializable;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.service.DroneService;
-import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
 /**
  * Created by Mamadian
@@ -24,8 +23,10 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
     /**   Reference to the Map Fragment   **/
     private transient MapDroneFragment mapDroneFragment;
 
+
     /**   CurrentDrone   **/
     private transient Drone currentDrone;
+
 
     //**   -   -  -    MODE Flag    -  -   -  **//
     /**  SEGMENT MODE Boolean Flag  **/
@@ -234,8 +235,12 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
         buttonAskADrone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentDrone = DroneService.askNewDrone(v.getContext());
+                Drone currentDrone = DroneService.askNewDrone(v.getContext());
+
                 if(currentDrone != null) {
+                    /**    **/
+                    mapDroneFragment.setCurrentDrone(currentDrone);
+
                     buttonFreeDrone.setVisibility(View.VISIBLE);
                     buttonAskADrone.setVisibility(View.INVISIBLE);
                     buttonExclusion.setEnabled(true);
@@ -245,10 +250,28 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
                     buttonExclusion.setEnabled(true);
                     buttonStart.setEnabled(true);
                     buttonStop.setEnabled(true);
+
+                    /** **/
+                    mapDroneFragment.initPositionDroneOnMap();
                 }
                 else {
                     Toast.makeText(v.getContext(), "Vous n'avez pas pu avoir de Drone", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+    }
+
+
+    /**
+     * STOP the current DRONE  for this INTERVENTION
+     */
+    private void initStopDroneButton(){
+        buttonStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Drone currentDrone = mapDroneFragment.getCurrentDrone();
+                DroneService.stopDrone(currentDrone, v.getContext());
+                buttonStop.setEnabled(false);
             }
         });
     }

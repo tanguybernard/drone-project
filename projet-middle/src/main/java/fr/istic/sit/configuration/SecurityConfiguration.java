@@ -47,7 +47,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/intervention**")
                 .antMatchers("/sinister**")
                 .antMatchers("/sig**")
-                .antMatchers("/way**");
+                .antMatchers("/way**")
+                .antMatchers("/photo**")
+                .antMatchers("/drone**")
+                .antMatchers("/hello**");
 
     }
 
