@@ -21,7 +21,7 @@ public class GlobalExceptionController {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = Exception.class)
-    public ErrorResponse handleException(Exception e){
+    public  @ResponseBody ErrorResponse handleException(Exception e){
         return new ErrorResponse(e.getMessage());
     }
 
