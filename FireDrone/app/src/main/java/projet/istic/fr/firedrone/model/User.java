@@ -3,9 +3,11 @@ package projet.istic.fr.firedrone.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by mamadian on 18/04/16.
+ * @author mamadian.
  */
 public class User {
+
+    //**  -   -       -    Attributes    -       -   -  **//
 
     @SerializedName("login")
     String login;
@@ -28,6 +30,8 @@ public class User {
     @SerializedName("id")
     String id;
 
+    //**  -   -       -    Constructor    -       -   -  **//
+
     public User(String lastname, String login, String firstname, String phone, String email,String role) {
         this.lastname = lastname;
         this.login = login;
@@ -36,6 +40,10 @@ public class User {
         this.email = email;
         this.role=role;
     }
+
+
+
+    //**  -   -       -    Getter & Setter    -       -   -  **//
 
     public String getLogin() {
         return login;
@@ -93,6 +101,8 @@ public class User {
         this.id = id;
     }
 
-
-
+    //**  -   -       -    isSIT    -       -   -  **//
+    public boolean isSIT() {
+        return this.role.equals("ROLE_SIT");
+    }
 }
