@@ -13,7 +13,10 @@ import java.io.Serializable;
 
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.Drone;
+import projet.istic.fr.firedrone.model.MissionDrone;
+import projet.istic.fr.firedrone.model.ModeMissionDrone;
 import projet.istic.fr.firedrone.service.DroneService;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 
 /**
  * Created by Mamadian
@@ -114,10 +117,35 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
      * initialize Buttons
      */
     private void initButtons() {
-        initAskADroneButton();
-        initTrajectoryButtons();
-        initExclusionButton();
-        initControlsButtons();
+        if (InterventionSingleton.getInstance().getIntervention().getDrones().isEmpty()) {
+            initAskADroneButton();
+            initTrajectoryButtons();
+            initExclusionButton();
+            initControlsButtons();
+        }
+        else {
+            disableAllButtons();
+        }
+    }
+
+
+    /**
+     * Disable all the Buttons
+     * This method is called when a drone is already Use.
+     */
+    private void disableAllButtons() {
+        buttonZone.setEnabled(false);
+        buttonAskADrone.setEnabled(false);
+        buttonAskADrone.setEnabled(false);
+        buttonZone.setEnabled(false);
+        buttonSegment.setEnabled(false);
+        buttonLoop.setEnabled(false);
+        buttonExclusion.setEnabled(false);
+        buttonStart.setEnabled(false);
+        buttonStop.setEnabled(false);
+
+        buttonFreeDrone.setVisibility(View.VISIBLE);
+        buttonFreeDrone.setEnabled(true);
     }
 
 
@@ -125,6 +153,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
      * Init Trajectory Buttons
      */
     private void initTrajectoryButtons(){
+
         //**          -    Zone    -         **//
         buttonZone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,7 +236,10 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DroneService.startDrone(mapDroneFragment.getCurrentDrone(), v.getContext());
+                DroneService.startDrone(
+                        mapDroneFragment.getCurrentDrone(),
+                        new MissionDrone(getCurrentMode(), mapDroneFragment.getListPointsMissionDrone() ),
+                        v.getContext());
             }
         });
 
@@ -226,6 +258,24 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
             }
         });
 
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    private String getCurrentMode() {
+        if(segmentMode) {
+            return ModeMissionDrone.SEGMENT.getValue();
+        }
+        if(zoneMode) {
+            return ModeMissionDrone.ZONE.getValue();
+        }
+        if(loopMode) {
+            return ModeMissionDrone.LOOP.getValue();
+        }
+        return ModeMissionDrone.SEGMENT.getValue();
     }
 
     /**
