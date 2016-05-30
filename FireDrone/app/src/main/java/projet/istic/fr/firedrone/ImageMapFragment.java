@@ -60,6 +60,7 @@ public class ImageMapFragment extends SupportMapFragment implements
 
         //Si la liste est vide, on met les coordonnées de l'Ille-et-Vilaine
         if(listImage.isEmpty()) {
+            System.err.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 
             final LatLng coordIlle = new LatLng(48.2292016, -1.5300694999999678);
             //Zoom sur la zone des marqueurs
@@ -72,10 +73,15 @@ public class ImageMapFragment extends SupportMapFragment implements
 
         }
         else {
+            System.err.println("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+
             //Parcours de la liste des interventions
             for (int i = 0; i < listImage.size(); i++) {
                 //Si on a bien une latitude et une longitude, on met le marqueur
                 if ((listImage.get(i).getLatitude() != null) && (listImage.get(i).getLongitude() != null)) {
+
+                    System.err.println("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS2");
+
                     //Cast de la latitude et de la longitude
                     try {
                         Double latitude = Double.parseDouble(listImage.get(i).getLatitude());
