@@ -262,7 +262,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
             public void onClick(View v) {
 
                 Drone currentDrone = mapDroneFragment.getCurrentDrone();
-                DroneService.free(currentDrone,v.getContext());
+
 
                 buttonFreeDrone.setVisibility(View.INVISIBLE);
                 buttonAskADrone.setVisibility(View.VISIBLE);
