@@ -10,6 +10,7 @@ parser.add_argument('--connect',default='tcp:127.0.0.1:5760',required=True,
 parser.add_argument('--mission',help='Mission')
 parser.add_argument('--idDrone',help='Identifiant du drone',required=True)
 parser.add_argument('--idIntervention',help='Identifiant de l\'intervention',required=True)
+parser.add_argument('--imageFolder',help='Dossier des images',required=True)
 
 args = parser.parse_args()
 
@@ -58,7 +59,8 @@ def arm_and_takeoff(aTargetAltitude):
             break
         time.sleep(1)
 
-arm_and_takeoff(10)
+nextPoint = 0
+arm_and_takeoff(70)
 
 if args.mission != None:
     import json
@@ -73,13 +75,13 @@ if args.mission != None:
     vehicle.flush() # Send commands
     #aller
     for missionitem in dataMission['mission']:
-        cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,missionitem['lattitude'], missionitem['longitude'], 0)
+        cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,missionitem['lattitude'], missionitem['longitude'], 70)
         cmds.add(cmd)
 
     #retour
     if len(dataMission['mission']) > 1 :
         for i in reversed(range(1, len(dataMission['mission']) - 1)):
-            cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,dataMission['mission'][i]['lattitude'], dataMission['mission'][i]['longitude'], 0)
+            cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,dataMission['mission'][i]['lattitude'], dataMission['mission'][i]['longitude'], 70)
             cmds.add(cmd)
         cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_DO_JUMP, 0, 0, 1, -1, 0, 0, 0, 0, 0)
         cmds.add(cmd)
@@ -94,17 +96,24 @@ while not vehicle.mode.name=='AUTO':  #Wait until mode has changed
     print " Waiting for mode change ..."
     # Set the vehicle into auto mode
     vehicle.mode = VehicleMode("AUTO")
-    time.sleep(1)
+    time.sleep(1);
 
 @vehicle.on_attribute('location')
 def listener(self, attr_name, value):
     import requests
+    lat = str(value.global_relative_frame.lat)
+    lon = str(value.global_relative_frame.lon)
     url = 'http://m2gla-drone.istic.univ-rennes1.fr:8080/intervention/' + args.idIntervention + '/drone'
-    print url
-    data = '{ "battery": ' + str(vehicle.battery.current) +',"id":"'+ str(args.idDrone) +'", "ip": "127.0.0.1","latitude": "' + str(value.global_relative_frame.lat) + '","longitude": "' + str(value.global_relative_frame.lon) + '","name": "drone1","port": "14551"}'
-    print data
-    response = requests.patch(url, data=data)
-    print response
+    data = '{ "battery": ' + str(vehicle.battery.current) +',"id":"'+ str(args.idDrone) +'", "ip": "127.0.0.1","latitude": "' + lat + '","longitude": "' + lon + '","name": "drone1","port": "14551"}'
+    headers = {"content-type": "application/json"}
+    requests.patch(url, data=data,headers=headers)
+    global nextPoint
+    import urllib
+    if vehicle.commands.next != nextPoint:
+        urllib.urlretrieve("https://maps.googleapis.com/maps/api/staticmap?center=" +lat +"," + lon + "&zoom=19&size=640x512&maptype=satellite&key=AIzaSyDMiGs7FfMIZANrYC6tBx6D-CFXMt0eY64&style=feature:road.local&scale=1", args.imageFolder + "/" + str(time.time()) + ".png")
+        nextPoint = vehicle.commands.next
 
-while vehicle.mode.name == 'AUTO' and vehicle.commands != None:
+while vehicle.mode.name == 'AUTO' and vehicle.commands != None and vehicle.armed:
     time.sleep(0.1)
+
+vehicle.close()

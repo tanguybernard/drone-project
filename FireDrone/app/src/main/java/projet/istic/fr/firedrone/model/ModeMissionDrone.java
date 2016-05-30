@@ -1,13 +1,15 @@
 package projet.istic.fr.firedrone.model;
 
+import com.fasterxml.jackson.core.io.SegmentedStringWriter;
+
 /**
  * @author Group A.
  */
-public enum UserROLE {
+public enum ModeMissionDrone {
 
-    ROLE_SIT("ROLE_SIT"),
-    ROLE_CODIS("ROLE_CODIS"),
-    ROLE_BASE("ROLE_BASE");
+    ZONE("MODE_ZONE"),
+    SEGMENT("MODE_SEGMENT"),
+    LOOP("MODE_LOOP");
 
 
     private String value;
@@ -20,9 +22,7 @@ public enum UserROLE {
         this.value = value;
     }
 
-    UserROLE(String value) {
+    ModeMissionDrone(String value) {
         this.value = value;
     }
-
-
 }

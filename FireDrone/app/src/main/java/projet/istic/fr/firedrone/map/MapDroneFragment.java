@@ -2,6 +2,7 @@ package projet.istic.fr.firedrone.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +43,7 @@ import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.model.Drone;
+import projet.istic.fr.firedrone.model.PointMissionDrone;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -74,7 +76,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
     //bouton de suppression de marqueur
     private transient ImageButton suppressionMarker;
-    
+
     //marqueur du drône
     transient List<Marker> markerDrones = new ArrayList<>();
     /**   CurrentDrone   **/
@@ -353,4 +355,20 @@ public class MapDroneFragment extends SupportMapFragment implements
             addPolylineDrone(point);
         }
     }
+
+
+    /**
+     *
+     * @return
+     */
+    public List<PointMissionDrone> getListPointsMissionDrone() {
+        List<PointMissionDrone> listPoint = new ArrayList<>();
+
+        for(Marker marker: listMarkers.values()) {
+            listPoint.add(new PointMissionDrone(marker.getPosition().latitude, marker.getPosition().longitude));
+        }
+
+        return listPoint;
+    }
+
 }

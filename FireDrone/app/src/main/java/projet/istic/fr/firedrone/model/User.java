@@ -101,8 +101,17 @@ public class User {
         this.id = id;
     }
 
-    //**  -   -       -    isSIT    -       -   -  **//
+    //**  -   -       -    getRole    -       -   -  **//
     public boolean isSIT() {
-        return this.role.equals("ROLE_SIT");
+        return this.role.equals(UserROLE.ROLE_SIT.getValue());
     }
+
+    public boolean isCODIS() {
+        return this.role.equals(UserROLE.ROLE_CODIS.getValue());
+    }
+
+    public boolean isBASEUSER() {
+        return this.role.equals(UserROLE.ROLE_CODIS.getValue());
+    }
+
 }

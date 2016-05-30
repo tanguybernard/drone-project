@@ -79,7 +79,24 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
-		<!-- Fin AOP -->
+
+		<!-- FIN AOP -->
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.1</version>
+			<scope>${depencency.scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.any23</groupId>
+			<artifactId>apache-any23-core</artifactId>
+			<version>1.1</version>
+			<scope>${depencency.scope}</scope>
+		</dependency>
+
+
+
 
 	</dependencies>
 	<build>
