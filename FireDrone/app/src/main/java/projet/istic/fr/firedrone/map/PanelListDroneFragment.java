@@ -207,7 +207,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                DroneService.startDrone(mapDroneFragment.getCurrentDrone(), v.getContext());
             }
         });
 
@@ -216,12 +216,34 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
             @Override
             public void onClick(View v) {
 
+                Drone currentDrone = mapDroneFragment.getCurrentDrone();
+                DroneService.stopDrone(currentDrone, v.getContext());
+                buttonStop.setEnabled(false);
+
+                DroneService.stopDrone(mapDroneFragment.getCurrentDrone(), v.getContext());
+
             }
         });
 
         buttonFreeDrone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Drone currentDrone = mapDroneFragment.getCurrentDrone();
+                DroneService.free(currentDrone,v.getContext());
+
+                buttonFreeDrone.setVisibility(View.INVISIBLE);
+                buttonAskADrone.setVisibility(View.VISIBLE);
+                buttonExclusion.setEnabled(false);
+                buttonZone.setEnabled(false);
+                buttonSegment.setEnabled(false);
+                buttonLoop.setEnabled(false);
+                buttonExclusion.setEnabled(false);
+                buttonStart.setEnabled(false);
+                buttonStop.setEnabled(false);
+
+
+                DroneService.freeDrone(mapDroneFragment.getCurrentDrone(), v.getContext());;
 
             }
         });
@@ -257,21 +279,6 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
                 else {
                     Toast.makeText(v.getContext(), "Vous n'avez pas pu avoir de Drone", Toast.LENGTH_LONG).show();
                 }
-            }
-        });
-    }
-
-
-    /**
-     * STOP the current DRONE  for this INTERVENTION
-     */
-    private void initStopDroneButton(){
-        buttonStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Drone currentDrone = mapDroneFragment.getCurrentDrone();
-                DroneService.stopDrone(currentDrone, v.getContext());
-                buttonStop.setEnabled(false);
             }
         });
     }

@@ -2,6 +2,7 @@ package projet.istic.fr.firedrone.ModelAPI;
 
 import java.util.List;
 
+import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.ImageItem;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MeansItem;
@@ -103,6 +104,10 @@ public interface InterventionAPI {
 
         @GET("/intervention/way")
         public void getAllWayRequested(@Query("statusWay") String status, Callback<List<Intervention>> callback);
+
+
+        @GET("/intervention/{id}/drone")
+        public void getAllDrone(@Path("id") String identifiantIntervention,Callback<List<Drone>> callback);
 
 
 
