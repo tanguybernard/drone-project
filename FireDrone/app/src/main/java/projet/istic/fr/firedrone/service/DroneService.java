@@ -70,7 +70,7 @@ public class DroneService {
         droneAPI.stopDrone(sIntervId, drone, new Callback<Drone>() {
             @Override
             public void success(Drone drone, Response response) {
-                intervention.deleteDrone(drone);
+                //intervention.deleteDrone(drone);
             }
 
             @Override
@@ -81,29 +81,6 @@ public class DroneService {
 
     }
 
-    public static void free(Drone drone, final Context context){
-
-        final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
-        String sIntervId = intervention.getId();
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(FiredroneConstante.END_POINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
-                .build();
-        DroneAPI droneAPI = restAdapter.create(DroneAPI.class);
-
-        droneAPI.freeDrone(sIntervId, drone.getId(), new Callback<Drone>() {
-            @Override
-            public void success(Drone drone, Response response) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                FiredroneConstante.getToastError(context).show();
-            }
-        });
-    }
 
     /**
      * Launch the Drone into its mission
@@ -145,6 +122,27 @@ public class DroneService {
      */
     public static void freeDrone(Drone drone, final Context context) {
 
+        final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
+
+        String sIntervId = intervention.getId();
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
+                .build();
+        DroneAPI droneAPI = restAdapter.create(DroneAPI.class);
+
+        droneAPI.freeDrone(sIntervId, drone.getId(), new Callback<Drone>() {
+            @Override
+            public void success(Drone drone, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                FiredroneConstante.getToastError(context).show();
+            }
+        });
     }
 
 
