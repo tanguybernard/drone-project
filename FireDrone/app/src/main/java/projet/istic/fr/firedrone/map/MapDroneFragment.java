@@ -66,7 +66,7 @@ public class MapDroneFragment extends SupportMapFragment implements
     private transient LatLng dernierPoint;
 
     //bouton de suppression de marqueur
-    private ImageButton suppressionMarker;
+    private transient ImageButton suppressionMarker;
 
 
 

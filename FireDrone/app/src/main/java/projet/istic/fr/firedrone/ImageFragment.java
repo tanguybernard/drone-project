@@ -76,7 +76,8 @@ public class ImageFragment extends Fragment implements Observateur {
 
 
         //Création de la liste et affichage dans la gridView
-        listImage = getListData(view);
+        //listImage = getListData(view);
+        listImage=getData();
 
 
         GridView gridview = (GridView) view.findViewById(R.id.girdPicture);
@@ -88,13 +89,13 @@ public class ImageFragment extends Fragment implements Observateur {
                                                 ImageItem item = (ImageItem) parent.getItemAtPosition(position);
                                                 //Create intent
                                                 Intent myIntent = new Intent(getActivity(), ImageFullScreenActivity.class);
-                                                getActivity().startActivity(myIntent);
 
                                                 myIntent.putExtra("date", item.getDate());
-                                                myIntent.putExtra("image", item.getImage());
+                                                System.out.println(item.getImageUrl());
+                                                myIntent.putExtra("imageUrl", item.getImageUrl());
 
                                                 //Start fullscreen activity
-                                                getActivity().startActivity(myIntent);
+                                                startActivity(myIntent);
                                             }
         });
 
@@ -114,11 +115,13 @@ public class ImageFragment extends Fragment implements Observateur {
         Bitmap bitmap=null;
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.accident_rouge);
         ImageItem i = new ImageItem();
-        i.setImage(largeIcon);
+        i.setImageUrl("http://ekladata.com/ayidw9UokbdBaQ82I94dHfkgHok.png");
         i.setDate("Osef3");
         i.setLatitude("48.2292016");
         i.setLongitude("-1.5300694999999678");
         imageItems.add(i);
+
+        generateMap(imageItems,view);
         return imageItems;
     }
 

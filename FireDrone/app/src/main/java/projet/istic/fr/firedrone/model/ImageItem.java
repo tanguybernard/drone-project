@@ -1,6 +1,8 @@
 package projet.istic.fr.firedrone.model;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -25,9 +27,10 @@ public class ImageItem {
     @SerializedName("latitude")
     private String latitude;
 
-    @SerializedName("image")
-    private Bitmap image;
+    @SerializedName("imageURL")
+    private String imageUrl;
 
+    private Bitmap imageBitmap;
 
 
     public String getId() {
@@ -71,12 +74,19 @@ public class ImageItem {
     }
 
 
-    public Bitmap getImage() {
-        return image;
+    public String getImageUrl() {
+        return this.imageUrl;
     }
 
-    public void setImage(Bitmap image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
+    public void setImageBitmap(Bitmap imageBitmap) {
+        this.imageBitmap = imageBitmap;
+    }
 }
