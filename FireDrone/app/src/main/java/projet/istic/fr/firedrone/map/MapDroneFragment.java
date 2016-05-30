@@ -80,6 +80,8 @@ public class MapDroneFragment extends SupportMapFragment implements
     /**   CurrentDrone   **/
     private Drone currentDrone;
 
+    transient Marker markerDrone;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

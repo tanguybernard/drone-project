@@ -121,7 +121,7 @@ public class ImageMapFragment extends SupportMapFragment implements
                 //délimitation du zoom sur la carte par rapport à l'ensemble des marqueurs
                 final LatLngBounds bounds = builder.build();
                 //Définition du padding autour des marqueurs
-                final int padding = 30;
+                final int padding = 100;
                 //Zoom sur la zone des marqueurs
                 googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
