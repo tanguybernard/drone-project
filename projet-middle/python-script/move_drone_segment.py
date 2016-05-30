@@ -1,15 +1,15 @@
 from dronekit import connect, VehicleMode,Command
 from pymavlink import mavutil
 import time
-
+import ee
 #Set up option parsing to get connection string
 import argparse
 parser = argparse.ArgumentParser(description='Print out vehicle state information. Connects to SITL on local PC by default.')
-parser.add_argument('--connect',default='tcp:127.0.0.1:5760',
+parser.add_argument('--connect',default='tcp:127.0.0.1:5760',required=True,
                    help="vehicle connection target string. If not specified, SITL automatically started and used.")
 parser.add_argument('--mission',help='Mission')
-parser.add_argument('--idDrone',help='Identifiant du drone')
-parser.add_argument('--idIntervention',help='Identifiant de l\'intervention')
+parser.add_argument('--idDrone',help='Identifiant du drone',required=True)
+parser.add_argument('--idIntervention',help='Identifiant de l\'intervention',required=True)
 
 args = parser.parse_args()
 
@@ -99,10 +99,12 @@ while not vehicle.mode.name=='AUTO':  #Wait until mode has changed
 @vehicle.on_attribute('location')
 def listener(self, attr_name, value):
     import requests
-    #url = 'http://http://m2gla-drone.istic.univ-rennes1.fr:8080/intervention/' + args.idIntervention + '/drone'
-    #data = '{"query":{"bool":{"must":[{"text":{"record.document":"SOME_JOURNAL"}},{"text":{"record.articleTitle":"farmers"}}],"must_not":[],"should":[]}},"from":0,"size":50,"sort":[],"facets":{}}'
-    #response = requests.get(url, data=data)
-    print " GlobalRelative: %s" % value.global_relative_frame
+    url = 'http://m2gla-drone.istic.univ-rennes1.fr:8080/intervention/' + args.idIntervention + '/drone'
+    print url
+    data = '{ "battery": ' + str(vehicle.battery.current) +',"id":"'+ str(args.idDrone) +'", "ip": "127.0.0.1","latitude": "' + str(value.global_relative_frame.lat) + '","longitude": "' + str(value.global_relative_frame.lon) + '","name": "drone1","port": "14551"}'
+    print data
+    response = requests.patch(url, data=data)
+    print response
 
 while vehicle.mode.name == 'AUTO' and vehicle.commands != None:
     time.sleep(0.1)
