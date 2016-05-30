@@ -76,29 +76,7 @@ public class ImageFragment extends Fragment implements Observateur {
 
 
         //Création de la liste et affichage dans la gridView
-        //listImage = getListData(view);
-        listImage=getData();
-
-
-        GridView gridview = (GridView) view.findViewById(R.id.girdPicture);
-        GridViewAdapter gridAdapter = new GridViewAdapter(this.getContext(), R.layout.image_grid_item_layout, listImage);
-        gridview.setAdapter(gridAdapter);
-
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                                                ImageItem item = (ImageItem) parent.getItemAtPosition(position);
-                                                //Create intent
-                                                Intent myIntent = new Intent(getActivity(), ImageFullScreenActivity.class);
-
-                                                myIntent.putExtra("date", item.getDate());
-                                                System.out.println(item.getImageUrl());
-                                                myIntent.putExtra("imageUrl", item.getImageUrl());
-
-                                                //Start fullscreen activity
-                                                startActivity(myIntent);
-                                            }
-        });
-
+        getListData();
 
         return view;
     }
@@ -129,7 +107,7 @@ public class ImageFragment extends Fragment implements Observateur {
      *
      * @return list data of in progress interventions
      */
-    private List<ImageItem> getListData(final View view) {
+    private List<ImageItem> getListData() {
 
         final List<ImageItem> imageItems = new ArrayList<ImageItem>();
 
@@ -149,6 +127,30 @@ public class ImageFragment extends Fragment implements Observateur {
             @Override
             public void success(List<ImageItem> images, Response response) {
                 imageItems.addAll(images);
+
+
+                GridView gridview = (GridView) view.findViewById(R.id.girdPicture);
+                GridViewAdapter gridAdapter = new GridViewAdapter(getContext(), R.layout.image_grid_item_layout, images);
+                gridview.setAdapter(gridAdapter);
+
+                gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                        ImageItem item = (ImageItem) parent.getItemAtPosition(position);
+                        //Create intent
+                        Intent myIntent = new Intent(getActivity(), ImageFullScreenActivity.class);
+
+                        myIntent.putExtra("date", item.getDate());
+                        System.out.println(item.getImageUrl());
+                        myIntent.putExtra("imageUrl", item.getImageUrl());
+
+                        //Start fullscreen activity
+                        startActivity(myIntent);
+                    }
+                });
+
+
+
+
                 generateMap(images,view);
             }
 

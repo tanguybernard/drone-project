@@ -37,12 +37,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.MainActivity;
+import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.PointMissionDrone;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.OkClient;
+import retrofit.client.Response;
 
 
 public class MapDroneFragment extends SupportMapFragment implements
@@ -69,12 +76,12 @@ public class MapDroneFragment extends SupportMapFragment implements
 
     //bouton de suppression de marqueur
     private transient ImageButton suppressionMarker;
-
-
-
+    
+    //marqueur du drône
+    transient List<Marker> markerDrones = new ArrayList<>();
     /**   CurrentDrone   **/
     private Drone currentDrone;
-    /** marqueur du drône **/
+
     transient Marker markerDrone;
 
 
@@ -103,12 +110,12 @@ public class MapDroneFragment extends SupportMapFragment implements
             @Override
             public void onDroneMove(LatLng point) {
 
-                //Lorsque le drone change de position il appelle cette méthode
+                /*//Lorsque le drone change de position il appelle cette méthode
                 if (markerDrone != null) {
                     markerDrone.setPosition(point);
                     markerDrone.setVisible(true);
                     addPolylineDrone(point);
-                }
+                }**/
 
             }
 
@@ -174,16 +181,15 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positionIntervention, 16));
 
-        markerDrone = myMap.addMarker(new MarkerOptions()
-                        .position(positionIntervention)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36))
-        );
+
 
         //initialisation de l'option de polyline du drône
         initPolylineDrone();
 
         //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
         myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this, null));
+
+        refreshPointDrone();
     }
 
 
@@ -230,66 +236,32 @@ public class MapDroneFragment extends SupportMapFragment implements
         return getListPoint();
     }
 
-
-
-
-    private Location convertLatLngToLocation(LatLng latLng) {
-        Location location = new Location("someLoc");
-        location.setLatitude(latLng.latitude);
-        location.setLongitude(latLng.longitude);
-        return location;
-    }
-
-
-
-
-    public void setAnimation(GoogleMap myMap, final List<LatLng> directionPoint, final Bitmap bitmap) {
-
-
-        Marker marker = myMap.addMarker(new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                .position(directionPoint.get(0))
-                .flat(true));
-
-        myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(directionPoint.get(0), 10));
-
-        animateMarker(myMap, marker, directionPoint, false);
-    }
-
-
-    private void animateMarker(GoogleMap myMap, final Marker marker, final List<LatLng> directionPoint,
-                                      final boolean hideMarker) {
-        final Handler handler = new Handler();
-        final long start = SystemClock.uptimeMillis();
-        Projection proj = myMap.getProjection();
-        final long duration = 30000;
-
-        final Interpolator interpolator = new LinearInterpolator();
-
-        handler.post(new Runnable() {
-            int i = 0;
+    private void refreshPointDrone(){
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setClient(new OkClient())
+                .build();
+        final InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
+        interventionAPI.getAllDrone(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Drone>>() {
+            @Override
+            public void success(List<Drone> drones, Response response) {
+                for(Marker marker : markerDrones){
+                    marker.remove();
+                }
+                markerDrones.clear();
+                for (Drone drone : drones) {
+                    LatLng position = new LatLng(Double.valueOf(drone.getLatitude()),Double.valueOf(drone.getLongitude()));
+                    markerDrones.add(myMap.addMarker(new MarkerOptions()
+                                    .position(position)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36)))
+                    );
+                }
+            }
 
             @Override
-            public void run() {
-                System.out.println("run marker");
-                long elapsed = SystemClock.uptimeMillis() - start;
-                float t = interpolator.getInterpolation((float) elapsed
-                        / duration);
-                if (i < directionPoint.size())
-                    marker.setPosition(directionPoint.get(i));
-                i++;
+            public void failure(RetrofitError error) {
 
-
-                if (t < 1.0) {
-                    // Post again 16ms later.
-                    handler.postDelayed(this, 3000);
-                } else {
-                    if (hideMarker) {
-                        marker.setVisible(false);
-                    } else {
-                        marker.setVisible(true);
-                    }
-                }
             }
         });
     }
@@ -398,4 +370,5 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         return listPoint;
     }
+
 }

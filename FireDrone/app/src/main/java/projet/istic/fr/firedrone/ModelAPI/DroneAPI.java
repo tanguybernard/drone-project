@@ -5,6 +5,7 @@ import java.util.List;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.StartMissionDrone;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
@@ -34,9 +35,10 @@ public interface DroneAPI {
     @POST("/intervention/{intervId}/drone/stop")
     void stopDrone(@Path("intervId") String psIntervQuery, @Body Drone drone, retrofit.Callback<Drone> response);
 
-
     void startDrone(@Path("intervId") String psIntervQuery, @Body StartMissionDrone startMissionDrone, retrofit.Callback<Drone> response);
 
+    @DELETE("/intervention/{intervId}/drone/{idDrone}")
+    void freeDrone(@Path("intervId") String psIntervQuery, @Path("idDrone") String psDroneQuery, retrofit.Callback<Drone> response);
 
     @PATCH("/intervention/{intervId}/drone")
     void editDrone(@Path("intervId") String psIntervQuery, @Body Drone drone, retrofit.Callback<List<Drone>> response);
