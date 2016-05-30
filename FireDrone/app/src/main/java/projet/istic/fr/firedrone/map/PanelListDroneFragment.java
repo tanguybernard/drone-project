@@ -25,7 +25,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
     private transient MapDroneFragment mapDroneFragment;
 
     /**   CurrentDrone   **/
-    private Drone currentDrone;
+    private transient Drone currentDrone;
 
     //**   -   -  -    MODE Flag    -  -   -  **//
     /**  SEGMENT MODE Boolean Flag  **/
@@ -40,21 +40,21 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
 
     //**   -   -  -    Button    -  -   -  **//
     /**  ASK FOR A DRONE BUTTON  **/
-    private Button buttonAskADrone;
+    private transient Button buttonAskADrone;
     /**  ZONE BUTTON  **/
-    private Button buttonZone;
+    private transient Button buttonZone;
     /**  SEGMENT BUTTON  **/
-    private Button buttonSegment;
+    private transient Button buttonSegment;
     /**  LOOP BUTTON  **/
-    private Button buttonLoop;
+    private transient Button buttonLoop;
     /**  EXCLUSION BUTTON Flag  **/
-    private Button buttonExclusion;
+    private transient Button buttonExclusion;
     /**  START BUTTON Flag  **/
-    private Button buttonStart;
+    private transient Button buttonStart;
     /**  STOP BUTTON Flag  **/
-    private Button buttonStop;
+    private transient Button buttonStop;
     /**  FREE DRONE BUTTON Flag  **/
-    private Button buttonFreeDrone;
+    private transient Button buttonFreeDrone;
 
 
     //**   -   -  -    Default Colors    -  -   -  **//
