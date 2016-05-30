@@ -27,12 +27,14 @@ public class InterventionService {
 	@Autowired
 	private NotificationSenderService sender;
 
-
 	@Autowired
 	private InterventionRepository repository;
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	DroneService droneService;
 	
 	public Intervention getId(String id) {
 		return repository.findOne(id);
@@ -73,7 +75,9 @@ public class InterventionService {
 			intervention.setWays(new ArrayList<Way>());
 
 		//On cree l'id du moyen.
-		way.setId((new Date()).toString());
+		Date now = new Date();
+		Long idWay = now.getTime();
+		way.setId(idWay.toString());
 		/*if(intervention.getWays().isEmpty()){
 			way.setId((new Date()).toString());
 		}else {
@@ -132,7 +136,9 @@ public class InterventionService {
 		//Send notification
 		Map<String, String> payload = new HashMap<String, String>();
 		payload.put("idIntervention", id);
-		payload.put("cosIam", cos.getLogin());
+		if (cos != null) {
+			payload.put("cosIam", cos.getLogin());
+		}
 		try {
 			sender.sendNotification(payload);
 		} catch (Exception e) {
@@ -232,11 +238,13 @@ public class InterventionService {
 
 	public Drone addDrone(String id, Drone drone){
 
-		//TODO changer la validation, seuelement un drone par intervention
-		//TODO ajouter l'execution du programme python
 		Intervention intervention = repository.findById(id);
 		Date now = new Date();
 		Long idDrone = now.getTime();
+
+		//On reemplace le nom de l'utilisateur par son ID
+		drone.setIdUser(userRepository.findByLogin(drone.getIdUser()).getId());
+
 		if(!userHasDrone(intervention.getDrones(), drone)){
 			drone.setId( idDrone.toString());
 
@@ -255,7 +263,7 @@ public class InterventionService {
 	public Drone editDrone(String id, Drone drone){
 		Intervention intervention = repository.findById(id);
 		//Intervention newIntervention  = null;
-		if(!userHasDrone(intervention.getDrones(), drone)) {
+		//if(!userHasDrone(intervention.getDrones(), drone)) {
 			intervention.getDrones()
 					.stream()
 					.filter(d -> d.getId().equalsIgnoreCase(drone.getId()))
@@ -269,8 +277,8 @@ public class InterventionService {
 
 			return drone;
 
-		}
-		throw new CustomException("D-0001","Impossible d'associer plus d'un drone à un utilisateur");
+		//}
+		//throw new CustomException("D-0001","Impossible d'associer plus d'un drone à un utilisateur");
 	}
 
 	public Intervention deleteDrone(String id, String idDrone){

@@ -77,7 +77,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
     //bouton de suppression de marqueur
     private transient ImageButton suppressionMarker;
-    
+
     //marqueur du drône
     transient List<Marker> markerDrones = new ArrayList<>();
     /**   CurrentDrone   **/
