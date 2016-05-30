@@ -110,7 +110,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 String bodyString = new String(((TypedByteArray) response.getBody()).getBytes());
 
-
                 JSONObject reader = null;
                 try {
                     reader = new JSONObject(bodyString);
