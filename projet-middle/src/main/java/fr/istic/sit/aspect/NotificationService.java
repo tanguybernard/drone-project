@@ -1,8 +1,6 @@
 package fr.istic.sit.aspect;
 
 import fr.istic.sit.annotation.ParamNotification;
-import fr.istic.sit.notification.PushyAPI;
-import fr.istic.sit.notification.PushyPushRequest;
 import fr.istic.sit.service.NotificationSenderService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -16,8 +14,6 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by fracma on 4/28/16.
@@ -52,6 +48,6 @@ public class NotificationService {
             }
         }
 
-        sender.sendGenericNotification(id);
+        sender.sendSynchroNotification(id);
     }
 }

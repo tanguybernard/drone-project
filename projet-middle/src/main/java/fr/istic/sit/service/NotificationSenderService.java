@@ -23,13 +23,14 @@ public class NotificationSenderService {
     @Autowired
     PushyAPI pushyAPI;
 
-    public void sendGenericNotification(String message) throws Exception {
+
+    public void sendSynchroNotification(String message) throws Exception {
         // Set payload (any object, it will be serialized to JSON)
         Map<String, String> payload = new HashMap<String, String>();
 
         // Add test message
-        payload.put("message", message);
-        log.info("SendGenericNotification --> payload "+payload);
+        payload.put("idIntervention", message);
+        log.info("sendSynchroNotification --> payload "+payload);
         send(payload);
     }
 

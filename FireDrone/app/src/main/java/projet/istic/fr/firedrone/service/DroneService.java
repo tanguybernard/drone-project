@@ -2,7 +2,7 @@ package projet.istic.fr.firedrone.service;
 
 
 import android.content.Context;
-
+import android.util.Log;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.ModelAPI.DroneAPI;
@@ -20,19 +20,17 @@ import retrofit.client.Response;
  */
 public class DroneService {
 
+    /**  -   -   -    Static Field   -   -   -   **/
 
     public static Drone askNewDrone(final Context context) {
-        //  Intervention  //
-        final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
-        String sIntervId = intervention.getId();
+         final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
+         String sIntervId = intervention.getId();
 
-        // Rest Adapter Retrofit  //
-        RestAdapter restAdapter = new RestAdapter.Builder().
-                setEndpoint(FiredroneConstante.END_POINT).
-                setLogLevel(RestAdapter.LogLevel.FULL).
-                build();
-
-        DroneAPI droneAPI = restAdapter.create(DroneAPI.class);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
+                .build();
+         DroneAPI droneAPI = restAdapter.create(DroneAPI.class);
         droneAPI.addDrone(sIntervId, new Drone(), new Callback<Drone>() {
 
             @Override
@@ -42,6 +40,9 @@ public class DroneService {
 
             @Override
             public void failure(RetrofitError error) {
+                Log.d("error", " - - - - - - > FLAG ERROR");
+                System.out.println( error );
+                Log.d("error", " - - - - - - > FLAG ERROR");
                 FiredroneConstante.getToastError(context).show();
             }
         });
@@ -49,6 +50,38 @@ public class DroneService {
         return intervention.getDroneByUserID(UserSingleton.getInstance().getUser().getId());
     }
 
+
+    public static void stopDrone(Drone drone, final Context context){
+        final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
+        String sIntervId = intervention.getId();
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
+                .build();
+        DroneAPI droneAPI = restAdapter.create(DroneAPI.class);
+        droneAPI.stopDrone(sIntervId, drone, new Callback<Drone>() {
+            @Override
+            public void success(Drone drone, Response response) {
+                intervention.deleteDrone(drone);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                FiredroneConstante.getToastError(context).show();
+            }
+        });
+
+    }
+
+
+    public static void startDrone(Drone currentDrone, Context context) {
+
+    }
+
+    public static void freeDrone(Drone currentDrone, Context context) {
+
+    }
 
 
 }

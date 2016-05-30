@@ -42,7 +42,6 @@ import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.model.Drone;
-import projet.istic.fr.firedrone.model.Resource;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -56,6 +55,8 @@ public class MapDroneFragment extends SupportMapFragment implements
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline, Serializable {
 
+
+
     private transient GoogleMap myMap;
     //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
     private transient Map<String, Marker> listMarkers = null;
@@ -64,6 +65,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
     private transient Polyline polyline;
 
+
     //options polyline du drone
     private transient PolylineOptions polylineOptionsDrone;
     private transient Polyline polylineDrone;
@@ -71,10 +73,12 @@ public class MapDroneFragment extends SupportMapFragment implements
     private transient LatLng dernierPoint;
 
     //bouton de suppression de marqueur
-    private ImageButton suppressionMarker;
-
+    private transient ImageButton suppressionMarker;
+    
     //marqueur du drône
     transient List<Marker> markerDrones = new ArrayList<>();
+    /**   CurrentDrone   **/
+    private Drone currentDrone;
 
 
     @Override
@@ -97,7 +101,7 @@ public class MapDroneFragment extends SupportMapFragment implements
             System.out.println("============ null ==================");
         }
 
-
+        //**   Listener OnDroneMove   **//
         ((MainActivity) getActivity()).setDroneMoveListener(new DroneListenerEventNEW.DroneActionMapListener() {
             @Override
             public void onDroneMove(LatLng point) {
@@ -150,7 +154,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         if(myMap != null){
             //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
-            myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this,null));
+            myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this, null));
         }
         return mapView;
     }
@@ -323,4 +327,30 @@ public class MapDroneFragment extends SupportMapFragment implements
         //mise à jour des polylines
         updatePolyline();
     }
+
+
+    /**  - Getter and Setter Current Drone -  **/
+    public Drone getCurrentDrone() {
+        return currentDrone;
+    }
+
+    public void setCurrentDrone(Drone currentDrone) {
+        this.currentDrone = currentDrone;
+    }
+
+    /**
+     * Initialize and Put the DRONE on the MAP when the Drone is asked for the first time
+     */
+    public void initPositionDroneOnMap() {
+        if (markerDrone != null) {
+            Double latString = Double.parseDouble(currentDrone.getLatitude());
+            Double lngString = Double.parseDouble(currentDrone.getLongitude());
+            LatLng point = new LatLng(latString, lngString);
+            markerDrone.setPosition(point);
+            markerDrone.setVisible(true);
+            addPolylineDrone(point);
+        }
+    }
+
+
 }

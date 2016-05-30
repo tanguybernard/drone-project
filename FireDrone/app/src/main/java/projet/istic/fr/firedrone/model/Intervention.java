@@ -109,6 +109,16 @@ public class Intervention {
         this.drones.add(drone);
     }
 
+    public void deleteDrone(Drone drone){
+        int i=0;
+        for(Drone d : drones){
+            if(drone.getId().equals(d.getId())){
+                this.drones.remove(i);
+            }
+            i++;
+        }
+    }
+
     public Intervention(){
 
     }
