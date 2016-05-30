@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
@@ -33,12 +34,14 @@ import retrofit.client.Response;
 public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
     private List<MeansItem> listData;
     private LayoutInflater layoutInflater;
+    private HashMap hashIdIntervention;
+    private HashMap hashAddress;
 
-    public MoyenReqListAdapter(Context aContext, List<MeansItem> listData) {
+    public MoyenReqListAdapter(Context aContext, List<MeansItem> listData,HashMap hashIdIntervention,HashMap hashAddress) {
         super(aContext,0,listData);
         this.listData =listData;
-        //layoutInflater = LayoutInflater.from(aContext);
-
+        this.hashAddress = hashAddress;
+        this.hashIdIntervention = hashIdIntervention;
     }
 
     @Override
@@ -50,6 +53,9 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.moyen_request_item, null);
             holder = new ViewHolder();
             holder.myName = (TextView) convertView.findViewById(R.id.moyen_name2);
+            holder.myInterventionId = (TextView) convertView.findViewById(R.id.moyen_inervention_id);
+            holder.myInterventionAddress = (TextView) convertView.findViewById(R.id.moyen_inervention_address);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -77,6 +83,10 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
 
 
         holder.myName.setText(item.getMsMeanName());
+        holder.myInterventionAddress.setText((CharSequence) hashAddress.get(item.getMsMeanId()));
+        holder.myInterventionId.setText((CharSequence) hashIdIntervention.get(item.getMsMeanId()));
+
+
 
         return convertView;
     }
@@ -141,5 +151,7 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
 
     static class ViewHolder {
         TextView myName;
+        TextView myInterventionId;
+        TextView myInterventionAddress;
     }
 }

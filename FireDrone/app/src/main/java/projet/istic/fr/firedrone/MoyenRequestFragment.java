@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
@@ -81,6 +82,12 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
 
         final List<MeansItem> results = new ArrayList<MeansItem>();
 
+        final HashMap hashAddress = new HashMap();
+        final HashMap hashIdIntervention = new HashMap();
+
+        // Put elements to the map
+
+
         interventionAPI.getAllWayRequested("D", new Callback<List<Intervention>>() {
 
             @Override
@@ -88,12 +95,20 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
                 for (Intervention a:
                         interventions) {
                     results.addAll(a.getWays());
+                    for (MeansItem m: a.getWays()
+                         ) {
+
+                        hashAddress.put(m.getMsMeanId(), a.getAddress());
+                        hashIdIntervention.put(m.getMsMeanId(), a.getId());
+                    }
+
+
                 }
 
 
                 lv1 = (ListView) view.findViewById(R.id.moyenListView2);
 
-                listAdapter = new MoyenReqListAdapter(getContext(), results);
+                listAdapter = new MoyenReqListAdapter(getContext(), results, hashIdIntervention, hashAddress);
 
                 lv1.setAdapter(listAdapter);
 

@@ -82,5 +82,6 @@
     <string name="trajectoire_button_stop">Stop</string>
     <string name="button_ask_drone">Contrôler un Drone</string>
     <string name="button_free_drone">Libérer le Drone</string>
+    <string name="utilisateur">Utilisateur</string>
 
 </resources>
