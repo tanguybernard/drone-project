@@ -203,7 +203,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                DroneService.startDrone(mapDroneFragment.getCurrentDrone(), v.getContext());
             }
         });
 
@@ -211,14 +211,14 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                DroneService.stopDrone(mapDroneFragment.getCurrentDrone(), v.getContext());
             }
         });
 
         buttonFreeDrone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                DroneService.freeDrone(mapDroneFragment.getCurrentDrone(), v.getContext());;
             }
         });
 

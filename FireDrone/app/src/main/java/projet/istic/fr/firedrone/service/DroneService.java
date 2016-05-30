@@ -22,8 +22,6 @@ public class DroneService {
 
     /**  -   -   -    Static Field   -   -   -   **/
 
-
-
     public static Drone askNewDrone(final Context context) {
          final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
          String sIntervId = intervention.getId();
@@ -37,10 +35,6 @@ public class DroneService {
 
             @Override
             public void success(Drone newDrone, Response response) {
-                Log.d("error", " - - - - - -- - - - - - > FLAG");
-                System.out.println(newDrone.toString());
-
-
                 intervention.addDrone(newDrone);
             }
 
@@ -52,8 +46,7 @@ public class DroneService {
                 FiredroneConstante.getToastError(context).show();
             }
         });
-        Log.d("error", " - - - - - -- - - - - - > LISTE DE TOUS LES DRONES DE L'INTERVENTION EN COURS");
-        System.out.println(intervention.getDrones());
+
         return intervention.getDroneByUserID(UserSingleton.getInstance().getUser().getId());
     }
 
@@ -78,6 +71,15 @@ public class DroneService {
                 FiredroneConstante.getToastError(context).show();
             }
         });
+
+    }
+
+
+    public static void startDrone(Drone currentDrone, Context context) {
+
+    }
+
+    public static void freeDrone(Drone currentDrone, Context context) {
 
     }
 
