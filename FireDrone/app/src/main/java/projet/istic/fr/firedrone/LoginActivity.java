@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import projet.istic.fr.firedrone.Interceptor.Interceptor;
 import projet.istic.fr.firedrone.ModelAPI.UserApi;
 import projet.istic.fr.firedrone.model.User;
+import projet.istic.fr.firedrone.service.InternetConnectionService;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -93,19 +94,6 @@ public class LoginActivity extends AppCompatActivity {
         System.out.println(login);
         System.out.println(password);
 
-        if (login.equals("admin")) {
-
-            System.out.println("connected");
-            Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-            LoginActivity.this.startActivity(myIntent);
-            setResult(RESULT_OK, myIntent);
-            finish();
-            return;
-
-        }
-        System.out.println("disconnected");
-
-
         final User user;
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
@@ -165,7 +153,15 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        FiredroneConstante.getToastError(getApplicationContext()).show();;
+                        if(new InternetConnectionService().isOnline(getApplicationContext())){
+                            FiredroneConstante.getErrorLogin(getApplicationContext()).show();
+
+                        }
+                        else{
+                            FiredroneConstante.getToastError(getApplicationContext()).show();
+
+                        }
+
                     }
                 });
 
@@ -178,7 +174,14 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                FiredroneConstante.getToastError(getApplicationContext()).show();
+                if(new InternetConnectionService().isOnline(getApplicationContext())){
+                    FiredroneConstante.getErrorLogin(getApplicationContext()).show();
+
+                }
+                else{
+                    FiredroneConstante.getToastError(getApplicationContext()).show();
+
+                }
             }
         });
 

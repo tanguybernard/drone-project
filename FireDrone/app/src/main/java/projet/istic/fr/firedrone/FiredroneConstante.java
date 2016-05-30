@@ -25,6 +25,10 @@ public class FiredroneConstante {
         return Toast.makeText(context,"Impossible d'accéder au serveur",Toast.LENGTH_LONG);
     }
 
+    public static Toast getErrorLogin(Context context){
+        return Toast.makeText(context,"Identifiant ou mot de passe incorrect",Toast.LENGTH_LONG);
+    }
+
 
 }
 
