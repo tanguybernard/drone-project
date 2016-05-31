@@ -83,5 +83,7 @@
     <string name="button_ask_drone">Contrôler un Drone</string>
     <string name="button_free_drone">Libérer le Drone</string>
     <string name="utilisateur">Utilisateur</string>
+    <string name="array_ways">Tableau des moyens</string>
+    <string name="validate_ways">Moyen à valider</string>
 
 </resources>
