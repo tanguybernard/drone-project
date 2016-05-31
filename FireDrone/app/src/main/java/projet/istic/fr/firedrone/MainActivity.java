@@ -188,12 +188,15 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Logout properly
+     */
     public void goBackToLogin(){
-        System.out.println("lol");;
-        InterventionSingleton.getInstance().reset();
-        UserSingleton.getInstance().reset();
-        Intent myIntent = new Intent(this, LoginActivity.class);
-        startActivity(myIntent);
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("finish", true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
+        startActivity(intent);
+        finish();
     }
 
     @Override
