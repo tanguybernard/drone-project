@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by fracma on 5/30/16.
+ * @author FireDroneTeam
  */
 
 @Component
@@ -18,8 +18,20 @@ public class DroneService {
     @Autowired
     private ExecuteShellComand executeShellComand;
 
+    public void createDrone(){
+        log.debug("Creating drone....");
+        String response = executeShellComand.executeCommand("./create-drone.sh 1 48.115127 -1.637972");
+        log.info("Response "+ response);
+    }
+
     public void startDrone(){
         log.debug("Starting drone....");
+        String response = executeShellComand.executeCommand("./create-drone.sh 1 48.115127 -1.637972");
+        log.info("Response "+ response);
+    }
+
+    public void stopDrone(){
+        log.debug("Stopping drone....");
         String response = executeShellComand.executeCommand("./create-drone.sh 1 48.115127 -1.637972");
         log.info("Response "+ response);
     }
