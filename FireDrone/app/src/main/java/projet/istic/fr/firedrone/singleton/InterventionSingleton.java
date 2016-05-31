@@ -33,4 +33,8 @@ public class InterventionSingleton
         return this.intervention;
     }
 
+    public void reset() {
+        intervention = new Intervention();
+    }
+
 }
