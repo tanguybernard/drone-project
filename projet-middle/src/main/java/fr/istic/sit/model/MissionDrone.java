@@ -1,4 +1,4 @@
-package projet.istic.fr.firedrone.model;
+package fr.istic.sit.model;
 
 import java.util.List;
 
@@ -48,9 +48,6 @@ public class MissionDrone {
 
     @Override
     public String toString() {
-        return "MissionDrone{" +
-                "mode='" + mode + '\'' +
-                ", points=" + points +
-                '}';
+        return "mission{" + points + '}';
     }
 }

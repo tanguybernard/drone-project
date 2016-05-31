@@ -1,6 +1,5 @@
 package projet.istic.fr.firedrone.synchro;
 
-import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
 

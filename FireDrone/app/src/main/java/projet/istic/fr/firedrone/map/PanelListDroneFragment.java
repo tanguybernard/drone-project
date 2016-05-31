@@ -355,7 +355,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
         Log.e("- - - * * * * MY FLAG", "HERE YOU ARE MOTHER FUCKER");
         Intervention intervention = InterventionSingleton.getInstance().getIntervention();
         if(!intervention.getDrones().isEmpty()) {
-
+            currentDrone = intervention.getDrones().get(0);
             mapDroneFragment.setCurrentDrone(currentDrone);
 
             buttonFreeDrone.setVisibility(View.VISIBLE);
@@ -369,7 +369,6 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
             buttonStop.setEnabled(true);
 
             mapDroneFragment.initPositionDroneOnMap();
-            mapDroneFragment.setCurrentDrone(intervention.getDrones().get(0));
         }
         else {
             Toast.makeText(getContext(), "Vous n'avez pas pu avoir de Drone", Toast.LENGTH_LONG).show();

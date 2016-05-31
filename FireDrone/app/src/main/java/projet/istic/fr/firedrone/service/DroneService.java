@@ -8,10 +8,10 @@ import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.Interceptor.Interceptor;
 import projet.istic.fr.firedrone.ModelAPI.DroneAPI;
 import projet.istic.fr.firedrone.listener.DroneEventListenerInterface;
+import projet.istic.fr.firedrone.model.ActionMissionDrone;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MissionDrone;
-import projet.istic.fr.firedrone.model.StartMissionDrone;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -61,12 +61,10 @@ public class DroneService {
      * @param context
      */
     public static void stopDrone(Drone drone, final Context context){
-        final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
-        String sIntervId = intervention.getId();
-
         final DroneAPI droneAPI = Interceptor.getInstance().getRestAdapter().create(DroneAPI.class);
 
-        droneAPI.stopDrone(sIntervId, drone, new Callback<Drone>() {
+        ActionMissionDrone actionMissionDrone = new ActionMissionDrone(InterventionSingleton.getInstance().getIntervention().getId(), drone, null, false);
+        droneAPI.actionDrone(actionMissionDrone, new Callback<Drone>() {
             @Override
             public void success(Drone drone, Response response) {
                 //intervention.deleteDrone(drone);
@@ -87,11 +85,10 @@ public class DroneService {
      * @param context
      */
     public static void startDrone(Drone drone, MissionDrone mission, final Context context) {
-        final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
         final DroneAPI droneAPI = Interceptor.getInstance().getRestAdapter().create(DroneAPI.class);
-        StartMissionDrone startMissionDrone = new StartMissionDrone(InterventionSingleton.getInstance().getIntervention().getId(), drone.getId(), mission);
+        ActionMissionDrone actionMissionDrone = new ActionMissionDrone(InterventionSingleton.getInstance().getIntervention().getId(), drone, mission, true);
 
-        droneAPI.startDrone(intervention.getId(), startMissionDrone, new Callback<Drone>() {
+        droneAPI.actionDrone(actionMissionDrone, new Callback<Drone>() {
 
             @Override
             public void success(Drone newDrone, Response response) {
