@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
     signingConfigs {
         config {
         }
@@ -28,8 +32,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:design:23.3.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    testCompile 'org.assertj:assertj-core:1.7.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:design:23.0.1'
     compile 'com.o3dr.android:dronekit-android:2.9.0'
     compile 'com.google.android.gms:play-services-fitness:8.4.0'
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
@@ -38,4 +44,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
 
+    androidTestCompile 'junit:junit:4.12'
 }

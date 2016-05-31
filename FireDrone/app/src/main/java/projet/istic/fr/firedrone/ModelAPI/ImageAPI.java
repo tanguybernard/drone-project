@@ -23,5 +23,12 @@ public interface ImageAPI {
     public void getImagesByIntervention(
             @Query("idIntervention") String idIntervention, Callback<List<ImageItem>> response);
 
+    @GET("/photo")
+    public void getImagesByLatLong(
+            @Query("idIntervention") String idIntervention,
+            @Query("latitude") String latitude,
+            @Query("longitude") String longitude,
+            Callback<List<ImageItem>> response);
+
 
 }

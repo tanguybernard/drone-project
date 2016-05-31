@@ -163,6 +163,8 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
                     setSegmentMode(false);
                     setLoopMode(false);
 
+                    buttonExclusion.setEnabled(true);
+
                     buttonZone.setTextColor(Color.BLACK);
                     buttonZone.setBackgroundColor(Color.BLUE);
 
@@ -182,6 +184,8 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
                     setZoneMode(false);
                     setSegmentMode(true);
                     setLoopMode(false);
+
+                    buttonExclusion.setEnabled(false);
 
                     buttonSegment.setTextColor(Color.BLACK);
                     buttonSegment.setBackgroundColor(Color.BLUE);
@@ -203,6 +207,8 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
                     setZoneMode(false);
                     setSegmentMode(false);
                     setLoopMode(true);
+
+                    buttonExclusion.setEnabled(false);
 
                     buttonLoop.setTextColor(Color.BLACK);
                     buttonLoop.setBackgroundColor(Color.BLUE);
@@ -355,9 +361,10 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
         Log.e("- - - * * * * MY FLAG", "HERE YOU ARE MOTHER FUCKER");
         Intervention intervention = InterventionSingleton.getInstance().getIntervention();
         if(!intervention.getDrones().isEmpty()) {
-            currentDrone = intervention.getDrones().get(0);
-            mapDroneFragment.setCurrentDrone(currentDrone);
 
+            currentDrone= intervention.getDrones().get(0);
+
+            mapDroneFragment.setCurrentDrone(currentDrone);
             buttonFreeDrone.setVisibility(View.VISIBLE);
             buttonAskADrone.setVisibility(View.INVISIBLE);
             buttonExclusion.setEnabled(true);
@@ -369,6 +376,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
             buttonStop.setEnabled(true);
 
             mapDroneFragment.initPositionDroneOnMap();
+
         }
         else {
             Toast.makeText(getContext(), "Vous n'avez pas pu avoir de Drone", Toast.LENGTH_LONG).show();
