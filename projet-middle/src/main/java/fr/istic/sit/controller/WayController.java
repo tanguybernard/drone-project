@@ -1,6 +1,5 @@
 package fr.istic.sit.controller;
 
-import fr.istic.sit.domain.Way;
 import fr.istic.sit.domain.WayType;
 import fr.istic.sit.service.WayService;
 import io.swagger.annotations.Api;
