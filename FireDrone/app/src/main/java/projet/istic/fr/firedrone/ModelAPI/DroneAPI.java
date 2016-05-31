@@ -35,6 +35,7 @@ public interface DroneAPI {
     @POST("/intervention/{intervId}/drone/stop")
     void stopDrone(@Path("intervId") String psIntervQuery, @Body Drone drone, retrofit.Callback<Drone> response);
 
+
     void startDrone(@Path("intervId") String psIntervQuery, @Body StartMissionDrone startMissionDrone, retrofit.Callback<Drone> response);
 
     @DELETE("/intervention/{intervId}/drone/{idDrone}")

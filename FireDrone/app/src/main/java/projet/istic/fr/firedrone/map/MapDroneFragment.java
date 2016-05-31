@@ -44,6 +44,7 @@ import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.PointMissionDrone;
+import projet.istic.fr.firedrone.service.DroneService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -80,7 +81,7 @@ public class MapDroneFragment extends SupportMapFragment implements
     //marqueur du drône
     transient List<Marker> markerDrones = new ArrayList<>();
     /**   CurrentDrone   **/
-    private Drone currentDrone;
+    transient private Drone currentDrone;
 
     transient Marker markerDrone;
 
@@ -94,16 +95,6 @@ public class MapDroneFragment extends SupportMapFragment implements
         }
         PanelListDroneFragment panelListDroneFragment = (PanelListDroneFragment) getArguments().getSerializable("panel");
 
-        if(panelListDroneFragment!=null){
-            System.out.println("==============================");
-            System.out.println(panelListDroneFragment.isLoopMode());
-            System.out.println(panelListDroneFragment.isSegmentMode());
-            System.out.println(panelListDroneFragment.isZoneMode());
-            System.out.println("==============================");
-        }
-        else{
-            System.out.println("============ null ==================");
-        }
 
         //**   Listener OnDroneMove   **//
         ((MainActivity) getActivity()).setDroneMoveListener(new DroneListenerEventNEW.DroneActionMapListener() {
@@ -138,6 +129,15 @@ public class MapDroneFragment extends SupportMapFragment implements
                 }
             }
         });
+
+
+
+        /**  Initialize Current Drone **/
+        if (!InterventionSingleton.getInstance().getIntervention().getDrones().isEmpty()) {
+            currentDrone = InterventionSingleton.getInstance().getIntervention().getDrones().get(0);
+        }
+
+
 
     }
 
@@ -189,7 +189,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
         myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this, null));
 
-        refreshPointDrone();
+        //refreshPointDrone();
     }
 
 
@@ -246,12 +246,12 @@ public class MapDroneFragment extends SupportMapFragment implements
         interventionAPI.getAllDrone(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Drone>>() {
             @Override
             public void success(List<Drone> drones, Response response) {
-                for(Marker marker : markerDrones){
+                for (Marker marker : markerDrones) {
                     marker.remove();
                 }
                 markerDrones.clear();
                 for (Drone drone : drones) {
-                    LatLng position = new LatLng(Double.valueOf(drone.getLatitude()),Double.valueOf(drone.getLongitude()));
+                    LatLng position = new LatLng(Double.valueOf(drone.getLatitude()), Double.valueOf(drone.getLongitude()));
                     markerDrones.add(myMap.addMarker(new MarkerOptions()
                                     .position(position)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36)))

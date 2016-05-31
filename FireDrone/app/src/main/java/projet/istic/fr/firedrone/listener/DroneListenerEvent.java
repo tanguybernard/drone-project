@@ -1,6 +1,5 @@
 package projet.istic.fr.firedrone.listener;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,8 +14,6 @@ import com.o3dr.services.android.lib.drone.mission.MissionItemType;
 import com.o3dr.services.android.lib.drone.mission.item.MissionItem;
 import com.o3dr.services.android.lib.drone.mission.item.spatial.Waypoint;
 import com.o3dr.services.android.lib.drone.property.Gps;
-import com.o3dr.services.android.lib.drone.property.Home;
-import com.o3dr.services.android.lib.drone.property.Speed;
 import com.o3dr.services.android.lib.drone.property.Type;
 
 import java.util.ArrayList;
