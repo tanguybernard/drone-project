@@ -31,10 +31,7 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         setContentView(R.layout.image_fullscreen);
 
         String title = getIntent().getStringExtra("date");
-        System.out.println(title);
         String urlImage = getIntent().getStringExtra("imageUrl");
-        System.out.println(urlImage);
-
 
         TextView titleTextView = (TextView) findViewById(R.id.title);
         if (titleTextView != null) {
@@ -42,18 +39,9 @@ public class ImageFullScreenActivity extends AppCompatActivity {
         }
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
-        System.out.println(urlImage);
-
-
-
 
         if (imageView != null) {
-
             new ImageDownloaderService(imageView).execute(urlImage);
         }
     }
-
-
-
-
 }

@@ -41,10 +41,6 @@
         android:id="@+id/group_3">
         <menu>
             <item
-                android:id="@+id/nav_controle"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/controle" />
-            <item
                 android:id="@+id/nav_image"
                 android:icon="@drawable/ic_menu_gallery"
                 android:title="@string/image" />

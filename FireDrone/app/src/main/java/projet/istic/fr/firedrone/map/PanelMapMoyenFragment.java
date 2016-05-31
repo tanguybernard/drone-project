@@ -55,6 +55,5 @@ public class PanelMapMoyenFragment extends Fragment {
 
         return view;
     }
-
 }
 

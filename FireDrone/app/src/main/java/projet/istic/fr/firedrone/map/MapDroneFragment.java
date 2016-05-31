@@ -34,7 +34,6 @@ import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.MainActivity;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.R;
-import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.PointMissionDrone;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
@@ -86,41 +85,6 @@ public class MapDroneFragment extends SupportMapFragment implements
             getMapAsync(this);
         }
         PanelListDroneFragment panelListDroneFragment = (PanelListDroneFragment) getArguments().getSerializable("panel");
-
-
-        //**   Listener OnDroneMove   **//
-        ((MainActivity) getActivity()).setDroneMoveListener(new DroneListenerEventNEW.DroneActionMapListener() {
-            @Override
-            public void onDroneMove(LatLng point) {
-
-                /*//Lorsque le drone change de position il appelle cette méthode
-                if (markerDrone != null) {
-                    markerDrone.setPosition(point);
-                    markerDrone.setVisible(true);
-                    addPolylineDrone(point);
-                }**/
-
-            }
-
-            //lorsqu'un drone recoit un ordre de mission, il appelle cette méthode là
-            @Override
-            public void droneReceivedMissionPoint(List<LatLng> pointsMissions) {
-                //on cherche à trouver tous les marqueurs proche des points (à moins de 1 mètres) reçues par le drône
-                for (Marker marker : listMarkers.values()) {
-
-                    //pour tous les points recues par le drône
-                    for (LatLng point : pointsMissions) {
-                        float[] result = new float[1];
-                        //calcul de la distance entre le marqueur et le point
-                        Location.distanceBetween(marker.getPosition().latitude, marker.getPosition().longitude, point.latitude, point.longitude, result);
-                        //si on est à moins de 1 mètre on change la couleur de l'icône
-                        if (result[0] < 1) {
-                            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                        }
-                    }
-                }
-            }
-        });
 
 
 

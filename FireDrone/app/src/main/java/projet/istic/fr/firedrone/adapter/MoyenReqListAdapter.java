@@ -64,9 +64,6 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
         final Button refuseButton = (Button) convertView.findViewById(R.id.btn_req_refuse);
         final Button validButton = (Button) convertView.findViewById(R.id.btn_req_valid);
 
-
-
-
         refuseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,17 +78,12 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
             }
         });
 
-
         holder.myName.setText(item.getMsMeanName());
         holder.myInterventionAddress.setText((CharSequence) hashAddress.get(item.getMsMeanId()));
         holder.myInterventionId.setText((CharSequence) hashIdIntervention.get(item.getMsMeanId()));
 
-
-
         return convertView;
     }
-
-
 
     /**
      * Decrease quantity of vehicle
@@ -123,7 +115,6 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
         }
     }
 
-
     public void editStatus(String status, MeansItem meansItem){
 
         String sIntervId = InterventionSingleton.getInstance().getIntervention().id;
@@ -143,7 +134,7 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
 
             @Override
             public void failure(RetrofitError error) {
-
+                FiredroneConstante.getToastError(getContext()).show();
             }
         });
 

@@ -29,7 +29,6 @@ import retrofit.client.Response;
 public class PushReceiver extends BroadcastReceiver  {
     @Override
     public void onReceive(Context context, Intent intent) {
-        String notificationTitle = "Pushy";
         String myMessage = "Test notification";
 
         String cosIam = null;
@@ -45,18 +44,13 @@ public class PushReceiver extends BroadcastReceiver  {
         }
         if (intent.getStringExtra("cosFree") != null) {
             cosFree = intent.getStringExtra("cosFree");
-
         }
         if (intent.getStringExtra("idIntervention") != null) {
             idIntervention = intent.getStringExtra("idIntervention");
         }
 
-
         Intervention inter = InterventionSingleton.getInstance().getIntervention();
         if (inter != null) {
-            System.out.println(idIntervention);
-            System.out.println(inter.getId());
-
             if (idIntervention.equals(inter.getId())) {
                 if (cosFree != null) {
                     notifyApp(context, "Liberation COS : " + cosFree);
@@ -65,38 +59,30 @@ public class PushReceiver extends BroadcastReceiver  {
                 } else {
                     notifyApp(context, "Mise à Jour Intervention");
                 }
-
             }
-
         }
         //notifyApp(context,"Mise à Jour Intervention");//bouchon
-
     }
 
 
 
 
-    public void notifyApp(Context context,String message) {
-
+    public void notifyApp(final Context context,String message) {
 
         NotificationCompat.Builder builder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_menu_send)
                         .setContentTitle(message)
                         //.setDefaults(Notification.DEFAULT_VIBRATE)
-
                         .setAutoCancel(true)
-
                         .setContentText("Synchronisation ...");
         int NOTIFICATION_ID = 12345;
-
 
         Intent targetIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(contentIntent);
         NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nManager.notify(NOTIFICATION_ID, builder.build());
-
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
@@ -119,7 +105,7 @@ public class PushReceiver extends BroadcastReceiver  {
 
                         @Override
                         public void failure(RetrofitError error) {
-
+                            FiredroneConstante.getToastError(context).show();
                         }
                     });
         }

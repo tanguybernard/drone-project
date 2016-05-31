@@ -8,8 +8,6 @@ import java.util.Map;
  */
 public class ColorNameService {
 
-
-
     public static String getColor(String name){
 
         String hexaColor;
@@ -29,10 +27,6 @@ public class ColorNameService {
 
         }
         return hexaColor;
-
-
-
-
     }
 
     /**

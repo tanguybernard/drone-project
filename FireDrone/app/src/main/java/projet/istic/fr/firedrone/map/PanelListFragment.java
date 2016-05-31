@@ -63,8 +63,6 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
             }
         }
 
-
-
         mAdapter.addSectionHeaderItem(MOYEN_AJOUTABLE);
         List<MeansItem> listMoyens = MeansItemService.getListDefaultMeansItem();
         for(MeansItem meansItem : listMoyens){
@@ -75,8 +73,6 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
         for(EnumPointType pointTYpe: EnumPointType.values()){
             mAdapter.addItem(pointTYpe);
         }
-
-
     }
 
     @Override
@@ -91,7 +87,6 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
                 viewSelected = v;
                 getListView().getChildAt(position- l.getFirstVisiblePosition()).setBackgroundColor(getResources().getColor(R.color.lightblue));
             }
-
 
             mapMoyenFragment.setItemSelected(mAdapter.getItem(position), position<mAdapter.getPosition(MOYEN_AJOUTABLE));
         }
@@ -113,8 +108,6 @@ public class PanelListFragment extends ListFragment implements AbsListView.OnScr
            }
        }
     }
-
-
 
     private boolean isHeader(int position) {
         View view = ((RelativeLayout)getListView().getChildAt(position)).getChildAt(0);

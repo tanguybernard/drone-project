@@ -155,16 +155,29 @@ def listener(self, attr_name, value):
     url = server +'/intervention/' + args.idIntervention + '/drone'
     data = '{ "battery": ' + str(vehicle.battery.current) +',"id":"'+ str(args.idDrone) +'","latitude": "' + lat + '","longitude": "' + lon + '"}'
     headers = {"content-type": "application/json"}
-    #requests.patch(url, data=data,headers=headers)
+
+    #on met a jour la position du drone sur le serveur
+    requests.patch(url, data=data,headers=headers)
+
     global nextPoint
-    import urllib
+    import urllib,os
+    #si on est arrive a un nouveau point de la mission
     if vehicle.commands.next != nextPoint:
-        filename = 'tmp/'+str(time.time())
+        filename = 'tmp/'+str(time.time())+'.png'
+
+        #recuperation de la limage de la carte a la position du drone
         urllib.urlretrieve("https://maps.googleapis.com/maps/api/staticmap?center=" +lat +"," + lon + "&zoom=19&size=640x512&maptype=satellite&key=AIzaSyDMiGs7FfMIZANrYC6tBx6D-CFXMt0eY64&style=feature:road.local&scale=1",filename)
+
         files = [('file', filename, open(filename, 'rb').read())]
         data ={"idIntervention":str(args.idIntervention),"latitude":lat ,"longitude":lon}
         url = server + '/photo/intervention/' + args.idIntervention
+
+        #on ajoute limage au serveur
         post_multipart(url,data,files)
+
+        #suppression de limage
+        os.remove(filename)
+
         nextPoint = vehicle.commands.next
 
 while vehicle.mode.name == 'AUTO' and vehicle.commands != None and vehicle.armed:

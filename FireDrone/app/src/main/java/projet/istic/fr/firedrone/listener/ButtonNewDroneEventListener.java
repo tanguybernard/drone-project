@@ -16,8 +16,6 @@ public class ButtonNewDroneEventListener implements View.OnClickListener {
     public ButtonNewDroneEventListener(DroneEventListenerInterface d) {
         this.droneEventListenerInterface = d;
     }
-
-
     @Override
     public void onClick(View v) {
         DroneService.askNewDrone(droneEventListenerInterface, v.getContext());

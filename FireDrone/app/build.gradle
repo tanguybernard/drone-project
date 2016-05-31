@@ -37,7 +37,6 @@ dependencies {
     testCompile 'org.assertj:assertj-core:1.7.1'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
-    compile 'com.o3dr.android:dronekit-android:2.9.0'
     compile 'com.google.android.gms:play-services-fitness:8.4.0'
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
     compile 'com.google.android.gms:play-services-vision:8.4.0'

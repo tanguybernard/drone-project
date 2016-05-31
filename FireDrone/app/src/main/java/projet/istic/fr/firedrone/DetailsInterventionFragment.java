@@ -25,14 +25,6 @@ import retrofit.client.Response;
  */
 public class DetailsInterventionFragment extends Fragment implements Observateur {
 
-
-    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
-
-    RestAdapter restAdapter = new RestAdapter.Builder()
-            .setEndpoint(FiredroneConstante.END_POINT)
-            .setLogLevel(RestAdapter.LogLevel.FULL)// get JSON answer
-            .build();
-
     private static DetailsInterventionFragment INSTANCE;
 
     public static DetailsInterventionFragment getInstance() {
@@ -49,16 +41,12 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
 
         final View view = inflater.inflate(R.layout.intervention_details_fragment, container, false);
 
-
         fillDataDetails(view,intervention);
-
 
         final Button buttonliberer = (Button)view.findViewById(R.id.btnlibererCos);
         buttonliberer.setVisibility(View.GONE);
         final Button buttondevenir = (Button)view.findViewById(R.id.btndevenirCos);
         buttondevenir.setVisibility(View.GONE);
-
-
 
         /**   Fields details of the Actual COS    **/
         final TextView cosLabel = (TextView) view.findViewById(R.id.cosLabel);
@@ -75,9 +63,7 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
                     public void success(Intervention intervention, Response response) {
                         buttondevenir.setVisibility(View.GONE);
                         buttonliberer.setVisibility(View.VISIBLE);
-
                         cosInformation.setText(intervention.getCos().getLastname() + " " + intervention.getCos().getFirstname());
-
                     }
 
                     @Override
@@ -88,7 +74,6 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
             }
         });
 
-
         buttonliberer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,9 +83,7 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
                     public void success(Intervention intervention, Response response) {
                         buttondevenir.setVisibility(View.VISIBLE);
                         buttonliberer.setVisibility(View.GONE);
-
                         cosInformation.setText("");
-
                     }
 
                     @Override
@@ -112,7 +95,6 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
         });
 
         /**  - - - - - - - - - - - - - - - - - - - -    **/
-
 
         if(InterventionSingleton.getInstance().getIntervention().getCos()==null)
         {
@@ -132,7 +114,6 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
                 buttonliberer.setVisibility(View.GONE);
             }
         }
-
         return view;
     }
 
@@ -143,7 +124,6 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
      * @param intervention
      */
     public void fillDataDetails(View view,Intervention intervention){
-
         TextView id = (TextView) view.findViewById(R.id.idText);
         TextView address = (TextView) view.findViewById(R.id.address);
         TextView date = (TextView) view.findViewById(R.id.date);
@@ -154,7 +134,6 @@ public class DetailsInterventionFragment extends Fragment implements Observateur
             date.setText(intervention.getDate());
             sinisterCode.setText(intervention.getSinisterCode());
         }
-
     }
 
     @Override

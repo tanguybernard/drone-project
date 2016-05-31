@@ -28,7 +28,6 @@ public class PagerAdapterMap extends FragmentPagerAdapter {
             case 0: return new PanelMapMoyenFragment();
         }
         return null;
-
     }
 
 
@@ -44,10 +43,5 @@ public class PagerAdapterMap extends FragmentPagerAdapter {
             case 0: return "Moyen";
         }
         return null;
-    }
-
-    public Collection<LatLng> getListPointMissionDrone() {
-       // return mapDroneFragment.getgetListMarkers();
-        return ((MapDroneFragment) this.mapDroneFragment.getChildFragmentManager().getFragments().get(0)).getListMarkers();
     }
 }

@@ -29,8 +29,6 @@ public class DragRemoveOnMapListener implements GoogleMap.OnMarkerDragListener {
         callMethodeDrag = pCallMethodeDrag;
     }
 
-
-
     @Override
     public void onMarkerDragStart(Marker marker) {
         if(callMethodeDrag == null || callMethodeDrag.displayButton(marker))
