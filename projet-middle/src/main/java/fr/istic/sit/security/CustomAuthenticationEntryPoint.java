@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * @author FireDroneTeam
  * Returns a 401 error code (Unauthorized) to the client.
  */
 @Component

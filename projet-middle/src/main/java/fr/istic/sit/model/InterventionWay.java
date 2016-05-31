@@ -5,7 +5,7 @@ import fr.istic.sit.domain.Way;
 import java.util.List;
 
 /**
- * Created by fracma on 5/26/16.
+ * @author FireDroneTeam
  */
 public class InterventionWay {
     private String id;

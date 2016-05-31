@@ -1,6 +1,8 @@
 package fr.istic.sit.security;
 
-
+/**
+ * @author FireDroneTeam
+ */
 
 public enum Authorities {
 
