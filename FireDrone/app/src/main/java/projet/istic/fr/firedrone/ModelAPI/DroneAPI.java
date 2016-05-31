@@ -7,7 +7,6 @@ import projet.istic.fr.firedrone.model.StartMissionDrone;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
-import retrofit.http.Header;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
 import retrofit.http.Path;

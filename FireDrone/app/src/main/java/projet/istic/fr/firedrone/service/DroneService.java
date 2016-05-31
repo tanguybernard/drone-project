@@ -7,16 +7,13 @@ import android.util.Log;
 import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.Interceptor.Interceptor;
 import projet.istic.fr.firedrone.ModelAPI.DroneAPI;
-import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.listener.DroneEventListenerInterface;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MissionDrone;
 import projet.istic.fr.firedrone.model.StartMissionDrone;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
-import projet.istic.fr.firedrone.singleton.UserSingleton;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -27,6 +24,11 @@ public class DroneService {
 
     //**  -   -   -    Static Field   -   -   -   **//
 
+    /**
+     * Create the New Drone
+     * @param droneEventInterface
+     * @param context
+     */
     public static void askNewDrone(final DroneEventListenerInterface droneEventInterface, final Context context) {
         final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
 
@@ -47,12 +49,17 @@ public class DroneService {
             }
         });
 
-        Log.d("error", " - - - - - -- - - - - - > LISTE DE TOUS LES DRONES DE L'INTERVENTION EN COURS");
-        System.out.println(intervention.getDrones());
+        Log.d("**FLAG**", " - - - - - - > LISTE DE TOUS LES DRONES DE L'INTERVENTION EN COURS");
+        Log.d("**FLAG**", intervention.getDrones().toString());
 
     }
 
 
+    /**
+     * Stop the Drone
+     * @param drone
+     * @param context
+     */
     public static void stopDrone(Drone drone, final Context context){
         final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
         String sIntervId = intervention.getId();
@@ -75,7 +82,7 @@ public class DroneService {
 
 
     /**
-     * Launch the Drone into its mission
+     * Start Drone Mission
      * @param drone
      * @param context
      */

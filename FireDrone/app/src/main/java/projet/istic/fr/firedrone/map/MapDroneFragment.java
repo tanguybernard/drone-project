@@ -81,7 +81,7 @@ public class MapDroneFragment extends SupportMapFragment implements
     //marqueur du drône
     transient List<Marker> markerDrones = new ArrayList<>();
     /**   CurrentDrone   **/
-    private Drone currentDrone;
+    transient private Drone currentDrone;
 
     transient Marker markerDrone;
 
@@ -246,12 +246,12 @@ public class MapDroneFragment extends SupportMapFragment implements
         interventionAPI.getAllDrone(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Drone>>() {
             @Override
             public void success(List<Drone> drones, Response response) {
-                for(Marker marker : markerDrones){
+                for (Marker marker : markerDrones) {
                     marker.remove();
                 }
                 markerDrones.clear();
                 for (Drone drone : drones) {
-                    LatLng position = new LatLng(Double.valueOf(drone.getLatitude()),Double.valueOf(drone.getLongitude()));
+                    LatLng position = new LatLng(Double.valueOf(drone.getLatitude()), Double.valueOf(drone.getLongitude()));
                     markerDrones.add(myMap.addMarker(new MarkerOptions()
                                     .position(position)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36)))

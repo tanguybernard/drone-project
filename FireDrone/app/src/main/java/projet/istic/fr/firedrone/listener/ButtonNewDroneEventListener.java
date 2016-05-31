@@ -10,7 +10,7 @@ import projet.istic.fr.firedrone.service.DroneService;
  */
 public class ButtonNewDroneEventListener implements View.OnClickListener {
 
-    private DroneEventListenerInterface droneEventListenerInterface;
+    private transient DroneEventListenerInterface droneEventListenerInterface;
 
     //**     Constructor    **//
     public ButtonNewDroneEventListener(DroneEventListenerInterface d) {

@@ -30,10 +30,8 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
     /**   Reference to the Map Fragment   **/
     private transient MapDroneFragment mapDroneFragment;
 
-
     /**   CurrentDrone   **/
     private transient Drone currentDrone;
-
 
     //**   -   -  -    MODE Flag    -  -   -  **//
     /**  SEGMENT MODE Boolean Flag  **/
@@ -44,7 +42,6 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
     private boolean loopMode = false;
     /**  EXCLUSION MODE Boolean Flag  **/
     private boolean exclusionMode = false;
-
 
     //**   -   -  -    Button    -  -   -  **//
     /**  ASK FOR A DRONE BUTTON  **/
@@ -278,9 +275,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
                 buttonStart.setEnabled(false);
                 buttonStop.setEnabled(false);
 
-
                 DroneService.freeDrone(mapDroneFragment.getCurrentDrone(), v.getContext());;
-
             }
         });
 
@@ -301,6 +296,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
         if(loopMode) {
             return ModeMissionDrone.LOOP.getValue();
         }
+
         return ModeMissionDrone.SEGMENT.getValue();
     }
 
@@ -309,35 +305,6 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
      */
     private void initAskADroneButton(){
         buttonAskADrone.setOnClickListener(new ButtonNewDroneEventListener(this));
-
-        /**
-         buttonAskADrone.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-        Drone currentDrone = DroneService.askNewDrone( , v.getContext());
-
-        if(currentDrone != null) {
-
-        mapDroneFragment.setCurrentDrone(currentDrone);
-
-        buttonFreeDrone.setVisibility(View.VISIBLE);
-        buttonAskADrone.setVisibility(View.INVISIBLE);
-        buttonExclusion.setEnabled(true);
-        buttonZone.setEnabled(true);
-        buttonSegment.setEnabled(true);
-        buttonLoop.setEnabled(true);
-        buttonExclusion.setEnabled(true);
-        buttonStart.setEnabled(true);
-        buttonStop.setEnabled(true);
-
-        mapDroneFragment.initPositionDroneOnMap();
-        }
-        else {
-        Toast.makeText(v.getContext(), "Vous n'avez pas pu avoir de Drone", Toast.LENGTH_LONG).show();
-        }
-        }
-        });
-         */
     }
 
 
