@@ -73,7 +73,6 @@ public class ImageFragment extends Fragment implements Observateur {
 
         view = inflater.inflate(R.layout.image_gallery, container, false);
 
-
         //Création de la liste et affichage dans la gridView
         getListData();
 
@@ -110,14 +109,12 @@ public class ImageFragment extends Fragment implements Observateur {
 
         final List<ImageItem> imageItems = new ArrayList<ImageItem>();
 
-
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
 
         ImageAPI imageAPI = restAdapter.create(ImageAPI.class);
-
 
         String idIntervention= InterventionSingleton.getInstance().getIntervention().getId();
 
@@ -126,7 +123,6 @@ public class ImageFragment extends Fragment implements Observateur {
             @Override
             public void success(List<ImageItem> images, Response response) {
                 imageItems.addAll(images);
-
 
                 GridView gridview = (GridView) view.findViewById(R.id.girdPicture);
                 GridViewAdapter gridAdapter = new GridViewAdapter(getContext(), R.layout.image_grid_item_layout, images);
@@ -146,10 +142,6 @@ public class ImageFragment extends Fragment implements Observateur {
                         startActivity(myIntent);
                     }
                 });
-
-
-
-
                 generateMap(images,view);
             }
 
@@ -160,14 +152,12 @@ public class ImageFragment extends Fragment implements Observateur {
         });
 
          return imageItems;
-
-         }
+    }
 
     //Méthode de génération de la google map à la place du FrameLayout de la liste d'intervention
     public void generateMap(List<ImageItem> imageList, View view){
 
         FrameLayout layoutId = (FrameLayout) view.findViewById(R.id.pictureMapLocation);
-
 
         //Test de la connexion de la tablette au réseau
         if (isOnline()) {
@@ -176,26 +166,16 @@ public class ImageFragment extends Fragment implements Observateur {
             //On envoi la liste des interventions que l'on a récupérée de la base
             imageMapFragment.setListImage(imageList);
 
-            System.out.println(imageList.get(0).getLongitude());
-
-
             if (layoutId.getVisibility() == View.VISIBLE) {
                 // Its visible
                 FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
                 transactionMap.replace(R.id.pictureMapLocation, imageMapFragment).commit();
-            } else {
-                // Either gone or invisible
-
             }
-
-
-
         }
         //Si pas de connexion wifi
         else {
             TextView notConnected = new TextView(getActivity());
             notConnected.setText("Vous n'avez pas de connexion internet, la map ne peut pas s'afficher");
-
             //layoutId.add(notConnected);
         }
     }
@@ -213,7 +193,6 @@ public class ImageFragment extends Fragment implements Observateur {
      */
     public void updateListImage(LatLng markerPosition){
 
-
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -221,13 +200,11 @@ public class ImageFragment extends Fragment implements Observateur {
 
         ImageAPI imageAPI = restAdapter.create(ImageAPI.class);
 
-
         String idIntervention= InterventionSingleton.getInstance().getIntervention().getId();
 
         String latitude = String.valueOf(markerPosition.latitude);
         String longitude = String.valueOf(markerPosition.longitude);
 
-        System.err.println(latitude);
         imageAPI.getImagesByLatLong(
                 idIntervention,
                 latitude,
@@ -236,7 +213,6 @@ public class ImageFragment extends Fragment implements Observateur {
 
             @Override
             public void success(List<ImageItem> images, Response response) {
-
 
                 GridView gridview = (GridView) view.findViewById(R.id.girdPicture);
                 GridViewAdapter gridAdapter = new GridViewAdapter(getContext(), R.layout.image_grid_item_layout, images);
@@ -256,10 +232,6 @@ public class ImageFragment extends Fragment implements Observateur {
                         startActivity(myIntent);
                     }
                 });
-
-
-
-
                 //generateMap(images,view);
             }
 
@@ -268,10 +240,6 @@ public class ImageFragment extends Fragment implements Observateur {
                 FiredroneConstante.getToastError(getContext()).show();
             }
         });
-
-
-
-
     }
 
 

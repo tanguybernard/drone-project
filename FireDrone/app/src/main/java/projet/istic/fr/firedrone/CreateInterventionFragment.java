@@ -53,9 +53,6 @@ import retrofit.client.Response;
 
 public class CreateInterventionFragment extends Fragment {
 
-    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
-    public static final String GEO_API="http://maps.googleapis.com/maps/api/geocode/xml?address=";
-
     private static InterventionsListFragment INSTANCE;
 
     public static InterventionsListFragment getInstance() {
@@ -69,8 +66,6 @@ public class CreateInterventionFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
 
-
-
         final View view = inflater.inflate(R.layout.intervention_creation,container,false);
 
         final Button btnSaveIntervention = (Button) view.findViewById(R.id.btnSaveIntervention);
@@ -82,7 +77,6 @@ public class CreateInterventionFragment extends Fragment {
             }
         });
 
-
         final Spinner codeSinistreList = (Spinner) view.findViewById(R.id.codeSinistreList);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),
@@ -90,26 +84,19 @@ public class CreateInterventionFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         codeSinistreList.setAdapter(adapter);
 
-
-
         /**
          * Select a code sinister => get default ways
          */
         codeSinistreList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-
-
                 Spinner spinner = (Spinner)view.findViewById(R.id.codeSinistreList);
                 String text = spinner.getSelectedItem().toString();
-
                 getListData(view,text);
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                System.out.println("nothing selected");
             }
 
         });
@@ -144,9 +131,6 @@ public class CreateInterventionFragment extends Fragment {
 
             Spinner spinner1=(Spinner)listView.getChildAt(i).findViewById(R.id.colorMeanSpinner);
             String text = spinner1.getSelectedItem().toString();
-            System.out.println("JOJO");
-            System.out.println(text);
-
             int quantity = Integer.parseInt(quantityStr.getText().toString());
 
             for(int q=0;q<quantity;q++){
@@ -240,8 +224,6 @@ public class CreateInterventionFragment extends Fragment {
 
         final ArrayList<MoyenInterventionItem> results = new ArrayList<MoyenInterventionItem>();
 
-
-
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -249,9 +231,6 @@ public class CreateInterventionFragment extends Fragment {
                 .build();
 
         DefaultWaysSinisterApi sinisterApi = restAdapter.create(DefaultWaysSinisterApi.class);
-
-
-
 
         sinisterApi.getSinisters(new Callback<List<DefaultSinister>>() {
 
@@ -262,15 +241,12 @@ public class CreateInterventionFragment extends Fragment {
                 for (DefaultSinister sinister :sinisters
                      ) {
                     if (sinisterCode.equals(sinister.getCode())){
-
-
                         String[] moyens = getResources().getStringArray(R.array.moyens);
                         for (String a:moyens
                              ) {
                             boolean find = false;
                             for (DefaultSinisterGroupWays sinisterGroup: sinister.getGroupWays()) {
 
-                                System.out.println(a);
                                 if (a.equals(sinisterGroup.getAcronym())) {
                                     find=true;
                                     newsData = new MoyenInterventionItem();
@@ -280,9 +256,6 @@ public class CreateInterventionFragment extends Fragment {
                                     newsData.setColor(sinisterGroup.getColor());
                                     results.add(newsData);
                                 }
-
-
-
                             }
                             if(!find){
                                 newsData = new MoyenInterventionItem();
@@ -291,19 +264,12 @@ public class CreateInterventionFragment extends Fragment {
                                 newsData.setQuantity(0);
                                 newsData.setColor("#0FFF");
                                 results.add(newsData);
-
                             }
-
-
                         }
-
-
                     }
-
                 }
 
                 final ListView lv1 = (ListView) view.findViewById(R.id.moyenListView);
-
 
                 MoyenListAdapter moyenListAdapter = new MoyenListAdapter(getContext(), results);
 
@@ -316,8 +282,6 @@ public class CreateInterventionFragment extends Fragment {
                         MoyenInterventionItem newsData = (MoyenInterventionItem) o;
                     }
                 });
-
-
             }
 
             @Override
@@ -326,10 +290,7 @@ public class CreateInterventionFragment extends Fragment {
             }
         });
 
-
-
         // Add some more dummy data for testing
-
         return results;
     }
 
@@ -343,7 +304,6 @@ public class CreateInterventionFragment extends Fragment {
 
         Geocoder coder = new Geocoder(getContext());
         List<Address> address;
-        Barcode.GeoPoint p1 = null;
 
         try {
             address = coder.getFromLocationName(strAddress,5);
@@ -369,9 +329,5 @@ public class CreateInterventionFragment extends Fragment {
 
         return null;
     }
-
-
-
-
 }
 

@@ -75,7 +75,6 @@ public class ImageMapFragment extends SupportMapFragment implements
                 //Si on a bien une latitude et une longitude, on met le marqueur
                 if ((listImage.get(i).getLatitude() != null) && (listImage.get(i).getLongitude() != null)) {
 
-
                     //Cast de la latitude et de la longitude
                     try {
                         Double latitude = Double.parseDouble(listImage.get(i).getLatitude());
@@ -90,11 +89,8 @@ public class ImageMapFragment extends SupportMapFragment implements
 
                         String snippet = listImage.get(i).getLatitude()+"; "+listImage.get(i).getLongitude();
 
-
-
                         //Définition du marqueur
                         MarkerOptions marker = new MarkerOptions().position(coordonnees).title(snippet);
-
 
                         listMarkers.add(marker);
                         //Ajout du marqueur
@@ -107,7 +103,7 @@ public class ImageMapFragment extends SupportMapFragment implements
                         verifInter = true;
 
                     } catch (NumberFormatException e) {
-                        System.out.println("Coordonnées fausses");
+
                     }
                 }
             }
@@ -138,7 +134,6 @@ public class ImageMapFragment extends SupportMapFragment implements
                 });
             }
         }
-
 
         myMap.setOnMarkerClickListener(this);
     }

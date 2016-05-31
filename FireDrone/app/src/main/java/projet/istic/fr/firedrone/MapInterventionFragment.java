@@ -86,8 +86,6 @@ public class MapInterventionFragment extends SupportMapFragment implements
                             //On récupère la référence pour l'afficher dans l'infobulle du marqueur
                             String idInter = listInter.get(i).getId();
                             String addressInter = listInter.get(i).getAddress();
-                            String codeSinistreInter = listInter.get(i).getSinisterCode();
-                            String dateInter = listInter.get(i).getDate();
 
                             String snippet = "Adresse : " + addressInter;
 
@@ -107,7 +105,7 @@ public class MapInterventionFragment extends SupportMapFragment implements
                             verifInter = true;
 
                         } catch (NumberFormatException e) {
-                            System.out.println("Coordonnées fausses");
+                            FiredroneConstante.getToastError(getContext(),"Adresse invalide").show();
                         }
                     }
                 }
@@ -138,18 +136,12 @@ public class MapInterventionFragment extends SupportMapFragment implements
                     });
                 }
             }
-
-
             myMap.setOnMarkerClickListener(this);
         }
 
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-    }
-
-    public List<Intervention> getListInter() {
-        return listInter;
     }
 
     public void setListInter(List<Intervention> listInter) {

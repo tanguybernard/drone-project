@@ -13,33 +13,21 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.o3dr.android.client.ControlTower;
-import com.o3dr.android.client.Drone;
-import com.o3dr.android.client.interfaces.TowerListener;
 
 import java.net.URL;
 import java.util.Collection;
 
 import me.pushy.sdk.Pushy;
-import projet.istic.fr.firedrone.listener.DroneListenerEvent;
-import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
-import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
 import projet.istic.fr.firedrone.synchro.MyObservable;
 import projet.istic.fr.firedrone.synchro.Observateur;
 
 public class MainActivity extends AppCompatActivity
-        implements TowerListener,VisibilityMenu{
-
-    //tower pour se connecter au drone et recevoir les évènements du drone
-    private ControlTower controlTower;
+        implements VisibilityMenu{
 
     private DrawerLayout myDrawer;
-
-    //listener qui va écouter tout les évènements envoyés par le drone
-    private DroneListenerEventNEW droneListenerEvent;
 
     private TabMapFragment fragmentDrawPath;
     private InterventionsListFragment fragmentFiche;
@@ -47,30 +35,7 @@ public class MainActivity extends AppCompatActivity
     private MoyenRequestFragment moyenReqFragment;
     private MoyenFragment fragmentMoyen;
     private ImageFragment imageFragment;
-
-    //fragment pour contrôler le drône
-    private PanelControleDroneFragment droneControlFragment;
-
     private   NavigationView navigationView;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        this.controlTower.connect(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if ( ControleFragmentBoucle.getInstance().getDrone().isConnected()) {
-            ControleFragmentBoucle.getInstance().getDrone().disconnect();
-        }
-        //on supprime le drône de la tower
-        controlTower.unregisterDrone(ControleFragmentBoucle.getInstance().getDrone());
-        //on se déconnecte de la tower
-        controlTower.disconnect();
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,36 +43,22 @@ public class MainActivity extends AppCompatActivity
 
         Pushy.listen(this);
 
-
         setContentView(R.layout.activity_main);
 
-
         new registerForPushNotificationsAsync().execute();
-
 
         MeansItemService.createListDefaultWay(getApplicationContext());
 
         fragmentFiche = InterventionsListFragment.getInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentFiche, "InterventionsListFragment").addToBackStack("detailFragment").commit();
 
-
-
-        //instanciation du fragment de contrôle du drône
-        droneControlFragment = PanelControleDroneFragment.getInstance();
-        //on crée le drône içi
-        ControleFragmentBoucle.getInstance().setDrone(new Drone(getApplicationContext()));;
-        //création du listener qui écoute le drône
-        droneListenerEvent = new DroneListenerEventNEW( ControleFragmentBoucle.getInstance());
         //fragmentMoyen = MoyenFragment.getInstance();
-
-        //instanciation du contrôle tower
-        this.controlTower = new ControlTower(getApplicationContext());
 
         fragmentDrawPath = TabMapFragment.getInstance();
 
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-       navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
         //dont show navigation until choice an intervention
@@ -115,12 +66,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().setGroupVisible(R.id.group_2, false);
         navigationView.getMenu().setGroupVisible(R.id.group_3, false);
 
-
         if(!UserSingleton.getInstance().getUser().getRole().equals(FiredroneConstante.ROLE_CODIS)){
             navigationView.getMenu().findItem(R.id.nav_moyen_req).setEnabled(false);
-
         }
-
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -132,13 +80,9 @@ public class MainActivity extends AppCompatActivity
                         return true;
                     }
                 });
-
-
     }
 
     public void selectDrawerItem(MenuItem item) {
-        //booléen indiquant si on va dans le panel du contrôle du drône
-        boolean usingControlDrone = false;
         Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_liste:
@@ -156,13 +100,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_parcours:
                 fragmentDrawPath = TabMapFragment.getInstance();
-
                 fragment = fragmentDrawPath;
-                break;
-            case R.id.nav_controle:
-                droneControlFragment = PanelControleDroneFragment.getInstance();
-                usingControlDrone = true;
-                fragment= droneControlFragment;
                 break;
             case R.id.nav_moyen_req:
                 moyenReqFragment = MoyenRequestFragment.getInstance();
@@ -183,7 +121,6 @@ public class MainActivity extends AppCompatActivity
             MyObservable.getInstance().setFragment((Observateur) fragment);
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("detailFragment").commit();
         }
-        droneListenerEvent.setUsingControlPanel(usingControlDrone);
         myDrawer.closeDrawers();
     }
 
@@ -200,48 +137,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        droneListenerEvent.setUsingControlPanel(false);
-    }
-
-    public void setDroneMoveListener(DroneListenerEventNEW.DroneActionMapListener droneMoveListener){
-        if(droneListenerEvent != null) {
-            droneListenerEvent.setDroneMoveListener(droneMoveListener);
-        }
-    }
-
-
-    public ControlTower getControlTower(){
-        return controlTower;
-    }
-
-    @Override
-    public void onTowerConnected() {
-        //quand la tower est connecté, on enregistre le drône
-        controlTower.registerDrone(ControleFragmentBoucle.getInstance().getDrone(), ControleFragmentBoucle.getInstance().getHandler());
-    }
-
-    public Collection<LatLng> getArrayPointsForMission(){
-        if(fragmentDrawPath == null){
-            return null;
-        }
-        return droneControlFragment.getMapDrone().getListMarkers();
-    }
-
-    @Override
-    public void onTowerDisconnected() {
-
-    }
-
-    @Override
     public void showMenu() {
         navigationView.setVisibility(View.VISIBLE);
     }
 
-
     //--------------------------------------------PUSHY----------------------------------------------------
-
 
     private class registerForPushNotificationsAsync extends AsyncTask<Void, Void, Exception>
     {

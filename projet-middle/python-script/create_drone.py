@@ -5,7 +5,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Print out vehicle state information. Connects to SITL on local PC by default.')
 parser.add_argument('--instance',default=0,help='Instance number',required=True)
 parser.add_argument('--longitude',default=0,help='Longitude')
-parser.add_argument('--lattitude',default=0,help='Latitude')
+parser.add_argument('--latitude',default=0,help='Latitude')
 
 
 args = parser.parse_args()

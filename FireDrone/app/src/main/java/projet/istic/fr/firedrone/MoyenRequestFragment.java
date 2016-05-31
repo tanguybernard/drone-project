@@ -52,7 +52,6 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
         return INSTANCE;
     }
 
-    List<MeansItem> listMoyen;
     ListView lv1 = null;
     ArrayAdapter<MeansItem> listAdapter;
 
@@ -63,7 +62,6 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
         p.ajouterObservateur(this);
 
         view = inflater.inflate(R.layout.moyen_list, container, false);
-
 
         getListData();
 
@@ -86,8 +84,6 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
         final HashMap hashIdIntervention = new HashMap();
 
         // Put elements to the map
-
-
         interventionAPI.getAllWayRequested("D", new Callback<List<Intervention>>() {
 
             @Override
@@ -95,21 +91,15 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
                 for (Intervention a:
                         interventions) {
                     results.addAll(a.getWays());
-                    for (MeansItem m: a.getWays()
-                         ) {
+                    for (MeansItem m: a.getWays()) {
 
                         hashAddress.put(m.getMsMeanId(), a.getAddress());
                         hashIdIntervention.put(m.getMsMeanId(), a.getId());
                     }
-
-
                 }
 
-
                 lv1 = (ListView) view.findViewById(R.id.moyenListView2);
-
                 listAdapter = new MoyenReqListAdapter(getContext(), results, hashIdIntervention, hashAddress);
-
                 lv1.setAdapter(listAdapter);
 
             }
@@ -120,16 +110,11 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
             }
         });
 
-
         return results;
     }
 
-
-
-
     @Override
     public void actualiser(Observable o) {
-
 
         if(o instanceof MyObservable){
 
@@ -138,9 +123,6 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.detach(this).attach(this).commit();
             }
-
         }
-
-
     }
 }

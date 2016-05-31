@@ -37,8 +37,6 @@ public class GridViewAdapter extends ArrayAdapter {
     private List<ImageItem> data = new ArrayList();
     private ImageItem currentItem;
 
-
-
     public GridViewAdapter(Context context, int layoutResourceId, List<ImageItem> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
@@ -66,15 +64,11 @@ public class GridViewAdapter extends ArrayAdapter {
         currentItem = (ImageItem) data.get(position);
         holder.imageTitle.setText(currentItem.getDate());
 
-
         //Request image
         new ImageDownloaderService(holder.image).execute(currentItem.getImageUrl());
 
         return row;
     }
-
-
-
 
     static class ViewHolder {
         TextView imageTitle;

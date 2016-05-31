@@ -41,9 +41,6 @@ public class ImageDownloaderService extends AsyncTask<String, Integer, Bitmap>{
             InputStream is = httpCon.getInputStream();
             return BitmapFactory.decodeStream(is);
 
-
-
-
         }catch(Exception e){
             Log.e("Image","Failed to load image",e);
         }

@@ -18,29 +18,15 @@ import projet.istic.fr.firedrone.model.MeansItemStatus;
  */
 public class MeanGRAPHICALGen implements BITMAPGen {
 
-
     //    Static Attributes
-
     private static final int PADDING = 42;
 
-
-
     //    Attributes
-
     private Rect border;
-
     private String name;
-
     private String type;
-
     private String fullNAME;
-
     private String color;
-
-
-    //    Default Constructor
-    public MeanGRAPHICALGen() {
-    }
 
     //    Parameter Attributes
     public MeanGRAPHICALGen(String type, String name, String colorHexa) {
@@ -96,16 +82,12 @@ public class MeanGRAPHICALGen implements BITMAPGen {
         dashPaint.setStrokeWidth(8);
 
         if(mean.getMsMeanHEngaged() == null || mean.getStatus() == MeansItemStatus.STATUS_ENTRANSIT) {
-
             dashPaint.setPathEffect(new DashPathEffect(new float[]{10, 10}, 0));
         }
 
         canvas.drawRect(myBorder, dashPaint);
-
         canvas.save();
 
         return bitmap;
     }
-
-
 }

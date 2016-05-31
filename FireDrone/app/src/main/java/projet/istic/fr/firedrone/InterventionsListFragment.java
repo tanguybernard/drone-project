@@ -89,16 +89,10 @@ public class InterventionsListFragment extends Fragment implements Observateur {
                 navigationView.getMenu().setGroupVisible(R.id.group_1, true);
                 navigationView.getMenu().setGroupVisible(R.id.group_2, true);
                 navigationView.getMenu().setGroupVisible(R.id.group_3, true);
-
-
-
             }
         });
 
-
-
         final Button btnAddIntervention = (Button) view.findViewById(R.id.btnAddIntervention);
-
 
         if(!UserSingleton.getInstance().getUser().getRole().equals(FiredroneConstante.ROLE_CODIS)){
             btnAddIntervention.setVisibility(view.INVISIBLE);
@@ -111,12 +105,8 @@ public class InterventionsListFragment extends Fragment implements Observateur {
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.content_frame, createInterventionFragment).commit();
-
             }
         });
-
-
-
 
         return view;
     }
@@ -172,13 +162,7 @@ public class InterventionsListFragment extends Fragment implements Observateur {
                 // Its visible
                 FragmentTransaction transactionMap = getFragmentManager().beginTransaction();
                 transactionMap.replace(R.id.interventionMapAddress, mapInterventionFragment).commit();
-            } else {
-                // Either gone or invisible
-
             }
-
-
-
         }
         //Si pas de connexion wifi
         else {
@@ -216,13 +200,9 @@ public class InterventionsListFragment extends Fragment implements Observateur {
 
     @Override
     public void actualiser(Observable o) {
-
-        System.out.println("TEST synchro");
         if(o instanceof MyObservable){
 
-
             Fragment frag = getFragmentManager().findFragmentById(R.id.content_frame);
-
 
             InterventionsListFragment myFragment = (InterventionsListFragment)getFragmentManager().findFragmentByTag("InterventionsListFragment");
             if (myFragment != null && myFragment.isVisible()) {
@@ -231,9 +211,6 @@ public class InterventionsListFragment extends Fragment implements Observateur {
                 tr.replace(R.id.content_frame, this);
                 tr.commit();
             }
-
         }
-
-
     }
 }

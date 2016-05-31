@@ -25,7 +25,6 @@ import projet.istic.fr.firedrone.synchro.Observateur;
  */
 public class TabMapFragment extends Fragment implements Observateur {
 
-
     //Instance
     private static TabMapFragment INSTANCE;
     private PagerAdapterMap pagerAdapter;
@@ -37,7 +36,6 @@ public class TabMapFragment extends Fragment implements Observateur {
         }
         return INSTANCE;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,29 +54,13 @@ public class TabMapFragment extends Fragment implements Observateur {
         return view;
     }
 
-    public Collection<LatLng> getListPointForMissionDrone(){
-        return pagerAdapter.getListPointMissionDrone();
-    }
-
-
     @Override
     public void actualiser(Observable o) {
 
-        System.out.println("TEST synchro");
         if(o instanceof MyObservable){
-
-
                 FragmentTransaction tr = getFragmentManager().beginTransaction();
                 tr.replace(R.id.content_frame, this);
                 tr.commit();
-
-
-
-
         }
-
-
     }
-
-
 }

@@ -31,13 +31,11 @@ public class SpinnerColorAdapter extends BaseAdapter
         names=new ArrayList<String>();
 
         int retrieve []=context.getResources().getIntArray(R.array.androidcolors);
-        for(int re:retrieve)
-        {
+        for(int re:retrieve) {
             colors.add(re);
         }
         String retrieve2 []=context.getResources().getStringArray(R.array.androidDescription);
-        for(String re:retrieve2)
-        {
+        for(String re:retrieve2) {
             names.add(re);
         }
     }
@@ -58,8 +56,7 @@ public class SpinnerColorAdapter extends BaseAdapter
         return arg0;
     }
     @Override
-    public View getView(int pos, View view, ViewGroup parent)
-    {
+    public View getView(int pos, View view, ViewGroup parent) {
 
         LayoutInflater inflater=LayoutInflater.from(context);
         view=inflater.inflate(android.R.layout.simple_spinner_dropdown_item, null);

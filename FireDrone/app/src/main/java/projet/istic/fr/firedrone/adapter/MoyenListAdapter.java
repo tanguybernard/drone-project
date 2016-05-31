@@ -63,7 +63,6 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
                 }
             }
 
-
         subQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,10 +77,8 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
             }
         });
 
-
         holder.myName.setText(item.getName());
         holder.quantity.setText(String.valueOf(item.getQuantity()), TextView.BufferType.EDITABLE);
-
 
         return convertView;
     }

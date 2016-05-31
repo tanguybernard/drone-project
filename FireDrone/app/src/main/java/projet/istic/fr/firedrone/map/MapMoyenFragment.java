@@ -104,8 +104,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -147,7 +145,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         button.setOnClickListener(this);
         return rootView;
     }
-
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -303,7 +300,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
                         @Override
                         public void failure(RetrofitError error) {
-
+                            FiredroneConstante.getToastError(getContext()).show();
                         }
                     });
                 }
@@ -454,7 +451,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
                 meansItemCloned.setStatus("D");
             }
 
-
             //on supprime l'item du panel après l'avoir ajouté
             if(itemToRemove){
                panelListFragment.removeItem(moyenItemSelected);
@@ -510,7 +506,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
         }
 
     }
-
 
     /**
      * OnClick Listener for the BUTTON
@@ -669,7 +664,6 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
 
                 createMeansOnMap();
                 createRessourceOnMap();
-
             }
         }
     }

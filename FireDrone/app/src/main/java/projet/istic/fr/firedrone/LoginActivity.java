@@ -32,8 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     //le token qu'il faut rajouter à toutes les requetes
     public String token = "";
 
-
-
     //*   Components   *//
     private transient EditText loginField;
     private transient EditText passField;
@@ -50,8 +48,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
 
         /** Init the View Text Fields **/
         loginField = (EditText) findViewById(R.id.loginField);
@@ -77,9 +73,6 @@ public class LoginActivity extends AppCompatActivity {
         final String login = loginField.getText().toString();
         String password = passField.getText().toString();
 
-        System.out.println(login);
-        System.out.println(password);
-
         final User user;
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
@@ -95,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
             public void success(User user, Response response) {
 
                 String bodyString = new String(((TypedByteArray) response.getBody()).getBytes());
-
 
                 JSONObject reader = null;
                 try {
@@ -120,8 +112,6 @@ public class LoginActivity extends AppCompatActivity {
                 //envoi de la requete avec le token comme header pour recuperer les informations de l'utilisateur
 
                 Interceptor.getInstance().setToken(token);
-                System.out.println("token=================" + Interceptor.getInstance().getToken());
-
 
                 final UserApi userApi = Interceptor.getInstance().getRestAdapter().create(UserApi.class);
 
@@ -141,32 +131,21 @@ public class LoginActivity extends AppCompatActivity {
                     public void failure(RetrofitError error) {
                         if(new InternetConnectionService().isOnline(getApplicationContext())){
                             FiredroneConstante.getErrorLogin(getApplicationContext()).show();
-
                         }
                         else{
                             FiredroneConstante.getToastError(getApplicationContext()).show();
-
                         }
-
                     }
                 });
-
-                System.out.println("RESULT");
-                System.out.println(bodyString);
-                System.out.println(sys);
-                System.out.println(token);
-
             }
 
             @Override
             public void failure(RetrofitError error) {
                 if(new InternetConnectionService().isOnline(getApplicationContext())){
                     FiredroneConstante.getErrorLogin(getApplicationContext()).show();
-
                 }
                 else{
                     FiredroneConstante.getToastError(getApplicationContext()).show();
-
                 }
             }
         });

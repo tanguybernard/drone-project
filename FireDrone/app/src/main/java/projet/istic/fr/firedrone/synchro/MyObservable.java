@@ -8,9 +8,7 @@ import java.util.ArrayList;
  */
 public class MyObservable implements Observable {
 
-
     private static MyObservable INSTANCE = null;
-    public  String toto;
 
     public static MyObservable getInstance() {
         if (INSTANCE == null)
@@ -18,28 +16,13 @@ public class MyObservable implements Observable {
             INSTANCE = new MyObservable();
         }
         return INSTANCE;
-
     }
-
-    public void lol(String test){
-        System.out.println(test);
-        toto = test;
-    }
-
-
-
-
-
-
-
-
 
     private ArrayList tabObservateur=new ArrayList();// Tableau d'observateurs.
+
     @Override
     public void ajouterObservateur(Observateur o) {
-
         tabObservateur.add(o);
-
     }
 
     @Override
@@ -51,7 +34,6 @@ public class MyObservable implements Observable {
 
     public void setFragment(Observateur fragment){
         this.fragment = fragment;
-
     }
 
     public Observateur getFragment(){
@@ -62,8 +44,6 @@ public class MyObservable implements Observable {
 
     @Override
     public void notifierObservateurs() {
-
-
         fragment.actualiser(this);
 
         /*for(int i=0;i<tabObservateur.size();i++)

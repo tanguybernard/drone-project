@@ -10,9 +10,6 @@ import retrofit.RestAdapter;
  */
 public class Interceptor {
 
-    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
-
-
     private String token;
 
     /** un interceptor de requete qui ajoute à toutes les requetes vers END_POINT un header (token) */
@@ -46,16 +43,8 @@ public class Interceptor {
         return INSTANCE;
     }
 
-    public RequestInterceptor getRequestInterceptor() {
-        return requestInterceptor;
-    }
-
     public RestAdapter getRestAdapter() {
         return restAdapter;
-    }
-
-    public String getToken() {
-        return token;
     }
 
     public void setToken(String token) {
