@@ -6,11 +6,11 @@
         >
         <item
             android:id="@+id/nav_liste"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/places_ic_search"
             android:title="@string/liste" />
         <item
             android:id="@+id/nav_details"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_manage"
             android:checked="true"
             android:title="@string/details" />
         <item
@@ -26,36 +26,32 @@
 
     <group android:title="Centre de commandement"
         android:id="@+id/group_2">
-        <menu>
 
             <item
                 android:id="@+id/nav_parcours"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/parcours" />
-        </menu>
     </group>
 
     <group android:title="Drône"
         android:id="@+id/group_3">
-        <menu>
-            <item
-                android:id="@+id/nav_controle"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/controle" />
+
+
             <item
                 android:id="@+id/nav_image"
-                android:icon="@drawable/ic_menu_gallery"
+                android:icon="@drawable/ic_menu_camera"
                 android:title="@string/image" />
 
-        </menu>
+
     </group>
     <group android:title="Utilisateur"
         android:id="@+id/group_4">
-        <menu>
+
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/places_ic_clear"
+
             android:title="Deconnexion" />
-        </menu>
+
     </group>
 </menu>

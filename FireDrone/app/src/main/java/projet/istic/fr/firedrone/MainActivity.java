@@ -156,13 +156,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_parcours:
                 fragmentDrawPath = TabMapFragment.getInstance();
-
                 fragment = fragmentDrawPath;
-                break;
-            case R.id.nav_controle:
-                droneControlFragment = PanelControleDroneFragment.getInstance();
-                usingControlDrone = true;
-                fragment= droneControlFragment;
                 break;
             case R.id.nav_moyen_req:
                 moyenReqFragment = MoyenRequestFragment.getInstance();
