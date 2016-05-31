@@ -51,5 +51,18 @@
 
         </menu>
     </group>
+    <group android:title="Drône"
+        android:id="@+id/group_4">
+
+    <menu>
+
+    <item android:id="@+id/Logout"
+
+        android:title="Deconnexion" />
+    </menu>
+    </group>
+
+
+
 
 </menu>
