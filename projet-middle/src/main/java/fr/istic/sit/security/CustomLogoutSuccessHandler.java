@@ -15,6 +15,7 @@ import java.io.IOException;
 
 
 /**
+ * @author FireDroneTeam
  * Spring Security logout handler
  */
 @Component

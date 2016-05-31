@@ -13,12 +13,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import projet.istic.fr.firedrone.model.ImageItem;
-import projet.istic.fr.firedrone.model.Intervention;
 
 /**
  * Created by tbernard on 25/05/16.
@@ -31,7 +28,7 @@ public class ImageMapFragment extends SupportMapFragment implements
     private ImageFragment imageFragment = ImageFragment.getInstance();
 
     //ensemble des marqueurs, clé : identifiant du marqueur, valeur : marqueur
-    private Map<String, Marker> listMarkers = null;
+    private ArrayList<MarkerOptions> listMarkers = null;
 
     private List<ImageItem> listImage = new ArrayList<ImageItem>();
 
@@ -39,7 +36,7 @@ public class ImageMapFragment extends SupportMapFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            listMarkers = new LinkedHashMap<String, Marker>();
+            listMarkers = new ArrayList<>();
             getMapAsync(this);
         }
     }
@@ -60,7 +57,6 @@ public class ImageMapFragment extends SupportMapFragment implements
 
         //Si la liste est vide, on met les coordonnées de l'Ille-et-Vilaine
         if(listImage.isEmpty()) {
-            System.err.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 
             final LatLng coordIlle = new LatLng(48.2292016, -1.5300694999999678);
             //Zoom sur la zone des marqueurs
@@ -73,14 +69,12 @@ public class ImageMapFragment extends SupportMapFragment implements
 
         }
         else {
-            System.err.println("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
 
             //Parcours de la liste des interventions
             for (int i = 0; i < listImage.size(); i++) {
                 //Si on a bien une latitude et une longitude, on met le marqueur
                 if ((listImage.get(i).getLatitude() != null) && (listImage.get(i).getLongitude() != null)) {
 
-                    System.err.println("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS2");
 
                     //Cast de la latitude et de la longitude
                     try {
@@ -99,8 +93,10 @@ public class ImageMapFragment extends SupportMapFragment implements
 
 
                         //Définition du marqueur
-                        MarkerOptions marker = new MarkerOptions().position(coordonnees).title(idImage).snippet(snippet);
+                        MarkerOptions marker = new MarkerOptions().position(coordonnees).title(snippet);
 
+
+                        listMarkers.add(marker);
                         //Ajout du marqueur
                         myMap.addMarker(marker);
 

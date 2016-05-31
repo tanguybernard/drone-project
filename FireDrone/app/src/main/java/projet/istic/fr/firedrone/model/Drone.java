@@ -13,16 +13,18 @@ public class Drone {
     private String id = "";
     @SerializedName("idUser")
     private String idUser = "";
-    @SerializedName("idIntervention")
-    private String idIntervention = "";
     @SerializedName("longitude")
     private String longitude;
     @SerializedName("latitude")
     private String latitude;
-    @SerializedName("addressip")
-    private String addressip;
+    @SerializedName("ip")
+    private String ip;
     @SerializedName("port")
     private String port;
+    @SerializedName("battery")
+    private int battery;
+    @SerializedName("name")
+    private String name;
 
 
 
@@ -31,23 +33,25 @@ public class Drone {
     public Drone() {
         this.id = "";
         this.idUser = "";
-        this.idIntervention = "";
-        this.longitude = "";
         this.latitude = "";
-        this.addressip = "";
+        this.longitude = "";
+        this.ip = "";
         this.port = "";
+        this.battery = 0;
+        this.name = "";
+
     }
 
-    public Drone(String id, String idUser, String idIntervention, String longitude, String latitude, String addressip, String port) {
+    public Drone(String id, String idUser, String longitude, String latitude, String ip, String port, int battery, String name) {
         this.id = id;
         this.idUser = idUser;
-        this.idIntervention = idIntervention;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.addressip = addressip;
+        this.ip = ip;
         this.port = port;
+        this.battery = battery;
+        this.name = name;
     }
-
 
     //**  -  -  -   Getter & Setters   -  -  -  **//
 
@@ -67,14 +71,6 @@ public class Drone {
         this.idUser = idUser;
     }
 
-    public String getIdIntervention() {
-        return idIntervention;
-    }
-
-    public void setIdIntervention(String idIntervention) {
-        this.idIntervention = idIntervention;
-    }
-
     public String getLongitude() {
         return longitude;
     }
@@ -91,12 +87,12 @@ public class Drone {
         this.latitude = latitude;
     }
 
-    public String getAddressip() {
-        return addressip;
+    public String getIp() {
+        return ip;
     }
 
-    public void setAddressip(String addressip) {
-        this.addressip = addressip;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public String getPort() {
@@ -107,6 +103,21 @@ public class Drone {
         this.port = port;
     }
 
+    public int getBattery() {
+        return battery;
+    }
+
+    public void setBattery(int battery) {
+        this.battery = battery;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     //**  -  -  -   To String   -  -  -  **//
 
@@ -115,15 +126,18 @@ public class Drone {
         return "Drone{" +
                 "id='" + id + '\'' +
                 ", idUser='" + idUser + '\'' +
-                ", idIntervention='" + idIntervention + '\'' +
                 ", longitude='" + longitude + '\'' +
                 ", latitude='" + latitude + '\'' +
-                ", addressip='" + addressip + '\'' +
+                ", ip='" + ip + '\'' +
                 ", port='" + port + '\'' +
+                ", battery=" + battery +
+                ", name='" + name + '\'' +
                 '}';
     }
 
+
     //**  -  -  -   Equals   -  -  -  **//
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -131,32 +145,33 @@ public class Drone {
 
         Drone drone = (Drone) o;
 
-        if (id != null ? !id.equals(drone.id) : drone.id != null) return false;
-        if (idUser != null ? !idUser.equals(drone.idUser) : drone.idUser != null) return false;
-        if (idIntervention != null ? !idIntervention.equals(drone.idIntervention) : drone.idIntervention != null)
-            return false;
-        if (longitude != null ? !longitude.equals(drone.longitude) : drone.longitude != null)
-            return false;
-        if (latitude != null ? !latitude.equals(drone.latitude) : drone.latitude != null)
-            return false;
-        if (addressip != null ? !addressip.equals(drone.addressip) : drone.addressip != null)
-            return false;
-        return !(port != null ? !port.equals(drone.port) : drone.port != null);
+        if (battery != drone.battery) return false;
+        if (!id.equals(drone.id)) return false;
+        if (!idUser.equals(drone.idUser)) return false;
+        if (!longitude.equals(drone.longitude)) return false;
+        if (!latitude.equals(drone.latitude)) return false;
+        if (!ip.equals(drone.ip)) return false;
+        if (!port.equals(drone.port)) return false;
+        return name.equals(drone.name);
 
     }
+
 
 
     //**  -  -  -   HashCode   -  -  -  **//
 
+
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (idUser != null ? idUser.hashCode() : 0);
-        result = 31 * result + (idIntervention != null ? idIntervention.hashCode() : 0);
-        result = 31 * result + (longitude != null ? longitude.hashCode() : 0);
-        result = 31 * result + (latitude != null ? latitude.hashCode() : 0);
-        result = 31 * result + (addressip != null ? addressip.hashCode() : 0);
-        result = 31 * result + (port != null ? port.hashCode() : 0);
+        int result = id.hashCode();
+        result = 31 * result + idUser.hashCode();
+        result = 31 * result + longitude.hashCode();
+        result = 31 * result + latitude.hashCode();
+        result = 31 * result + ip.hashCode();
+        result = 31 * result + port.hashCode();
+        result = 31 * result + battery;
+        result = 31 * result + name.hashCode();
         return result;
     }
+
 }

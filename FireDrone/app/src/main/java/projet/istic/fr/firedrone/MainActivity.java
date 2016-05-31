@@ -1,5 +1,6 @@
 package projet.istic.fr.firedrone;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -24,6 +25,7 @@ import projet.istic.fr.firedrone.listener.DroneListenerEvent;
 import projet.istic.fr.firedrone.listener.DroneListenerEventNEW;
 import projet.istic.fr.firedrone.map.TabMapFragment;
 import projet.istic.fr.firedrone.service.MeansItemService;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
 import projet.istic.fr.firedrone.synchro.MyObservable;
 import projet.istic.fr.firedrone.synchro.Observateur;
@@ -170,6 +172,11 @@ public class MainActivity extends AppCompatActivity
                 imageFragment = ImageFragment.getInstance();
                 fragment= imageFragment;
                 break;
+            case R.id.nav_logout:
+                System.out.println("nav_logout");
+                goBackToLogin();
+                fragment=null;
+                break;
         }
         //on remplace ici l'ancien fragment
         if(fragment != null){
@@ -178,6 +185,18 @@ public class MainActivity extends AppCompatActivity
         }
         droneListenerEvent.setUsingControlPanel(usingControlDrone);
         myDrawer.closeDrawers();
+    }
+
+
+    /**
+     * Logout properly
+     */
+    public void goBackToLogin(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("finish", true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
+        startActivity(intent);
+        finish();
     }
 
     @Override

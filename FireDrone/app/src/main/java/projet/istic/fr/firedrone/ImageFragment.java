@@ -215,6 +215,64 @@ public class ImageFragment extends Fragment implements Observateur {
     public void updateListImage(LatLng markerPosition){
 
 
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(FiredroneConstante.END_POINT)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+
+        ImageAPI imageAPI = restAdapter.create(ImageAPI.class);
+
+
+        String idIntervention= InterventionSingleton.getInstance().getIntervention().getId();
+
+        String latitude = String.valueOf(markerPosition.latitude);
+        String longitude = String.valueOf(markerPosition.longitude);
+
+        System.err.println(latitude);
+        imageAPI.getImagesByLatLong(
+                idIntervention,
+                latitude,
+                longitude,
+                new Callback<List<ImageItem>>() {
+
+            @Override
+            public void success(List<ImageItem> images, Response response) {
+
+
+                GridView gridview = (GridView) view.findViewById(R.id.girdPicture);
+                GridViewAdapter gridAdapter = new GridViewAdapter(getContext(), R.layout.image_grid_item_layout, images);
+                gridview.setAdapter(gridAdapter);
+
+                gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                        ImageItem item = (ImageItem) parent.getItemAtPosition(position);
+                        //Create intent
+                        Intent myIntent = new Intent(getActivity(), ImageFullScreenActivity.class);
+
+                        myIntent.putExtra("date", item.getDate());
+                        System.out.println(item.getImageUrl());
+                        myIntent.putExtra("imageUrl", item.getImageUrl());
+
+                        //Start fullscreen activity
+                        startActivity(myIntent);
+                    }
+                });
+
+
+
+
+                //generateMap(images,view);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                FiredroneConstante.getToastError(getContext()).show();
+            }
+        });
+
+
+
+
     }
 
 

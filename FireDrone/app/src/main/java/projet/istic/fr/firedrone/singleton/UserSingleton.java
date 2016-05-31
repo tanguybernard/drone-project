@@ -1,5 +1,6 @@
 package projet.istic.fr.firedrone.singleton;
 
+import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.User;
 
 /**
@@ -31,5 +32,9 @@ public class UserSingleton {
 
     public User getUser() {
         return user;
+    }
+
+    public void reset() {
+        user = new User();
     }
 }

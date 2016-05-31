@@ -53,7 +53,10 @@ public class SwaggerConfiguration {
     private Predicate<String> paths() {
         return or(regex("/intervention.*"),
                 regex("/sinister.*"),
-                regex("/user/.*"));
+                regex("/user.*"),
+                regex("/photo.*"),
+                regex("/sig.*"),
+                regex("/way.*"));
     }
 
 

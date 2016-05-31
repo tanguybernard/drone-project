@@ -3,10 +3,10 @@ package fr.istic.sit.service;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSFile;
 import fr.istic.sit.dao.PhotoRepository;
 import fr.istic.sit.domain.Photo;
 import fr.istic.sit.util.Validator;
-import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +14,17 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by fracma on 5/26/16.
+ *  @author FireDroneTeam
  */
 
 @Component
@@ -39,29 +39,27 @@ public class PhotoService {
     @Autowired
     private PhotoRepository photoRepository;
 
-    public void setPhoto() {
+    public String setPhoto( MultipartFile file, String idIntervention, String latitude, String longitude) {
         DBObject metaData = new BasicDBObject();
-        metaData.put("idIntervention", "571f7731b760adc0c3bec8fb");
-        metaData.put("latitude", "48.115127");
-        metaData.put("longitude", "-1.637972");
-        //metaData.put("idDrone", "anything 2");
-
-        //,
+        metaData.put("idIntervention", idIntervention);
+        metaData.put("latitude", latitude);
+        metaData.put("longitude", longitude);
 
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream("/Users/fracma/master2/SIT/test.jpg");
-            gridFsTemplate.store(inputStream, "test.jpg", "image/jpg", metaData);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-
+            inputStream =file.getInputStream();
+            GridFSFile imgSave = gridFsTemplate.store(inputStream, file.getName(), "image/jpg", metaData);
+            return imgSave.getId().toString();
+        } catch (IOException  e ) {
+            log.error(e.getMessage());
+            return null;
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage());
+                    return null;
                 }
             }
         }
@@ -76,25 +74,8 @@ public class PhotoService {
         List<Photo> photo = new ArrayList<>();
         Query query = new Query();
         query.addCriteria(Criteria.where("metadata.idIntervention").is(idIntervention));
-        //query.limit(1);
-        //query.with(new Sort(Sort.Direction.DESC, "uploadDate"));
 
-        //return gridFsTemplate.find(buildMetadataSearchQuery(new BasicDBObject("target_field", "abcdefg")));
-
-        //List<GridFSDBFile> files = gridFs.find(buildMetadataSearchQuery(new BasicDBObject("target_field", "abcdefg")));
-
-        //new InputStreamResource(gridFsFile.getInputStream())
         List<GridFSDBFile> files = gridFsTemplate.find(query);
-
-        log.info("Photos " + files.size());
-
-     /*   files.forEach(f -> {
-            try {
-                photo.add(new Photo(IOUtils.toByteArray(f.getInputStream())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });*/
 
         log.info("Photos " + photo.size());
         return photo;
@@ -119,14 +100,41 @@ public class PhotoService {
         return metadatSearchQuery;
     }
 
-    public List<Photo> getPhotos(String idIntervention) {
-        if(!Validator.isEmpty(idIntervention))
+    public List<Photo> getPhotos(String idIntervention, String latitude, String longitude) {
+        if( !Validator.isEmpty(latitude) && !Validator.isEmpty(longitude) && !Validator.isEmpty(idIntervention)){
+            return photoRepository.findByIdInterventionAndLatitudeAndLongitude(idIntervention, new Double(latitude), new Double (longitude));
+        } else if(!Validator.isEmpty(idIntervention)) {
             return photoRepository.findByIdIntervention(idIntervention);
-
+        }
         return photoRepository.findAll();
     }
 
     public Photo insertPhoto(Photo photo){
         return photoRepository.save(photo);
+    }
+
+    public GridFSDBFile getPhotoById(String idPhoto) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(idPhoto));
+        query.limit(1);
+        List<GridFSDBFile> files = gridFsTemplate.find(query);
+
+        log.info("getPhotoById " + files.size());
+        return files.get(0);
+    }
+
+   public Photo savePhoto(String idIntervention, String latitude, String longitude, MultipartFile file){
+
+       String idImage= setPhoto(file, idIntervention, latitude, longitude);
+       if(idImage != null){
+           Photo photo = new Photo();
+           photo.setDate((new Date()).toString());
+           photo.setIdIntervention(idIntervention);
+           photo.setLatitude(new Double(latitude));
+           photo.setLongitude(new Double(longitude));
+           photo.setImageURL("http://m2gla-drone.istic.univ-rennes1.fr:8080/photo/"+idImage);
+           return insertPhoto(photo);
+       }
+       return null;
     }
 }

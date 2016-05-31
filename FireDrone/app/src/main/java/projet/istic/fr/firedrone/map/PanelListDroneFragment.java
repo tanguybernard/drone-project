@@ -3,6 +3,7 @@ package projet.istic.fr.firedrone.map;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,10 @@ import android.widget.Toast;
 import java.io.Serializable;
 
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.listener.ButtonNewDroneEventListener;
+import projet.istic.fr.firedrone.listener.DroneEventListenerInterface;
 import projet.istic.fr.firedrone.model.Drone;
+import projet.istic.fr.firedrone.model.Intervention;
 import projet.istic.fr.firedrone.model.MissionDrone;
 import projet.istic.fr.firedrone.model.ModeMissionDrone;
 import projet.istic.fr.firedrone.service.DroneService;
@@ -21,15 +25,13 @@ import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 /**
  * Created by Mamadian
  */
-public class PanelListDroneFragment extends Fragment implements Serializable {
+public class PanelListDroneFragment extends Fragment implements Serializable, DroneEventListenerInterface {
 
     /**   Reference to the Map Fragment   **/
     private transient MapDroneFragment mapDroneFragment;
 
-
     /**   CurrentDrone   **/
     private transient Drone currentDrone;
-
 
     //**   -   -  -    MODE Flag    -  -   -  **//
     /**  SEGMENT MODE Boolean Flag  **/
@@ -40,7 +42,6 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
     private boolean loopMode = false;
     /**  EXCLUSION MODE Boolean Flag  **/
     private boolean exclusionMode = false;
-
 
     //**   -   -  -    Button    -  -   -  **//
     /**  ASK FOR A DRONE BUTTON  **/
@@ -117,13 +118,12 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
      * initialize Buttons
      */
     private void initButtons() {
-        if (InterventionSingleton.getInstance().getIntervention().getDrones().isEmpty()) {
-            initAskADroneButton();
-            initTrajectoryButtons();
-            initExclusionButton();
-            initControlsButtons();
-        }
-        else {
+        initAskADroneButton();
+        initTrajectoryButtons();
+        initExclusionButton();
+        initControlsButtons();
+
+        if ( ! InterventionSingleton.getInstance().getIntervention().getDrones().isEmpty()) {
             disableAllButtons();
         }
     }
@@ -163,6 +163,8 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
                     setSegmentMode(false);
                     setLoopMode(false);
 
+                    buttonExclusion.setEnabled(true);
+
                     buttonZone.setTextColor(Color.BLACK);
                     buttonZone.setBackgroundColor(Color.BLUE);
 
@@ -182,6 +184,8 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
                     setZoneMode(false);
                     setSegmentMode(true);
                     setLoopMode(false);
+
+                    buttonExclusion.setEnabled(false);
 
                     buttonSegment.setTextColor(Color.BLACK);
                     buttonSegment.setBackgroundColor(Color.BLUE);
@@ -203,6 +207,8 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
                     setZoneMode(false);
                     setSegmentMode(false);
                     setLoopMode(true);
+
+                    buttonExclusion.setEnabled(false);
 
                     buttonLoop.setTextColor(Color.BLACK);
                     buttonLoop.setBackgroundColor(Color.BLUE);
@@ -233,6 +239,8 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
      *
      */
     private void initControlsButtons() {
+
+        /**    -- StartDrone --    **/
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,7 +251,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
             }
         });
 
-
+        /**    -- StopDrone --    **/
         buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -257,15 +265,14 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
             }
         });
 
+        /**    -- FreeDrone --    **/
         buttonFreeDrone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Drone currentDrone = mapDroneFragment.getCurrentDrone();
-
-
                 buttonFreeDrone.setVisibility(View.INVISIBLE);
                 buttonAskADrone.setVisibility(View.VISIBLE);
+                buttonAskADrone.setEnabled(true);
                 buttonExclusion.setEnabled(false);
                 buttonZone.setEnabled(false);
                 buttonSegment.setEnabled(false);
@@ -274,9 +281,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
                 buttonStart.setEnabled(false);
                 buttonStop.setEnabled(false);
 
-
                 DroneService.freeDrone(mapDroneFragment.getCurrentDrone(), v.getContext());;
-
             }
         });
 
@@ -297,6 +302,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
         if(loopMode) {
             return ModeMissionDrone.LOOP.getValue();
         }
+
         return ModeMissionDrone.SEGMENT.getValue();
     }
 
@@ -304,33 +310,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
      * Ask a DRONE for this INTERVENTION
      */
     private void initAskADroneButton(){
-        buttonAskADrone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Drone currentDrone = DroneService.askNewDrone(v.getContext());
-
-                if(currentDrone != null) {
-                    /**    **/
-                    mapDroneFragment.setCurrentDrone(currentDrone);
-
-                    buttonFreeDrone.setVisibility(View.VISIBLE);
-                    buttonAskADrone.setVisibility(View.INVISIBLE);
-                    buttonExclusion.setEnabled(true);
-                    buttonZone.setEnabled(true);
-                    buttonSegment.setEnabled(true);
-                    buttonLoop.setEnabled(true);
-                    buttonExclusion.setEnabled(true);
-                    buttonStart.setEnabled(true);
-                    buttonStop.setEnabled(true);
-
-                    /** **/
-                    mapDroneFragment.initPositionDroneOnMap();
-                }
-                else {
-                    Toast.makeText(v.getContext(), "Vous n'avez pas pu avoir de Drone", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        buttonAskADrone.setOnClickListener(new ButtonNewDroneEventListener(this));
     }
 
 
@@ -367,4 +347,38 @@ public class PanelListDroneFragment extends Fragment implements Serializable {
     public void setExclusionMode(boolean exclusionMode) {
         this.exclusionMode = exclusionMode;
     }
+
+
+
+    //**   -    -     - - DroneEventListenerInterface - -    -     -   **//
+
+    /**
+     *
+     */
+    @Override
+    public void update() {
+
+        Log.e("- - - * * * * MY FLAG", "HERE YOU ARE MOTHER FUCKER");
+        Intervention intervention = InterventionSingleton.getInstance().getIntervention();
+        if(!intervention.getDrones().isEmpty()) {
+            currentDrone= intervention.getDrones().get(0);
+            mapDroneFragment.setCurrentDrone(currentDrone);
+            buttonFreeDrone.setVisibility(View.VISIBLE);
+            buttonAskADrone.setVisibility(View.INVISIBLE);
+            buttonExclusion.setEnabled(true);
+            buttonZone.setEnabled(true);
+            buttonSegment.setEnabled(true);
+            buttonLoop.setEnabled(true);
+            buttonExclusion.setEnabled(true);
+            buttonStart.setEnabled(true);
+            buttonStop.setEnabled(true);
+
+            mapDroneFragment.initPositionDroneOnMap();
+
+        }
+        else {
+            Toast.makeText(getContext(), "Vous n'avez pas pu avoir de Drone", Toast.LENGTH_LONG).show();
+        }
+    }
 }
+

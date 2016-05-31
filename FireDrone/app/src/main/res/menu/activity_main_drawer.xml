@@ -51,5 +51,17 @@
 
         </menu>
     </group>
+    <group android:title="Utilisateur"
+        android:id="@+id/group_4">
+
+    <menu>
+
+    <item android:id="@+id/nav_logout"
+        android:title="Deconnexion" />
+    </menu>
+    </group>
+
+
+
 
 </menu>

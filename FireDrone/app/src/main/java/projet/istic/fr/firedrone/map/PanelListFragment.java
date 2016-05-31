@@ -28,7 +28,7 @@ import projet.istic.fr.firedrone.singleton.InterventionSingleton;
  */
 public class PanelListFragment extends ListFragment implements AbsListView.OnScrollListener,Serializable {
 
-    private View viewSelected;
+    private transient View viewSelected;
     private transient MapMoyenFragment mapMoyenFragment;
     private transient List<MeansItem> meansItemListDemande;
     private transient SectionListAdapter mAdapter;

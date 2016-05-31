@@ -1,26 +1,19 @@
 package projet.istic.fr.firedrone.map;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -80,9 +73,9 @@ public class MapDroneFragment extends SupportMapFragment implements
     //marqueur du drône
     transient List<Marker> markerDrones = new ArrayList<>();
     /**   CurrentDrone   **/
-    private Drone currentDrone;
+    transient private Drone currentDrone;
 
-    transient Marker markerDrone;
+    transient MarkerOptions markerDrone;
 
 
     @Override
@@ -94,16 +87,6 @@ public class MapDroneFragment extends SupportMapFragment implements
         }
         PanelListDroneFragment panelListDroneFragment = (PanelListDroneFragment) getArguments().getSerializable("panel");
 
-        if(panelListDroneFragment!=null){
-            System.out.println("==============================");
-            System.out.println(panelListDroneFragment.isLoopMode());
-            System.out.println(panelListDroneFragment.isSegmentMode());
-            System.out.println(panelListDroneFragment.isZoneMode());
-            System.out.println("==============================");
-        }
-        else{
-            System.out.println("============ null ==================");
-        }
 
         //**   Listener OnDroneMove   **//
         ((MainActivity) getActivity()).setDroneMoveListener(new DroneListenerEventNEW.DroneActionMapListener() {
@@ -139,6 +122,15 @@ public class MapDroneFragment extends SupportMapFragment implements
             }
         });
 
+
+
+        /**  Initialize Current Drone **/
+        if (!InterventionSingleton.getInstance().getIntervention().getDrones().isEmpty()) {
+            currentDrone = InterventionSingleton.getInstance().getIntervention().getDrones().get(0);
+        }
+
+
+
     }
 
     @Override
@@ -153,7 +145,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         suppressionMarker.setVisibility(View.INVISIBLE);
 
         //ajout du bouton de suppression et placement
-        mapView.addView(suppressionMarker, new FrameLayout.LayoutParams(150,150, Gravity.CENTER_HORIZONTAL));
+        mapView.addView(suppressionMarker, new FrameLayout.LayoutParams(150, 150, Gravity.CENTER_HORIZONTAL));
 
 
         if(myMap != null){
@@ -189,7 +181,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
         myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this, null));
 
-        refreshPointDrone();
+        //refreshPointDrone();
     }
 
 
@@ -199,7 +191,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         //add marker
         putMarker(point, listMarkers.size());
-;
+        ;
     }
 
 
@@ -212,8 +204,8 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         //canvas.drawText(Integer.toString(num), 0, 50, paint); // paint defines the text color, stroke width, size
         Marker marker = myMap.addMarker(new MarkerOptions()
-                        .position(clickedPosition)
-                        .title(Integer.toString(num)).draggable(true));
+                .position(clickedPosition)
+                .title(Integer.toString(num)).draggable(true));
         addPolyline(marker);
 
     }
@@ -246,12 +238,12 @@ public class MapDroneFragment extends SupportMapFragment implements
         interventionAPI.getAllDrone(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Drone>>() {
             @Override
             public void success(List<Drone> drones, Response response) {
-                for(Marker marker : markerDrones){
+                for (Marker marker : markerDrones) {
                     marker.remove();
                 }
                 markerDrones.clear();
                 for (Drone drone : drones) {
-                    LatLng position = new LatLng(Double.valueOf(drone.getLatitude()),Double.valueOf(drone.getLongitude()));
+                    LatLng position = new LatLng(Double.valueOf(drone.getLatitude()), Double.valueOf(drone.getLongitude()));
                     markerDrones.add(myMap.addMarker(new MarkerOptions()
                                     .position(position)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36)))
@@ -346,12 +338,21 @@ public class MapDroneFragment extends SupportMapFragment implements
      * Initialize and Put the DRONE on the MAP when the Drone is asked for the first time
      */
     public void initPositionDroneOnMap() {
-        if (markerDrone != null) {
+        Log.d("**FLAG1**", " ######################### On est dans la fonction ");
+        if(currentDrone != null) {
+            Log.d("**FLAG2**", " ######################### On est dans le if");
+
+            Log.d("**FLAG3**", currentDrone.getLatitude());
+            Log.d("**FLAG4**", currentDrone.getLongitude());
+
             Double latString = Double.parseDouble(currentDrone.getLatitude());
             Double lngString = Double.parseDouble(currentDrone.getLongitude());
+
             LatLng point = new LatLng(latString, lngString);
-            markerDrone.setPosition(point);
-            markerDrone.setVisible(true);
+            markerDrone = new MarkerOptions();
+
+            markerDrone.position(point);
+            myMap.addMarker(markerDrone);
             addPolylineDrone(point);
         }
     }
@@ -370,5 +371,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
         return listPoint;
     }
+
+
 
 }

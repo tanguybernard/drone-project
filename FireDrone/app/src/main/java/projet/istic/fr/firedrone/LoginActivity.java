@@ -34,30 +34,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    /*
-    RequestInterceptor requestInterceptor = new RequestInterceptor() {
-        @Override
-        public void intercept(RequestFacade request) {
-            request.addHeader("User-Agent", "Retrofit-Sample-App");
-        }
-    };
-
-    RestAdapter restAdapter = new RestAdapter.Builder()
-            .setEndpoint("https://api.github.com")
-            .setRequestInterceptor(requestInterceptor)
-            .build();
-    */
-
     //*   Components   *//
-    private EditText loginField;
-    private EditText passField;
-    private Button loginButton;
+    private transient EditText loginField;
+    private transient EditText passField;
+    private transient Button loginButton;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+    private transient GoogleApiClient client;
 
 
     @Override
