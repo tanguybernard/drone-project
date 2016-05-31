@@ -16,18 +16,16 @@
         <item
             android:id="@+id/nav_moyen"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/moyen" />
+            android:title="@string/array_ways" />
         <item
             android:id="@+id/nav_moyen_req"
             android:icon="@drawable/ic_menu_share"
-            android:title="Moyen demandé" />
+            android:title="@string/validate_ways" />
 
     </group>
 
     <group android:title="Centre de commandement"
-        android:id="@+id/group_2"
-
-        >
+        android:id="@+id/group_2">
         <menu>
 
             <item
@@ -53,15 +51,11 @@
     </group>
     <group android:title="Utilisateur"
         android:id="@+id/group_4">
-
-    <menu>
-
-    <item android:id="@+id/nav_logout"
-        android:title="Deconnexion" />
-    </menu>
+        <menu>
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Deconnexion" />
+        </menu>
     </group>
-
-
-
-
 </menu>
