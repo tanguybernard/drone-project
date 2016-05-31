@@ -254,24 +254,27 @@ public class InterventionService {
 
         //On remplace le nom de l'utilisateur par son ID
         drone.setIdUser(userRepository.findByLogin(drone.getIdUser()).getId());
+        try {
+            if (!userHasDrone(intervention.getDrones(), drone)) {
+                //**  Initialize the Drone  **/
+                drone.setId(getNextIDDRONE().toString());
+                drone.setIp(DEFAULT_IP_DRONE);
+                final Integer port = Integer.parseInt(drone.getId()) * 10 + 5760;
+                drone.setPort(port.toString());
+                drone.setLatitude(intervention.getLatitude().toString());
+                drone.setLongitude(intervention.getLongitude().toString());
+                drone.setName("Drone d" + drone.getId() + "-" + drone.getPort());
 
-        if(!userHasDrone(intervention.getDrones(), drone)){
-            //**  Initialize the Drone  **/
-            drone.setId( getNextIDDRONE().toString());
-            drone.setIp(DEFAULT_IP_DRONE);
-            final Integer port = Integer.parseInt(drone.getId())*10 + 5760;
-            drone.setPort(port.toString());
-            drone.setLatitude(intervention.getLatitude().toString());
-            drone.setLongitude(intervention.getLongitude().toString());
-            drone.setName("Drone d"+drone.getId()+"-"+drone.getPort());
+                if (intervention.getDrones() == null)
+                    intervention.setDrones(new ArrayList<>());
 
-            if(intervention.getDrones() == null)
-                intervention.setDrones(new ArrayList<>());
+                intervention.getDrones().add(drone);
+                repository.save(intervention);
 
-            intervention.getDrones().add(drone);
-            repository.save(intervention);
-
-            return drone;
+                return drone;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         throw new CustomException("D-0001","Impossible d'associer plus d'un drone à un utilisateur");
@@ -382,8 +385,9 @@ public class InterventionService {
      */
     public Integer getNextIDDRONE() {
         List<Intervention> allInterventions = repository.findAll();
-        allInterventions.forEach(intervention -> {
-                    //i.setStatus(WayStatus.getDescription(i.getStatus()));
+        allInterventions.stream()
+                .filter(i -> i.getDrones() != null)
+                .forEach(intervention -> {
                     intervention.getDrones().forEach(drone -> nextDroneID++);
                 }
         );

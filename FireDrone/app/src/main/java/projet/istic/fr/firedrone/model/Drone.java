@@ -22,7 +22,7 @@ public class Drone {
     @SerializedName("port")
     private String port;
     @SerializedName("battery")
-    private int battery;
+    private Double battery;
     @SerializedName("name")
     private String name;
 
@@ -37,12 +37,12 @@ public class Drone {
         this.longitude = "";
         this.ip = "";
         this.port = "";
-        this.battery = 0;
+        this.battery = new Double(0);
         this.name = "";
 
     }
 
-    public Drone(String id, String idUser, String longitude, String latitude, String ip, String port, int battery, String name) {
+    public Drone(String id, String idUser, String longitude, String latitude, String ip, String port, Double battery, String name) {
         this.id = id;
         this.idUser = idUser;
         this.longitude = longitude;
@@ -103,11 +103,11 @@ public class Drone {
         this.port = port;
     }
 
-    public int getBattery() {
+    public Double getBattery() {
         return battery;
     }
 
-    public void setBattery(int battery) {
+    public void setBattery(Double battery) {
         this.battery = battery;
     }
 
@@ -163,14 +163,14 @@ public class Drone {
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + idUser.hashCode();
-        result = 31 * result + longitude.hashCode();
-        result = 31 * result + latitude.hashCode();
-        result = 31 * result + ip.hashCode();
-        result = 31 * result + port.hashCode();
-        result = 31 * result + battery;
-        result = 31 * result + name.hashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (idUser != null ? idUser.hashCode() : 0);
+        result = 31 * result + (longitude != null ? longitude.hashCode() : 0);
+        result = 31 * result + (latitude != null ? latitude.hashCode() : 0);
+        result = 31 * result + (ip != null ? ip.hashCode() : 0);
+        result = 31 * result + (port != null ? port.hashCode() : 0);
+        result = 31 * result + (battery != null ? battery.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
 

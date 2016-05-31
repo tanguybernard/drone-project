@@ -3,7 +3,6 @@ package projet.istic.fr.firedrone;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -280,4 +279,5 @@ public class ImageFragment extends Fragment implements Observateur {
     public void actualiser(Observable o) {
 
     }
+
 }

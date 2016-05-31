@@ -45,6 +45,7 @@ public class DroneService {
             @Override
             public void failure(RetrofitError error) {
                 Log.e("failure", " - - - - - - > FLAG ERROR");
+                Log.e("failure", error.getMessage());
                 FiredroneConstante.getToastError(context).show();
             }
         });
