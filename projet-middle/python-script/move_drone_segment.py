@@ -10,9 +10,57 @@ parser.add_argument('--connect',default='tcp:127.0.0.1:5760',required=True,
 parser.add_argument('--mission',help='Mission')
 parser.add_argument('--idDrone',help='Identifiant du drone',required=True)
 parser.add_argument('--idIntervention',help='Identifiant de l\'intervention',required=True)
-parser.add_argument('--imageFolder',help='Dossier des images',required=True)
 
 args = parser.parse_args()
+
+import  mimetypes
+
+def get_content_type(filename):
+    return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+
+def encode_multipart_formdata(fields, files):
+    """
+    fields is a sequence of (name, value) elements for regular form fields.
+    files is a sequence of (name, filename, value) elements for data to be uploaded as files
+    Return (content_type, body) ready for httplib.HTTP instance
+    """
+    BOUNDARY = '----------ThIs_Is_tHe_bouNdaRY_$'
+    CRLF = '\r\n'
+    L = []
+    L.append('--' + BOUNDARY)
+    L.append('Content-Disposition: form-data; name="%s"' % "idIntervention")
+    L.append('')
+    L.append(fields["idIntervention"])
+    L.append('--' + BOUNDARY)
+    L.append('Content-Disposition: form-data; name="%s"' % "latitude")
+    L.append('')
+    L.append(fields["latitude"])
+    L.append('--' + BOUNDARY)
+    L.append('Content-Disposition: form-data; name="%s"' % "longitude")
+    L.append('')
+    L.append(fields["longitude"])
+    for (key,filename, value) in files:
+        L.append('--' + BOUNDARY)
+        L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
+        L.append('Content-Type: %s' % get_content_type(filename))
+        L.append('')
+        L.append(value)
+    L.append('--' + BOUNDARY + '--')
+    L.append('')
+    body = CRLF.join(L)
+    content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+    return content_type, body
+
+def post_multipart(host, fields, files):
+    import requests
+    print 'post'
+    content_type, body = encode_multipart_formdata(fields, files)
+    headers = {
+        'content-type': content_type,
+        'content-length': str(len(body))
+    }
+    r = requests.post(host, data=body, headers=headers)
+    return r.text
 
 vehicle = connect(args.connect, wait_ready=True)
 def arm_and_takeoff(aTargetAltitude):
@@ -103,14 +151,20 @@ def listener(self, attr_name, value):
     import requests
     lat = str(value.global_relative_frame.lat)
     lon = str(value.global_relative_frame.lon)
-    url = 'http://m2gla-drone.istic.univ-rennes1.fr:8080/intervention/' + args.idIntervention + '/drone'
-    data = '{ "battery": ' + str(vehicle.battery.current) +',"id":"'+ str(args.idDrone) +'", "ip": "127.0.0.1","latitude": "' + lat + '","longitude": "' + lon + '","name": "drone1","port": "14551"}'
+    server ='http://m2gla-drone.istic.univ-rennes1.fr:8080'
+    url = server +'/intervention/' + args.idIntervention + '/drone'
+    data = '{ "battery": ' + str(vehicle.battery.current) +',"id":"'+ str(args.idDrone) +'","latitude": "' + lat + '","longitude": "' + lon + '"}'
     headers = {"content-type": "application/json"}
-    requests.patch(url, data=data,headers=headers)
+    #requests.patch(url, data=data,headers=headers)
     global nextPoint
     import urllib
     if vehicle.commands.next != nextPoint:
-        urllib.urlretrieve("https://maps.googleapis.com/maps/api/staticmap?center=" +lat +"," + lon + "&zoom=19&size=640x512&maptype=satellite&key=AIzaSyDMiGs7FfMIZANrYC6tBx6D-CFXMt0eY64&style=feature:road.local&scale=1", args.imageFolder + "/" + str(time.time()) + ".png")
+        filename = 'tmp/'+str(time.time())
+        urllib.urlretrieve("https://maps.googleapis.com/maps/api/staticmap?center=" +lat +"," + lon + "&zoom=19&size=640x512&maptype=satellite&key=AIzaSyDMiGs7FfMIZANrYC6tBx6D-CFXMt0eY64&style=feature:road.local&scale=1",filename)
+        files = [('file', filename, open(filename, 'rb').read())]
+        data ={"idIntervention":str(args.idIntervention),"latitude":lat ,"longitude":lon}
+        url = server + '/photo/intervention/' + args.idIntervention
+        post_multipart(url,data,files)
         nextPoint = vehicle.commands.next
 
 while vehicle.mode.name == 'AUTO' and vehicle.commands != None and vehicle.armed:
