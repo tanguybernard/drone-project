@@ -123,13 +123,13 @@ if args.mission != None:
     vehicle.flush() # Send commands
     #aller
     for missionitem in dataMission['mission']:
-        cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,missionitem['lattitude'], missionitem['longitude'], 70)
+        cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,missionitem['latitude'], missionitem['longitude'], 70)
         cmds.add(cmd)
 
     #retour
     if len(dataMission['mission']) > 1 :
         for i in reversed(range(1, len(dataMission['mission']) - 1)):
-            cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,dataMission['mission'][i]['lattitude'], dataMission['mission'][i]['longitude'], 70)
+            cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,dataMission['mission'][i]['latitude'], dataMission['mission'][i]['longitude'], 70)
             cmds.add(cmd)
         cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_DO_JUMP, 0, 0, 1, -1, 0, 0, 0, 0, 0)
         cmds.add(cmd)
