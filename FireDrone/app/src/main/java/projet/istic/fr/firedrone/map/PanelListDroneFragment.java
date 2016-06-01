@@ -287,6 +287,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
 
     }
 
+
     /**
      *
      * @return
@@ -311,6 +312,7 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
     private void initAskADroneButton(){
         buttonAskADrone.setOnClickListener(new ButtonNewDroneEventListener(this));
     }
+
 
     //**   -   -  -    Getters & Setters    -  -   -  **//
 
@@ -337,6 +339,15 @@ public class PanelListDroneFragment extends Fragment implements Serializable, Dr
     public void setLoopMode(Boolean loopMode) {
         this.loopMode = loopMode;
     }
+
+    public boolean isExclusionMode() {
+        return exclusionMode;
+    }
+
+    public void setExclusionMode(boolean exclusionMode) {
+        this.exclusionMode = exclusionMode;
+    }
+
 
 
     //**   -    -     - - DroneEventListenerInterface - -    -     -   **//

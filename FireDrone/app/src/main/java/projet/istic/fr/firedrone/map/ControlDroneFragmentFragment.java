@@ -103,7 +103,7 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
 
         //**   -  DefaultColor  -   **//
         defaultTextColor = Color.BLACK;
-        defaultBackgroundColor = Color.LTGRAY;
+        defaultBackgroundColor = Color.TRANSPARENT;
         //defaultBackgroundColor = ((ColorDrawable) buttonZone.getBackground()).getColor();
 
         //**   -  DEFAULT MODE  -   **//
