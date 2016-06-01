@@ -260,23 +260,20 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
         Log.e("FLAG", "- - - - - -     --> BUTTON START" + buttonStart);
         Log.e("FLAG", "- - - - - -     -->        CURRENTDRONE " + currentDrone);
         buttonStart.setOnClickListener(new ActionOnDroneEventListener(
-                this, currentDrone,
-                ActionOnDroneEventListener.ActionEventDroneType.START,
-                new MissionDrone(getMode().getValue(), mapDroneFragment.getListPointsMissionDrone())));
+                this, mapDroneFragment, currentDrone,
+                ActionOnDroneEventListener.ActionEventDroneType.START));
 
 
         /**    -- StopDrone --    **/
         buttonStop.setOnClickListener(new ActionOnDroneEventListener(
-                this, currentDrone,
-                ActionOnDroneEventListener.ActionEventDroneType.STOP,
-                null));
+                this, mapDroneFragment, currentDrone,
+                ActionOnDroneEventListener.ActionEventDroneType.STOP));
 
 
         /**    -- FreeDrone --    **/
         buttonFreeDrone.setOnClickListener(new ActionOnDroneEventListener(
-                this, currentDrone,
-                ActionOnDroneEventListener.ActionEventDroneType.FREE,
-                null));
+                this, mapDroneFragment, currentDrone,
+                ActionOnDroneEventListener.ActionEventDroneType.FREE));
     }
 
 
@@ -286,9 +283,8 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
      */
     private void initAskADroneButton(){
         buttonAskADrone.setOnClickListener(new ActionOnDroneEventListener(
-                this, new Drone(),
-                ActionOnDroneEventListener.ActionEventDroneType.CREATE,
-                null));
+                this, mapDroneFragment, new Drone(),
+                ActionOnDroneEventListener.ActionEventDroneType.CREATE));
     }
 
 

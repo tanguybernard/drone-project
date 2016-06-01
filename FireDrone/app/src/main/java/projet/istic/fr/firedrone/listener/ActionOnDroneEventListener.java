@@ -20,28 +20,28 @@ public class ActionOnDroneEventListener implements View.OnClickListener {
     private transient DroneEventListenerFragmentInterface droneEventListenerFragmentInterface;
 
     /** **/
+    private transient DroneMissionFragmentInterface droneMissionFragmentInterface;
+
+    /** **/
     private ActionEventDroneType actionEventDroneType;
+
 
     /** **/
     private Drone drone;
 
-    /** **/
-    private MissionDrone mission;
+
 
     //**     Constructor    **//
 
-    /**
-     *
-     * @param droneEventListenerFragmentInterface
-     * @param drone
-     * @param actionEventDroneType
-     * @param mission
-     */
-    public ActionOnDroneEventListener(DroneEventListenerFragmentInterface droneEventListenerFragmentInterface, Drone drone, ActionEventDroneType actionEventDroneType, MissionDrone mission) {
+
+    public ActionOnDroneEventListener(DroneEventListenerFragmentInterface droneEventListenerFragmentInterface,
+                                      DroneMissionFragmentInterface droneMissionFragmentInterface,
+                                      Drone drone,
+                                      ActionEventDroneType actionEventDroneType) {
         this.droneEventListenerFragmentInterface = droneEventListenerFragmentInterface;
+        this.droneMissionFragmentInterface = droneMissionFragmentInterface;
         this.drone = drone;
         this.actionEventDroneType = actionEventDroneType;
-        this.mission = mission;
     }
 
 
@@ -49,10 +49,15 @@ public class ActionOnDroneEventListener implements View.OnClickListener {
     public void onClick(View v) {
         switch (actionEventDroneType) {
             case START:
-                DroneService.startDrone(droneEventListenerFragmentInterface, drone, mission, v.getContext());
+                DroneService.startDrone(droneEventListenerFragmentInterface,
+                        drone,
+                        new MissionDrone(droneMissionFragmentInterface.getMode().getValue(), droneMissionFragmentInterface.getListPointsMissionDrone()),
+                        v.getContext());
                 break;
             case STOP:
-                DroneService.stopDrone(droneEventListenerFragmentInterface, drone, v.getContext());
+                DroneService.stopDrone(droneEventListenerFragmentInterface,
+                        drone,
+                        v.getContext());
                 break;
             case CREATE:
                 DroneService.askNewDrone(droneEventListenerFragmentInterface, v.getContext());

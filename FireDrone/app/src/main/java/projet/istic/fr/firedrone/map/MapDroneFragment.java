@@ -32,6 +32,7 @@ import java.util.Map;
 import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.listener.DroneMissionFragmentInterface;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.PointMissionDrone;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
@@ -44,6 +45,7 @@ import retrofit.client.Response;
 
 public class MapDroneFragment extends SupportMapFragment implements
         GoogleMap.OnMapClickListener,
+        DroneMissionFragmentInterface,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline, Serializable {
 
@@ -332,6 +334,7 @@ public class MapDroneFragment extends SupportMapFragment implements
      * Get the List of all Points of the Drone's Mission
      * @return
      */
+    @Override
     public List<PointMissionDrone> getListPointsMissionDrone() {
         List<PointMissionDrone> listPoint = new ArrayList<>();
 
@@ -366,6 +369,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         this.mode = mode;
     }
 
+    @Override
     public EnumTrajectoryMode getMode() {
         return this.mode;
     }
