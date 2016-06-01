@@ -265,7 +265,9 @@ public class MapDroneFragment extends SupportMapFragment implements
         }
         polylineOptions.width(5);
         polylineOptions.addAll(getListPoint());
-
+        if(mode == ModeMissionDrone.LOOP && listMarkers.size() >2) {
+            polylineOptions.add(listMarkers.values().iterator().next().getPosition());
+        }
         //s'il existe déjà un polyline, on le supprime
         if(polyline != null){
             polyline.remove();

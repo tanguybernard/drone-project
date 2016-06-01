@@ -75,8 +75,6 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
                              Bundle saveInstantState) {
 
 
-
-
         //**   -  Layout  -   **//
         final View view = inflater.inflate(R.layout.fragment_list_panel_drone, container, false);
         //**   -  Reference to Map Drone Fragment  -   **//
@@ -334,7 +332,7 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
     private void yourDroneIsActiveLAYOUTMODE() {
         buttonAskADrone.setVisibility(View.INVISIBLE);
         buttonAskADrone.setEnabled(false);
-        buttonExclusion.setEnabled(false);
+        buttonExclusion.setEnabled(true);
         buttonLoop.setEnabled(true);
         buttonSegment.setEnabled(true);
         buttonStart.setEnabled(true);
