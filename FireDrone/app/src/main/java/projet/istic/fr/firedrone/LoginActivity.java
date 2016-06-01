@@ -16,6 +16,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.ConnectException;
+
 import projet.istic.fr.firedrone.Interceptor.Interceptor;
 import projet.istic.fr.firedrone.ModelAPI.UserApi;
 import projet.istic.fr.firedrone.model.User;
@@ -83,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
         String basicAuth = "Basic " + Base64.encodeToString(String.format("%s:%s", "drone_android", "4ndr01d").getBytes(), Base64.NO_WRAP);
 
         final UserApi userApi = restAdapter.create(UserApi.class);
+
         userApi.connectUser(basicAuth, login, password, "password", new Callback<User>() {
             @Override
             public void success(User user, Response response) {
@@ -129,11 +132,12 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        if(new InternetConnectionService().isOnline(getApplicationContext())){
-                            FiredroneConstante.getErrorLogin(getApplicationContext()).show();
+                        if(!new InternetConnectionService().isOnline(getApplicationContext()) || error.getCause() instanceof ConnectException){
+                            FiredroneConstante.getToastError(getApplicationContext()).show();
+                            FiredroneConstante.getToastError(getApplicationContext()).show();
                         }
                         else{
-                            FiredroneConstante.getToastError(getApplicationContext()).show();
+                            FiredroneConstante.getErrorLogin(getApplicationContext()).show();
                         }
                     }
                 });

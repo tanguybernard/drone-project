@@ -654,8 +654,8 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     public void actualiser(Observable o) {
         if(o instanceof MyObservable){
             MapMoyenFragment myFragment = (MapMoyenFragment) getFragmentManager().findFragmentById(R.id.content_map_moyen);
-            if (myFragment != null && myFragment.isVisible()) {
-                //ICI ROMAIN
+            if (myFragment != null && myFragment.isVisible() && googleMap != null) {
+
                 googleMap.clear();
                 mapMarkerItem.clear();
                 if (listSIG != null) {
