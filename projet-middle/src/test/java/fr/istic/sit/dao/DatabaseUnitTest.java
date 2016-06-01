@@ -5,30 +5,29 @@ import fr.istic.sit.configuration.MongoTestConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by fracma on 5/31/16.
+ * @author FireDroneTeam
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {TestApplication.class, MongoTestConfiguration.class})
-@WebAppConfiguration
-//@IntegrationTest
+@WebIntegrationTest
 public abstract class DatabaseUnitTest {
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    protected void importJSON(String collection, String file) {
+    public void importJSON(String collection, String file) {
         try {
+            mongoTemplate.dropCollection(collection);
             for (Object line : FileUtils.readLines(new File(file), "utf8")) {
                 mongoTemplate.save(line, collection);
             }
