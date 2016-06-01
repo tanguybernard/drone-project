@@ -51,4 +51,12 @@ public class PointMissionDrone {
                 ", longitude=" + longitude +
                 '}';
     }
+
+
+    public String toJson() {
+        return '{' +
+                "\"latitude\" : " + latitude +
+                ", \"longitude\" :" + longitude +
+                '}';
+    }
 }

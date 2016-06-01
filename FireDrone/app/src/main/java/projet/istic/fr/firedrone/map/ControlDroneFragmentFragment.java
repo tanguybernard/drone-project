@@ -440,6 +440,8 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
 
     @Override
     public void updateStopDrone() {
+
+        buttonStart.setEnabled(true);
         mapDroneFragment.clearMissionOnMap();
         //**  Refresh MAP  **//
         mapDroneFragment.refreshPointDrone();
