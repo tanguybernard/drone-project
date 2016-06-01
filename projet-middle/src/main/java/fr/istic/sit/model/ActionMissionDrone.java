@@ -81,4 +81,24 @@ public class ActionMissionDrone {
     }
 
 
+    public String toJson(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("'{");
+        builder.append("\"mission\" :");
+        builder.append("[");
+        boolean firstRound = true;
+        for(PointMissionDrone pointMissionDrone: mission.getPoints()){
+            if(firstRound) {
+                firstRound = !firstRound;
+            }
+            else {
+                builder.append(", ");
+            }
+            builder.append(pointMissionDrone.toJson());
+        }
+        builder.append("]");
+        builder.append("}'");
+
+        return builder.toString();
+    }
 }

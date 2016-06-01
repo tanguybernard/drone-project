@@ -1,7 +1,6 @@
 package fr.istic.sit.dao;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -9,7 +8,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-
+/**
+ * @author FireDroneTeam
+ */
 public class SIGRepositoryTest  extends DatabaseUnitTest{
 
     @Autowired

@@ -75,8 +75,6 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
                              Bundle saveInstantState) {
 
 
-
-
         //**   -  Layout  -   **//
         final View view = inflater.inflate(R.layout.fragment_list_panel_drone, container, false);
         //**   -  Reference to Map Drone Fragment  -   **//
@@ -99,7 +97,7 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
 
         //**   -  DefaultColor  -   **//
         defaultTextColor = Color.BLACK;
-        defaultBackgroundColor = Color.LTGRAY;
+        defaultBackgroundColor = Color.TRANSPARENT;
         //defaultBackgroundColor = ((ColorDrawable) buttonZone.getBackground()).getColor();
 
         //**   -  DEFAULT MODE  -   **//
@@ -296,11 +294,17 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
         buttonAskADrone.setVisibility(View.VISIBLE);
         buttonAskADrone.setEnabled(true);
         buttonExclusion.setEnabled(false);
+        buttonExclusion.setTextColor(Color.LTGRAY);
         buttonLoop.setEnabled(false);
+        buttonLoop.setTextColor(Color.LTGRAY);
         buttonSegment.setEnabled(false);
+        buttonSegment.setTextColor(Color.LTGRAY);
         buttonStart.setEnabled(false);
+        buttonStart.setTextColor(Color.LTGRAY);
         buttonStop.setEnabled(false);
+        buttonStop.setTextColor(Color.LTGRAY);
         buttonZone.setEnabled(false);
+        buttonZone.setTextColor(Color.LTGRAY);
         buttonFreeDrone.setEnabled(false);
         buttonFreeDrone.setVisibility(View.INVISIBLE);
     }
@@ -328,11 +332,13 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
     private void yourDroneIsActiveLAYOUTMODE() {
         buttonAskADrone.setVisibility(View.INVISIBLE);
         buttonAskADrone.setEnabled(false);
-        buttonExclusion.setEnabled(false);
+        buttonExclusion.setEnabled(true);
         buttonLoop.setEnabled(true);
         buttonSegment.setEnabled(true);
         buttonStart.setEnabled(true);
+        buttonStart.setTextColor(Color.BLACK);
         buttonStop.setEnabled(false);
+        buttonStop.setTextColor(Color.LTGRAY);
         buttonZone.setEnabled(true);
         buttonFreeDrone.setEnabled(true);
         buttonFreeDrone.setVisibility(View.VISIBLE);
@@ -348,7 +354,9 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
         buttonLoop.setEnabled(false);
         buttonSegment.setEnabled(false);
         buttonStart.setEnabled(false);
+        buttonStart.setTextColor(Color.LTGRAY);
         buttonStop.setEnabled(true);
+        buttonStart.setTextColor(Color.BLACK);
         buttonZone.setEnabled(false);
         buttonFreeDrone.setEnabled(true);
         buttonFreeDrone.setVisibility(View.VISIBLE);
@@ -432,6 +440,8 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
 
     @Override
     public void updateStopDrone() {
+
+        buttonStart.setEnabled(true);
         mapDroneFragment.clearMissionOnMap();
         //**  Refresh MAP  **//
         mapDroneFragment.refreshPointDrone();
