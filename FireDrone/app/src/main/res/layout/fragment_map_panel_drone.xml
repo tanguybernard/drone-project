@@ -14,7 +14,7 @@
         android:id="@+id/panel_map_drone"
         android:orientation="vertical"
         android:layout_weight="3"
-        android:layout_width="450dp"
+        android:layout_width="500dp"
         android:layout_height="match_parent"
         >
 

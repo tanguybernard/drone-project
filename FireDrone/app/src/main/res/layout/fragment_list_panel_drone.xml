@@ -29,8 +29,7 @@
             android:text="@string/menu_trajectoire_drone"
             android:layout_marginBottom="10dp"
             android:textColor="#0041C4"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:enabled="false"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <Button
             android:id="@+id/Bsegment"
@@ -44,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/trajectoire_buttonitem_boucle"
+            android:layout_marginTop="10dp"
             android:enabled="false"/>
 
         <Button
@@ -51,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/trajectoire_buttonitem_zone"
+            android:layout_marginTop="10dp"
             android:enabled="false"/>
 
         <Button
@@ -58,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/trajectoire_buttonitem_exclusion"
+            android:layout_marginTop="10dp"
             android:enabled="false"/>
 
         <Button

@@ -32,7 +32,7 @@ public interface DroneAPI {
     @POST("/intervention/{intervId}/drone")
     void addDrone(@Path("intervId") String psIntervQuery, @Body Drone drone, retrofit.Callback<Drone> response);
 
-    @PATCH("/drone/")
+    @PATCH("/drone")
     void actionDrone(@Body ActionMissionDrone actionMissionDrone, retrofit.Callback<Drone> response);
 
     @DELETE("/intervention/{intervId}/drone/{idDrone}")

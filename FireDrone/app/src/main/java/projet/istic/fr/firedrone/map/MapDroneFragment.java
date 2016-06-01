@@ -1,7 +1,6 @@
 package projet.istic.fr.firedrone.map;
 
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
-import projet.istic.fr.firedrone.MainActivity;
 import projet.istic.fr.firedrone.ModelAPI.InterventionAPI;
 import projet.istic.fr.firedrone.R;
 import projet.istic.fr.firedrone.model.Drone;
@@ -71,10 +69,11 @@ public class MapDroneFragment extends SupportMapFragment implements
 
     //marqueur du drône
     transient List<Marker> markerDrones = new ArrayList<>();
+
     /**   CurrentDrone   **/
     transient private Drone currentDrone;
 
-    transient MarkerOptions markerDrone;
+    private EnumTrajectoryMode mode;
 
 
     @Override
@@ -84,17 +83,16 @@ public class MapDroneFragment extends SupportMapFragment implements
             listMarkers = new LinkedHashMap<String, Marker>();
             getMapAsync(this);
         }
-        PanelListDroneFragment panelListDroneFragment = (PanelListDroneFragment) getArguments().getSerializable("panel");
 
-
+        //ControlDroneFragmentFragment controlDroneFragment = (ControlDroneFragmentFragment) getArguments().getSerializable("panel");
 
         /**  Initialize Current Drone **/
         if (!InterventionSingleton.getInstance().getIntervention().getDrones().isEmpty()) {
             currentDrone = InterventionSingleton.getInstance().getIntervention().getDrones().get(0);
         }
 
-
-
+        //**   -  DEFAULT MODE  -   **//
+        setMode(EnumTrajectoryMode.NONE);
     }
 
     @Override
@@ -145,7 +143,9 @@ public class MapDroneFragment extends SupportMapFragment implements
         //création d'un listener pour écouter le mouvement du drag and drop sur les marqueurs de la carte
         myMap.setOnMarkerDragListener(new DragRemoveOnMapListener(suppressionMarker, myMap, this, null));
 
-        //refreshPointDrone();
+
+        refreshPointDrone();
+        //initPositionDroneOnMap();
     }
 
 
@@ -154,8 +154,9 @@ public class MapDroneFragment extends SupportMapFragment implements
         Log.v("MainActivity", "onMapClick(LatLng point)");
 
         //add marker
-        putMarker(point, listMarkers.size());
-        ;
+        if (getMode() != EnumTrajectoryMode.NONE) {
+            putMarker(point, listMarkers.size());
+        }
     }
 
 
@@ -192,7 +193,11 @@ public class MapDroneFragment extends SupportMapFragment implements
         return getListPoint();
     }
 
-    private void refreshPointDrone(){
+
+    /**
+     * Actualize the position of the Drone
+     */
+    public void refreshPointDrone(){
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -200,6 +205,7 @@ public class MapDroneFragment extends SupportMapFragment implements
                 .build();
         final InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
         interventionAPI.getAllDrone(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Drone>>() {
+
             @Override
             public void success(List<Drone> drones, Response response) {
                 for (Marker marker : markerDrones) {
@@ -222,20 +228,39 @@ public class MapDroneFragment extends SupportMapFragment implements
         });
     }
 
-    private List<LatLng> getListPoint(){
-        List<LatLng> listPoint = new ArrayList<>();
-        for(Marker marker: listMarkers.values()){
-            listPoint.add(marker.getPosition());
+    /**
+     * Clean the Map from Mission Markers
+     */
+    public void clearMissionOnMap(){
+        for(String key : listMarkers.keySet() ) {
+            listMarkers.get(key).remove();
         }
-        return listPoint;
+        listMarkers.clear();
+
+        updatePolyline();
     }
 
+
+    /**
+     * Update Polyline (Strokes) on the map
+     */
     @Override
     public void updatePolyline() {
-        // settin polyline in the map
         polylineOptions = new PolylineOptions();
-        //polygonOptions.strokeColor(Color.RED);
-        polylineOptions.color(Color.BLUE);
+        switch (getMode()) {
+            case EXCLUSION:
+                polylineOptions.color(Color.DKGRAY);
+                break;
+            case LOOP:
+                polylineOptions.color(Color.BLUE);
+                break;
+            case SEGMENT:
+                polylineOptions.color(Color.RED);
+                break;
+            case ZONE:
+                polylineOptions.color(Color.GREEN);
+                break;
+        }
         polylineOptions.width(5);
         polylineOptions.addAll(getListPoint());
 
@@ -254,8 +279,10 @@ public class MapDroneFragment extends SupportMapFragment implements
         }
     }
 
+    /**
+     *
+     */
     private void initPolylineDrone(){
-
         // settin polyline in the map
         polylineOptionsDrone = new PolylineOptions();
         //polygonOptions.strokeColor(Color.RED);
@@ -263,7 +290,10 @@ public class MapDroneFragment extends SupportMapFragment implements
         polylineOptionsDrone.width(7);
     }
 
-
+    /**
+     *
+     * @param point
+     */
     private void addPolylineDrone(LatLng point){
         if(dernierPoint != null) {
             polylineDrone = myMap.addPolyline(polylineOptionsDrone.add(dernierPoint, point));
@@ -272,14 +302,21 @@ public class MapDroneFragment extends SupportMapFragment implements
     }
 
 
+    /**
+     * suppression d'un marqueur sur la carte
+     * @param marker
+     */
     @Override
     public void removePoint(Marker marker) {
-        //suppression d'un marqueur sur la carte
         listMarkers.remove(marker.getId());
         //mise à jour des polylines
         updatePolyline();
     }
 
+    /**
+     *
+     * @param marker
+     */
     @Override
     public void addPolyline(Marker marker) {
         //ajout d'un marqueur
@@ -289,41 +326,10 @@ public class MapDroneFragment extends SupportMapFragment implements
     }
 
 
-    /**  - Getter and Setter Current Drone -  **/
-    public Drone getCurrentDrone() {
-        return currentDrone;
-    }
-
-    public void setCurrentDrone(Drone currentDrone) {
-        this.currentDrone = currentDrone;
-    }
+    //**  - Getter and Setter -  **//
 
     /**
-     * Initialize and Put the DRONE on the MAP when the Drone is asked for the first time
-     */
-    public void initPositionDroneOnMap() {
-        Log.d("**FLAG1**", " ######################### On est dans la fonction ");
-        if(currentDrone != null) {
-            Log.d("**FLAG2**", " ######################### On est dans le if");
-
-            Log.d("**FLAG3**", currentDrone.getLatitude());
-            Log.d("**FLAG4**", currentDrone.getLongitude());
-
-            Double latString = Double.parseDouble(currentDrone.getLatitude());
-            Double lngString = Double.parseDouble(currentDrone.getLongitude());
-
-            LatLng point = new LatLng(latString, lngString);
-            markerDrone = new MarkerOptions();
-
-            markerDrone.position(point);
-            myMap.addMarker(markerDrone);
-            addPolylineDrone(point);
-        }
-    }
-
-
-    /**
-     *
+     * Get the List of all Points of the Drone's Mission
      * @return
      */
     public List<PointMissionDrone> getListPointsMissionDrone() {
@@ -336,6 +342,31 @@ public class MapDroneFragment extends SupportMapFragment implements
         return listPoint;
     }
 
+    /**
+     *
+     * @return
+     */
+    private List<LatLng> getListPoint(){
+        List<LatLng> listPoint = new ArrayList<>();
+        for(Marker marker: listMarkers.values()){
+            listPoint.add(marker.getPosition());
+        }
+        return listPoint;
+    }
 
+    public Drone getCurrentDrone() {
+        return currentDrone;
+    }
 
+    public void setCurrentDrone(Drone currentDrone) {
+        this.currentDrone = currentDrone;
+    }
+
+    public void setMode(EnumTrajectoryMode mode) {
+        this.mode = mode;
+    }
+
+    public EnumTrajectoryMode getMode() {
+        return this.mode;
+    }
 }

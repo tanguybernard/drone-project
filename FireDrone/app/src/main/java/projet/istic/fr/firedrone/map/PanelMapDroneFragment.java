@@ -15,7 +15,7 @@ import projet.istic.fr.firedrone.singleton.UserSingleton;
  */
 public class PanelMapDroneFragment extends Fragment {
 
-    private transient PanelListDroneFragment panelListDroneFragment;
+    private transient ControlDroneFragmentFragment controlDroneFragment;
     private transient MapDroneFragment mapDroneFragment;
 
     @Nullable
@@ -24,21 +24,21 @@ public class PanelMapDroneFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_map_panel_drone, container, false);
 
         mapDroneFragment = new MapDroneFragment();
-        panelListDroneFragment = new PanelListDroneFragment();
+        controlDroneFragment = new ControlDroneFragmentFragment();
 
         Bundle argsMap = new Bundle();
-        argsMap.putSerializable("panel", panelListDroneFragment);
+        argsMap.putSerializable("panel", controlDroneFragment);
         mapDroneFragment.setArguments(argsMap);
 
         Bundle argsPanel = new Bundle();
         argsPanel.putSerializable("map", mapDroneFragment);
-        panelListDroneFragment.setArguments(argsPanel);
+        controlDroneFragment.setArguments(argsPanel);
 
         //**  Add the MAP Fragment  **//
         getChildFragmentManager().beginTransaction().replace(R.id.content_map_drone, mapDroneFragment).commit();
         //**  Non-SIT users don't see the Drone Control Fragment  **//
         if( UserSingleton.getInstance().getUser().isSIT()) {
-            getChildFragmentManager().beginTransaction().replace(R.id.panel_map_drone,panelListDroneFragment ).commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.panel_map_drone, controlDroneFragment).commit();
         }
         else {
             view.findViewById(R.id.panel_map_drone).setVisibility(View.GONE);

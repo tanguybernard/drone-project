@@ -7,7 +7,7 @@ import android.util.Log;
 import projet.istic.fr.firedrone.FiredroneConstante;
 import projet.istic.fr.firedrone.Interceptor.Interceptor;
 import projet.istic.fr.firedrone.ModelAPI.DroneAPI;
-import projet.istic.fr.firedrone.listener.DroneEventListenerInterface;
+import projet.istic.fr.firedrone.listener.DroneEventListenerFragmentInterface;
 import projet.istic.fr.firedrone.model.ActionMissionDrone;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.Intervention;
@@ -29,7 +29,7 @@ public class DroneService {
      * @param droneEventInterface
      * @param context
      */
-    public static void askNewDrone(final DroneEventListenerInterface droneEventInterface, final Context context) {
+    public static void askNewDrone(final DroneEventListenerFragmentInterface droneEventInterface, final Context context) {
         final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
 
         final DroneAPI droneAPI = Interceptor.getInstance().getRestAdapter().create(DroneAPI.class);
@@ -39,7 +39,7 @@ public class DroneService {
             @Override
             public void success(Drone drone, Response response) {
                 intervention.addDrone(drone);
-                droneEventInterface.update();
+                droneEventInterface.updateCreateDrone();
             }
 
             @Override
@@ -61,14 +61,14 @@ public class DroneService {
      * @param drone
      * @param context
      */
-    public static void stopDrone(Drone drone, final Context context){
+    public static void stopDrone(final DroneEventListenerFragmentInterface droneEventInterface, Drone drone, final Context context){
         final DroneAPI droneAPI = Interceptor.getInstance().getRestAdapter().create(DroneAPI.class);
 
         ActionMissionDrone actionMissionDrone = new ActionMissionDrone(InterventionSingleton.getInstance().getIntervention().getId(), drone, null, false);
         droneAPI.actionDrone(actionMissionDrone, new Callback<Drone>() {
             @Override
             public void success(Drone drone, Response response) {
-                //intervention.deleteDrone(drone);
+                droneEventInterface.updateStopDrone();
             }
 
             @Override
@@ -85,22 +85,22 @@ public class DroneService {
      * @param drone
      * @param context
      */
-    public static void startDrone(Drone drone, MissionDrone mission, final Context context) {
+    public static void startDrone(final DroneEventListenerFragmentInterface droneEventInterface, Drone drone, MissionDrone mission, final Context context) {
         final DroneAPI droneAPI = Interceptor.getInstance().getRestAdapter().create(DroneAPI.class);
-        ActionMissionDrone actionMissionDrone = new ActionMissionDrone(InterventionSingleton.getInstance().getIntervention().getId(), drone, mission, true);
 
+        ActionMissionDrone actionMissionDrone = new ActionMissionDrone(InterventionSingleton.getInstance().getIntervention().getId(), drone, mission, true);
+        Log.d("error", "    " + actionMissionDrone.toString());
         droneAPI.actionDrone(actionMissionDrone, new Callback<Drone>() {
 
             @Override
             public void success(Drone newDrone, Response response) {
-
+                droneEventInterface.updateStartDrone();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("error", " - - - - - - > FLAG ERROR");
+                Log.d("error", " - - - - - - > FLAG ERROR : DroneService.startDrone()");
                 Log.d("error", "    " + error.getMessage());
-                Log.d("error", " - - - - - - > FLAG ERROR");
                 FiredroneConstante.getToastError(context).show();
             }
         });
@@ -113,14 +113,15 @@ public class DroneService {
      * @param drone
      * @param context
      */
-    public static void freeDrone(Drone drone, final Context context) {
+    public static void freeDrone(final DroneEventListenerFragmentInterface droneEventInterface, Drone drone, final Context context) {
         final Intervention intervention = InterventionSingleton.getInstance().getIntervention();
 
         final DroneAPI droneAPI = Interceptor.getInstance().getRestAdapter().create(DroneAPI.class);
         droneAPI.freeDrone(intervention.getId(), drone.getId(), new Callback<Drone>() {
             @Override
             public void success(Drone drone, Response response) {
-                Log.e("Success", " Here we are in the Success");
+                Log.d("FLAG", " - - - DroneService.freeDrone() : Here we are in the Success");
+                droneEventInterface.updateDeleteDrone();
             }
 
             @Override
