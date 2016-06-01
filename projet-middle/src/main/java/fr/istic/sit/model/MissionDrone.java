@@ -48,6 +48,9 @@ public class MissionDrone {
 
     @Override
     public String toString() {
-        return "mission{" + points + '}';
+        return "MissionDrone{" +
+                "mode='" + mode + '\'' +
+                ", points=" + points +
+                '}';
     }
 }

@@ -1,9 +1,6 @@
 package projet.istic.fr.firedrone.map;
 
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,7 +18,6 @@ import projet.istic.fr.firedrone.listener.ActionOnDroneEventListener;
 import projet.istic.fr.firedrone.listener.DroneEventListenerFragmentInterface;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.Intervention;
-import projet.istic.fr.firedrone.model.MissionDrone;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
 
@@ -38,7 +34,7 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
 
     //**   -   -  -    TRAJECTORY MODE    -  -   -  **//
     /**  SEGMENT MODE Boolean Flag  **/
-    private EnumTrajectoryMode mode;
+    private ModeMissionDrone mode;
 
     //**   -   -  -    Button    -  -   -  **//
     /**  ASK FOR A DRONE BUTTON  **/
@@ -107,7 +103,7 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
         //defaultBackgroundColor = ((ColorDrawable) buttonZone.getBackground()).getColor();
 
         //**   -  DEFAULT MODE  -   **//
-        setMode(EnumTrajectoryMode.NONE);
+        setMode(ModeMissionDrone.NONE);
 
         //**   -  Initialization of Buttons  -   **//
         initButtons();
@@ -150,9 +146,9 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
         buttonLoop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getMode() != EnumTrajectoryMode.LOOP) {
-                    setMode(EnumTrajectoryMode.LOOP);
-                    mapDroneFragment.setMode(EnumTrajectoryMode.LOOP);
+                if (getMode() != ModeMissionDrone.LOOP) {
+                    setMode(ModeMissionDrone.LOOP);
+                    mapDroneFragment.setMode(ModeMissionDrone.LOOP);
                     mapDroneFragment.updatePolyline();
 
                     buttonExclusion.setEnabled(false);
@@ -173,9 +169,9 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
         buttonSegment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getMode() != EnumTrajectoryMode.SEGMENT) {
-                    setMode(EnumTrajectoryMode.SEGMENT);
-                    mapDroneFragment.setMode(EnumTrajectoryMode.SEGMENT);
+                if (getMode() != ModeMissionDrone.SEGMENT) {
+                    setMode(ModeMissionDrone.SEGMENT);
+                    mapDroneFragment.setMode(ModeMissionDrone.SEGMENT);
                     mapDroneFragment.updatePolyline();
 
                     buttonExclusion.setEnabled(false);
@@ -197,9 +193,9 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
         buttonZone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getMode() != EnumTrajectoryMode.ZONE) {
-                    setMode(EnumTrajectoryMode.ZONE);
-                    mapDroneFragment.setMode(EnumTrajectoryMode.ZONE);
+                if (getMode() != ModeMissionDrone.ZONE) {
+                    setMode(ModeMissionDrone.ZONE);
+                    mapDroneFragment.setMode(ModeMissionDrone.ZONE);
                     mapDroneFragment.updatePolyline();
 
                     buttonExclusion.setEnabled(true);
@@ -219,20 +215,20 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
         buttonExclusion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getMode() != EnumTrajectoryMode.EXCLUSION) {
+                if (getMode() != ModeMissionDrone.EXCLUSION) {
                     buttonExclusion.setTextColor(Color.WHITE);
                     buttonExclusion.setBackgroundColor(Color.DKGRAY);
 
-                    setMode(EnumTrajectoryMode.EXCLUSION);
-                    mapDroneFragment.setMode(EnumTrajectoryMode.EXCLUSION);
+                    setMode(ModeMissionDrone.EXCLUSION);
+                    mapDroneFragment.setMode(ModeMissionDrone.EXCLUSION);
                     mapDroneFragment.updatePolyline();
                 }
                 else {
                     buttonExclusion.setTextColor(defaultTextColor);
                     buttonExclusion.setBackgroundColor(defaultBackgroundColor);
 
-                    setMode(EnumTrajectoryMode.ZONE);
-                    mapDroneFragment.setMode(EnumTrajectoryMode.ZONE);
+                    setMode(ModeMissionDrone.ZONE);
+                    mapDroneFragment.setMode(ModeMissionDrone.ZONE);
                     mapDroneFragment.updatePolyline();
                 }
 
@@ -380,11 +376,11 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
     //**    -   -   -   -   -   -   -   -   -   -   -   -    **//
     //**   -    -     - - Getters & Setters - -    -     -   **//
 
-    public EnumTrajectoryMode getMode() {
+    public ModeMissionDrone getMode() {
         return mode;
     }
 
-    public void setMode(EnumTrajectoryMode mode) {
+    public void setMode(ModeMissionDrone mode) {
         this.mode = mode;
     }
 
@@ -418,7 +414,7 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
     public void updateDeleteDrone() {
         noDroneLAYOUTMODE();
         mapDroneFragment.clearMissionOnMap();
-        mapDroneFragment.setMode(EnumTrajectoryMode.NONE);
+        mapDroneFragment.setMode(ModeMissionDrone.NONE);
         //**  Refresh MAP  **//
         mapDroneFragment.refreshPointDrone();
         //**  -  -   -  -  **//
@@ -429,7 +425,6 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
     @Override
     public void updateStartDrone() {
         yourDroneIsMovingLAYOUTMODE();
-        mapDroneFragment.clearMissionOnMap();
         //**  Refresh MAP  **//
         mapDroneFragment.refreshPointDrone();
         //**  -  -   -  -  **//
@@ -437,6 +432,7 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
 
     @Override
     public void updateStopDrone() {
+        mapDroneFragment.clearMissionOnMap();
         //**  Refresh MAP  **//
         mapDroneFragment.refreshPointDrone();
         //**  -  -   -  -  **//

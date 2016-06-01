@@ -65,7 +65,7 @@ public class DroneService {
 
                 case LOOP:
                     command += "python move_drone_boucle.py ";
-                    cmdArgs_connect = "--connect " + TCP+":"+drone.getIp()+":"+drone.getPort() + " ";
+                    cmdArgs_connect = "--connect " + drone.getIp()+":"+drone.getPort() + " ";
                     cmdArgs_mission = "--mission " + actionMissionDrone.getMission().toString();
                     cmdArgs_idDrone = "--idDrone " + drone.getId() ;
                     cmdArgs_idIntervention = "--idIntervention " + actionMissionDrone.getIdIntervention() ;
@@ -84,7 +84,7 @@ public class DroneService {
                     break;
                 case SEGMENT:
                     command += "python move_drone_segment.py ";
-                    cmdArgs_connect = "--connect " + TCP+":"+drone.getIp()+":"+drone.getPort() + " ";
+                    cmdArgs_connect = "--connect " + drone.getIp()+":"+drone.getPort() + " ";
                     cmdArgs_mission = "--mission " + actionMissionDrone.getMission().toString();
                     cmdArgs_idDrone = "--idDrone " + drone.getId() ;
                     cmdArgs_idIntervention = "--idIntervention " + actionMissionDrone.getIdIntervention() ;

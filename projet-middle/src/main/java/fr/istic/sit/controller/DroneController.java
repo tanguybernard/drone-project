@@ -29,7 +29,7 @@ public class DroneController {
     //@Notification
     @RequestMapping(method = RequestMethod.PATCH)
     @ApiOperation(value = "Action on Drone", nickname = "Action Drone")
-    public void actionDrone(OAuth2Authentication authentication, @RequestBody ActionMissionDrone actionMissionDrone){
+    public void actionDrone(OAuth2Authentication authentication, @RequestBody ActionMissionDrone actionMissionDrone) {
         service.action(actionMissionDrone);
     }
 
