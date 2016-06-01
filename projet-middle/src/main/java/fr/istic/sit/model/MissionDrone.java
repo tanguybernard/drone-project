@@ -46,8 +46,12 @@ public class MissionDrone {
 
     //**     -      Getters & Setters      -     **//
 
+
     @Override
     public String toString() {
-        return "mission{" + points + '}';
+        return "MissionDrone{" +
+                "mode='" + mode + '\'' +
+                ", points=" + points +
+                '}';
     }
 }
