@@ -18,6 +18,10 @@ public class ActionMissionDrone {
 
     //**     -      Constructor      -     **//
 
+    public ActionMissionDrone(){
+
+    }
+
     public ActionMissionDrone(String idIntervention, Drone drone, MissionDrone mission, boolean start) {
         this.idIntervention = idIntervention;
         this.drone = drone;

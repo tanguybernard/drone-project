@@ -13,6 +13,10 @@ public class PointMissionDrone {
 
     //**     -      Constructor      -     **//
 
+    public PointMissionDrone(){
+
+    }
+
     public PointMissionDrone(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
