@@ -75,7 +75,7 @@ public class MapDroneFragment extends SupportMapFragment implements
     /**   CurrentDrone   **/
     transient private Drone currentDrone;
 
-    private EnumTrajectoryMode mode;
+    private ModeMissionDrone mode;
 
 
     @Override
@@ -94,7 +94,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         }
 
         //**   -  DEFAULT MODE  -   **//
-        setMode(EnumTrajectoryMode.NONE);
+        setMode(ModeMissionDrone.NONE);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         Log.v("MainActivity", "onMapClick(LatLng point)");
 
         //add marker
-        if (getMode() != EnumTrajectoryMode.NONE) {
+        if (getMode() != ModeMissionDrone.NONE) {
             putMarker(point, listMarkers.size());
         }
     }
@@ -365,12 +365,12 @@ public class MapDroneFragment extends SupportMapFragment implements
         this.currentDrone = currentDrone;
     }
 
-    public void setMode(EnumTrajectoryMode mode) {
+    public void setMode(ModeMissionDrone mode) {
         this.mode = mode;
     }
 
     @Override
-    public EnumTrajectoryMode getMode() {
+    public ModeMissionDrone getMode() {
         return this.mode;
     }
 }

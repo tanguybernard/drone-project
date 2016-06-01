@@ -46,7 +46,6 @@ public class MissionDrone {
 
     //**     -      Getters & Setters      -     **//
 
-
     @Override
     public String toString() {
         return "MissionDrone{" +
