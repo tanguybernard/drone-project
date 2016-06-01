@@ -27,6 +27,8 @@ public class ActionMissionDrone {
         this.drone = drone;
         this.mission = mission;
         this.start = start;
+
+        System.out.println();
     }
 
 
@@ -77,4 +79,6 @@ public class ActionMissionDrone {
                 ", start=" + start +
                 '}';
     }
+
+
 }

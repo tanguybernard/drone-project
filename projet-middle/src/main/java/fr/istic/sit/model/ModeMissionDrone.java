@@ -27,7 +27,14 @@ public enum ModeMissionDrone {
     }
 
     public static ModeMissionDrone getModeFromString(String value){
-        if ( value == ZONE.getValue() ) {
+
+        for (ModeMissionDrone mode: ModeMissionDrone.values()) {
+            if (mode.getValue().equals(value))
+                return mode;
+        }
+
+
+        /*if ( value == ZONE.getValue() ) {
             return ZONE;
         }
         else if ( value == SEGMENT.getValue() ) {
@@ -38,6 +45,7 @@ public enum ModeMissionDrone {
         }
         else {
             return null;
-        }
+        }*/
+        return null;
     }
 }

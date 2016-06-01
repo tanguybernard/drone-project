@@ -38,6 +38,7 @@ public class InterventionService {
     DroneService droneService;
     private Integer nextDroneID = 0;
     private String DEFAULT_IP_DRONE="127.0.0.1";
+    private Integer DEFAULT_PORT_DRONE_MAV_PROXY = 14550;
 
     public Intervention getId(String id) {
         return repository.findOne(id);
@@ -259,7 +260,7 @@ public class InterventionService {
                 //**  Initialize the Drone  **/
                 drone.setId(getNextIDDRONE().toString());
                 drone.setIp(DEFAULT_IP_DRONE);
-                final Integer port = Integer.parseInt(drone.getId()) * 10 + 5760;
+                final Integer port = Integer.parseInt(drone.getId()) * 1 + DEFAULT_PORT_DRONE_MAV_PROXY;
                 drone.setPort(port.toString());
                 drone.setLatitude(intervention.getLatitude().toString());
                 drone.setLongitude(intervention.getLongitude().toString());

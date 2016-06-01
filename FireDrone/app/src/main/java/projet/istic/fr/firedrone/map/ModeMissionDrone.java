@@ -3,14 +3,14 @@ package projet.istic.fr.firedrone.map;
 /**
  * @author Group A.
  */
-public enum EnumTrajectoryMode {
+public enum ModeMissionDrone {
 
-    NONE("NONE"),
-    LOOP("LOOP"), SEGMENT("SEGMENT"), ZONE("ZONE"), EXCLUSION("EXCLUSION");
+    NONE("MODE_NONE"),
+    LOOP("MODE_LOOP"), SEGMENT("MODE_SEGMENT"), ZONE("MODE_ZONE"), EXCLUSION("MODE_EXCLUSION");
 
     private String value;
 
-    EnumTrajectoryMode(String value) {
+    ModeMissionDrone(String value) {
         this.value = value;
     }
 
