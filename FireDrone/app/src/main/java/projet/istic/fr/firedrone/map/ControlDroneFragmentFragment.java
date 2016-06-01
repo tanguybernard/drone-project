@@ -34,7 +34,7 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
 
     //**   -   -  -    TRAJECTORY MODE    -  -   -  **//
     /**  SEGMENT MODE Boolean Flag  **/
-    private ModeMissionDrone mode;
+    private transient ModeMissionDrone mode;
 
     //**   -   -  -    Button    -  -   -  **//
     /**  ASK FOR A DRONE BUTTON  **/
@@ -48,7 +48,7 @@ public class ControlDroneFragmentFragment extends Fragment implements Serializab
     /**  EXCLUSION BUTTON Flag  **/
     private transient Button buttonExclusion;
     /**  START BUTTON Flag  **/
-    private  Button buttonStart;
+    private  transient Button buttonStart;
     /**  STOP BUTTON Flag  **/
     private transient Button buttonStop;
     /**  FREE DRONE BUTTON Flag  **/
