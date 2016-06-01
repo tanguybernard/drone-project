@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.io.FilterInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,7 +41,12 @@ public class ImageDownloaderService extends AsyncTask<String, Integer, Bitmap>{
                 throw new Exception("Failed to connect");
 
             InputStream is = httpCon.getInputStream();
-            return BitmapFactory.decodeStream(is);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            options.inSampleSize = 2;
+
+            return BitmapFactory.decodeStream(new FlushedInputStream(is), null, options);
 
         }catch(Exception e){
             Log.e("Image","Failed to load image",e);
@@ -63,5 +70,30 @@ public class ImageDownloaderService extends AsyncTask<String, Integer, Bitmap>{
     @Override
     protected void onCancelled(){
         // Handle what you want to do if you cancel this task
+    }
+
+
+    static class FlushedInputStream extends FilterInputStream {
+        public FlushedInputStream(InputStream inputStream) {
+            super(inputStream);
+        }
+
+        @Override
+        public long skip(long n) throws IOException {
+            long totalBytesSkipped = 0L;
+            while (totalBytesSkipped < n) {
+                long bytesSkipped = in.skip(n - totalBytesSkipped);
+                if (bytesSkipped == 0L) {
+                    int b = read();
+                    if (b < 0) {
+                        break;  // we reached EOF
+                    } else {
+                        bytesSkipped = 1; // we read one byte
+                    }
+                }
+                totalBytesSkipped += bytesSkipped;
+            }
+            return totalBytesSkipped;
+        }
     }
 }
