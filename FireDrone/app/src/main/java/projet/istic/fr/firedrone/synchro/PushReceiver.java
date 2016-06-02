@@ -10,6 +10,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
@@ -48,6 +49,9 @@ public class PushReceiver extends BroadcastReceiver  {
         if (intent.getStringExtra("idIntervention") != null) {
             idIntervention = intent.getStringExtra("idIntervention");
         }
+
+        if (intent.getStringExtra("test") != null) {
+            System.out.println("ddddddddddddddddddddddddddddddddddddddddddddddd");        }
 
         Intervention inter = InterventionSingleton.getInstance().getIntervention();
         if (inter != null) {

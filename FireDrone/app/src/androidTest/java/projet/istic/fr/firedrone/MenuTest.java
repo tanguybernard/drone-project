@@ -8,6 +8,8 @@ import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
+import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -46,6 +48,8 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.times;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.Matchers.hasToString;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -57,7 +61,7 @@ public class MenuTest {
 
 
     @Test
-    public void loginToMain2(){
+    public void deconnexionTest(){
         Intents.init();//Initializes Intents and begins recording intents.
 
         Espresso.onView(ViewMatchers.withId(R.id.loginField)).perform(typeText("tanguy"),closeSoftKeyboard());//test account
@@ -80,6 +84,7 @@ public class MenuTest {
 
         onView(withId(R.id.drawer_layout)).perform(open());
 
+
         try {
             Thread.sleep(4444);
         } catch (InterruptedException e) {
@@ -90,9 +95,50 @@ public class MenuTest {
 
         //Espresso.onData(Matchers.allOf((Iterable<Matcher<? super Object>>) instanceOf(NavigationMenuView.class))).perform()
 
-        //onData( Matchers.allOf( instanceOf( NavDrawerItem.class), navDrawerItemHavingName( rowContents))).perform( click());
-        onView(withId(R.id.nav_logout))
-                .perform(click());
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_logout));
+        //onView(withId(R.id.nav_logout)).perform(click());
+
+    }
+
+    @Test
+    public void selectInterTest(){
+        Intents.init();//Initializes Intents and begins recording intents.
+
+        Espresso.onView(ViewMatchers.withId(R.id.loginField)).perform(typeText("tanguy"),closeSoftKeyboard());//test account
+
+
+        Espresso.onView(ViewMatchers.withId(R.id.passField)).perform(typeText("tanguy"),closeSoftKeyboard());//test account
+
+
+
+        Espresso.onView(ViewMatchers.withId(R.id.loginButton)).perform(ViewActions.click());
+
+
+        try {
+            Thread.sleep(4444);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
+
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onData(anything()).inAdapterView(withId(R.id.interventionList)).atPosition(0).perform(click());
+
+
+        try {
+            Thread.sleep(4444);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
