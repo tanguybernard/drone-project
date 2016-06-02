@@ -68,6 +68,10 @@ public class MoyenRequestFragment extends Fragment implements Observateur {
         return view;
     }
 
+    /**
+     * get ways requested for all interventions
+     * @return
+     */
     private List<MeansItem> getListData() {
 
         RestAdapter restAdapter = new RestAdapter.Builder()

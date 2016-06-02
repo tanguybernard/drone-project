@@ -80,28 +80,6 @@ public class ImageFragment extends Fragment implements Observateur {
         return view;
     }
 
-
-    // Prepare some dummy data for gridview
-    private ArrayList<ImageItem> getData() {
-        final ArrayList<ImageItem> imageItems = new ArrayList<>();
-        /**for (int i = 0; i < imgs.length(); i++) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), imgs.getResourceId(i, -1));
-            imageItems.add(new ImageItem(bitmap, "Image#" + i));
-        }
-         return imageItems;*/
-        Bitmap bitmap=null;
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.accident_rouge);
-        ImageItem i = new ImageItem();
-        i.setImageUrl("http://ekladata.com/ayidw9UokbdBaQ82I94dHfkgHok.png");
-        i.setDate("Osef3");
-        i.setLatitude("48.2292016");
-        i.setLongitude("-1.5300694999999678");
-        imageItems.add(i);
-
-        generateMap(imageItems,view);
-        return imageItems;
-    }
-
     /**
      *
      * @return list data of in progress interventions
