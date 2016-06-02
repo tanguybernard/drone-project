@@ -32,9 +32,15 @@ public class DroneService {
      */
     public void createDrone(String id, String latitude, String longitude){
         log.info("Creating drone....");
-        String command = "./create-drone.sh " + id + " " + latitude + " " + longitude;
+        //String command = "./create-drone.sh " + id + " " + latitude + " " + longitude;
+
+        executeShellComand.executeCommandStart("ls","-la","","");
+
+        String command = "./create-drone.sh";
+        String response = executeShellComand.executeCommandStart(command, id, latitude, longitude);
+
         //String commandCreateDrone = "python create_drone.py --instance " + id + " --latitude " + latitude + " --longitude " + longitude + " &" ;
-        String response = executeShellComand.executeCommand(command);
+        //String response = executeShellComand.executeCommand2(command);
 
         log.info("Response ----> create-drone.sh  " + response);
 
@@ -64,7 +70,7 @@ public class DroneService {
      parser.add_argument('--imageFolder', help='Dossier des images',required=True)
 
      */
-    public void action(ActionMissionDrone actionMissionDrone){
+    public void actionNO(ActionMissionDrone actionMissionDrone){
         log.info("Action on drone....");
 
         String command = new String();
@@ -84,7 +90,7 @@ public class DroneService {
                     break;
 
                 case SEGMENT:
-                    //command += "python move_drone_segment.py ";
+                    //command += "./move_drone_segment.py ";
                     command += "./move_drone_segment.sh  ";
                     break;
 
@@ -92,14 +98,14 @@ public class DroneService {
                     break;
 
             }
-        /*    cmdArgs_connect = "--connect " + drone.getIp()+":"+drone.getPort() + " ";
+          /*  cmdArgs_connect = "--connect " + drone.getIp()+":"+drone.getPort() + " ";
             cmdArgs_mission = "--mission " + actionMissionDrone.toJson() + " ";
             cmdArgs_idDrone = "--idDrone " + drone.getId() + " ";
-            cmdArgs_idIntervention = "--idIntervention " + actionMissionDrone.getIdIntervention() ;
-*/
+            cmdArgs_idIntervention = "--idIntervention " + actionMissionDrone.getIdIntervention() ;*/
+
 
             cmdArgs_connect = drone.getIp()+":"+drone.getPort() + " ";
-            cmdArgs_mission = actionMissionDrone.toJson() + " ";
+            cmdArgs_mission = actionMissionDrone.stringCommand() + " ";
             cmdArgs_idDrone = drone.getId() + " ";
             cmdArgs_idIntervention = actionMissionDrone.getIdIntervention() ;
 
@@ -113,8 +119,77 @@ public class DroneService {
             log.info("Response "+ response);
 
         }
+        //** ACTION == STOP **//
         else {
 
+            command += "python stop_drone.py --connect " + actionMissionDrone.getDrone().getIp()+":"+actionMissionDrone.getDrone().getPort() ;
+            log.info("- - -> Requete : "+ command);
+            response = executeShellComand.executeCommand(command);
+        }
+        log.info("Response "+ response);
+    }
+
+    public void action(ActionMissionDrone actionMissionDrone){
+        log.info("Action on drone MONIK....");
+
+        String command = new String();
+        String response = "";
+
+        if(actionMissionDrone.isStart()) {
+            String cmdArgs_connect ;
+            String cmdArgs_mission ;
+            String cmdArgs_idDrone ;
+            String cmdArgs_idIntervention ;
+            Drone drone = actionMissionDrone.getDrone();
+
+            switch (ModeMissionDrone.getModeFromString(actionMissionDrone.getMission().getMode())) {
+
+                case LOOP:
+                    command += "python move_drone_boucle.py ";
+                    break;
+
+                case SEGMENT:
+                    //command += "./move_drone_segment.py ";
+                    command ="./move_drone_segment.sh";
+                    break;
+
+                case ZONE:
+                    break;
+
+            }
+          /*  cmdArgs_connect = "--connect " + drone.getIp()+":"+drone.getPort() + " ";
+            cmdArgs_mission = "--mission " + actionMissionDrone.toJson() + " ";
+            cmdArgs_idDrone = "--idDrone " + drone.getId() + " ";
+            cmdArgs_idIntervention = "--idIntervention " + actionMissionDrone.getIdIntervention() ;*/
+
+
+         /*   cmdArgs_connect = drone.getIp()+":"+drone.getPort() + " ";
+            cmdArgs_mission = actionMissionDrone.stringCommand() + " ";
+            cmdArgs_idDrone = drone.getId() + " ";
+            cmdArgs_idIntervention = actionMissionDrone.getIdIntervention() ;*/
+            cmdArgs_connect = drone.getIp()+":"+drone.getPort();
+            cmdArgs_mission = actionMissionDrone.stringCommand();
+            cmdArgs_idDrone = drone.getId();
+            cmdArgs_idIntervention = actionMissionDrone.getIdIntervention();
+
+
+           /* command += cmdArgs_connect;
+            command += cmdArgs_mission;
+            command += cmdArgs_idDrone;
+            command += cmdArgs_idIntervention;*/
+
+            log.info("- - -> Requete : "+ command+""+cmdArgs_connect+""+cmdArgs_mission+""+cmdArgs_idDrone+""+ cmdArgs_idIntervention);
+            //response = executeShellComand.executeCommand(command);
+            response = executeShellComand.executeCommandMove(command,cmdArgs_connect,cmdArgs_mission,cmdArgs_idDrone, cmdArgs_idIntervention );
+            log.info("Response "+ response);
+
+        }
+        //** ACTION == STOP **//
+        else {
+
+            command += "python stop_drone.py --connect " + actionMissionDrone.getDrone().getIp()+":"+actionMissionDrone.getDrone().getPort() ;
+            log.info("- - -> Requete : "+ command);
+            response = executeShellComand.executeCommand(command);
         }
         log.info("Response "+ response);
     }
