@@ -104,7 +104,7 @@ public class ActionMissionDrone {
 
     public String stringCommand(){
         StringBuilder builder = new StringBuilder();
-        builder.append("'(");
+        builder.append("(");
         boolean firstRound = true;
         for(PointMissionDrone pointMissionDrone: mission.getPoints()){
             if(firstRound) {
@@ -115,7 +115,7 @@ public class ActionMissionDrone {
             }
             builder.append(pointMissionDrone.stringCommand());
         }
-        builder.append(")'");
+        builder.append(")");
 
         return builder.toString();
     }
