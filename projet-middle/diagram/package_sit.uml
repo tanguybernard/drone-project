@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>fr.istic.sit</OriginalElement>
+  <nodes>
+    <node x="2.0" y="104.0">fr.istic.sit.aspect</node>
+    <node x="-179.0" y="93.0">fr.istic.sit.data</node>
+    <node x="472.0" y="-9.0">fr.istic.sit.configuration</node>
+    <node x="-170.0" y="134.0">fr.istic.sit.Application</node>
+    <node x="11.0" y="-7.0">fr.istic.sit.dao</node>
+    <node x="279.0" y="112.0">fr.istic.sit.service</node>
+    <node x="253.0" y="-7.0">fr.istic.sit.security</node>
+    <node x="480.0" y="240.0">fr.istic.sit.controller</node>
+    <node x="270.0" y="246.0">fr.istic.sit.exception</node>
+    <node x="-179.0" y="-5.0">fr.istic.sit.annotation</node>
+    <node x="0.0" y="231.0">fr.istic.sit.domain</node>
+    <node x="-180.0" y="44.0">fr.istic.sit.util</node>
+    <node x="481.0" y="114.0">fr.istic.sit.notification</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="fr.istic.sit.service" target="fr.istic.sit.domain">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.service" target="fr.istic.sit.notification">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.service" target="fr.istic.sit.service">
+      <point x="0.0" y="0.0" />
+      <point x="344.5" y="87.5" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.service" target="fr.istic.sit.exception">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.domain" target="fr.istic.sit.domain">
+      <point x="0.0" y="0.0" />
+      <point x="67.0" y="206.5" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.aspect" target="fr.istic.sit.domain">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.controller" target="fr.istic.sit.service">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.exception" target="fr.istic.sit.exception">
+      <point x="0.0" y="0.0" />
+      <point x="344.5" y="221.5" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.service" target="fr.istic.sit.dao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.configuration" target="fr.istic.sit.security">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.aspect" target="fr.istic.sit.service">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.security" target="fr.istic.sit.dao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="fr.istic.sit.aspect" target="fr.istic.sit.dao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="221.0" y="199.5" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -32,8 +32,6 @@ import projet.istic.fr.firedrone.synchro.Observateur;
  */
 public class MoyenFragment extends Fragment implements Observateur {
 
-    public static final String END_POINT = "http://m2gla-drone.istic.univ-rennes1.fr:8080";
-
     //Instance
     private static MoyenFragment INSTANCE;
 
