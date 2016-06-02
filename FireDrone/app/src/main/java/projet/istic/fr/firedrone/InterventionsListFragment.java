@@ -202,10 +202,7 @@ public class InterventionsListFragment extends Fragment implements Observateur {
     public void actualiser(Observable o) {
         if(o instanceof MyObservable){
 
-            Fragment frag = getFragmentManager().findFragmentById(R.id.content_frame);
-
-            InterventionsListFragment myFragment = (InterventionsListFragment)getFragmentManager().findFragmentByTag("InterventionsListFragment");
-            if (myFragment != null && myFragment.isVisible()) {
+            if (this.isVisible()) {
 
                 FragmentTransaction tr = getFragmentManager().beginTransaction();
                 tr.replace(R.id.content_frame, this);
