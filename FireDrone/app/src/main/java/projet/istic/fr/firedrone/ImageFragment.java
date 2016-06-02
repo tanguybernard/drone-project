@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -64,38 +65,26 @@ public class ImageFragment extends Fragment implements Observateur {
         view = inflater.inflate(R.layout.image_gallery, container, false);
 
         //Création de la liste et affichage dans la gridView
-        getListData();
+        getListData(true);
+
+
+        final Button btnAll = (Button) view.findViewById(R.id.btnAllImages);
+
+        btnAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getListData(false);
+            }
+        });
 
         return view;
-    }
-
-
-    // Prepare some dummy data for gridview
-    private ArrayList<ImageItem> getData() {
-        final ArrayList<ImageItem> imageItems = new ArrayList<>();
-        /**for (int i = 0; i < imgs.length(); i++) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), imgs.getResourceId(i, -1));
-            imageItems.add(new ImageItem(bitmap, "Image#" + i));
-        }
-         return imageItems;*/
-        Bitmap bitmap=null;
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.accident_rouge);
-        ImageItem i = new ImageItem();
-        i.setImageUrl("http://ekladata.com/ayidw9UokbdBaQ82I94dHfkgHok.png");
-        i.setDate("Osef3");
-        i.setLatitude("48.2292016");
-        i.setLongitude("-1.5300694999999678");
-        imageItems.add(i);
-
-        generateMap(imageItems,view);
-        return imageItems;
     }
 
     /**
      *
      * @return list data of in progress interventions
      */
-    private List<ImageItem> getListData() {
+    private List<ImageItem> getListData(final boolean generateMapBool) {
 
         final List<ImageItem> imageItems = new ArrayList<ImageItem>();
 
@@ -132,7 +121,11 @@ public class ImageFragment extends Fragment implements Observateur {
                         startActivity(myIntent);
                     }
                 });
-                generateMap(images,view);
+
+                if(generateMapBool){
+                    generateMap(images,view);
+                }
+
             }
 
             @Override

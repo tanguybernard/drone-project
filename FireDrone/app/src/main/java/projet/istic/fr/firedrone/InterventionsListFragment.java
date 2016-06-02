@@ -58,6 +58,7 @@ public class InterventionsListFragment extends Fragment implements Observateur {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
 
+        //save observable with observer
         MyObservable p = MyObservable.getInstance();
         p.ajouterObservateur(this);
         
@@ -117,6 +118,7 @@ public class InterventionsListFragment extends Fragment implements Observateur {
      */
     private List<Intervention> getListData(final View view) {
 
+        //call api rest server
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FiredroneConstante.END_POINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -202,11 +204,10 @@ public class InterventionsListFragment extends Fragment implements Observateur {
     public void actualiser(Observable o) {
         if(o instanceof MyObservable){
 
-            Fragment frag = getFragmentManager().findFragmentById(R.id.content_frame);
+            //fragment visible
+            if (this.isVisible()) {
 
-            InterventionsListFragment myFragment = (InterventionsListFragment)getFragmentManager().findFragmentByTag("InterventionsListFragment");
-            if (myFragment != null && myFragment.isVisible()) {
-
+                //replace fragment
                 FragmentTransaction tr = getFragmentManager().beginTransaction();
                 tr.replace(R.id.content_frame, this);
                 tr.commit();

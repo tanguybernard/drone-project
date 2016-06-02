@@ -1,6 +1,7 @@
 from dronekit import connect, VehicleMode,Command
 from pymavlink import mavutil
 import time
+import ee
 #Set up option parsing to get connection string
 import argparse
 parser = argparse.ArgumentParser(description='Print out vehicle state information. Connects to SITL on local PC by default.')
@@ -52,6 +53,7 @@ def encode_multipart_formdata(fields, files):
 
 def post_multipart(host, fields, files):
     import requests
+    print 'post'
     content_type, body = encode_multipart_formdata(fields, files)
     headers = {
         'content-type': content_type,
@@ -60,7 +62,7 @@ def post_multipart(host, fields, files):
     r = requests.post(host, data=body, headers=headers)
     return r.text
 
-vehicle = connect(args.connect, wait_ready=True,baud=57600)
+vehicle = connect(args.connect, wait_ready=True)
 def arm_and_takeoff(aTargetAltitude):
     """
     Arms vehicle and fly to aTargetAltitude.
@@ -106,10 +108,11 @@ def arm_and_takeoff(aTargetAltitude):
         time.sleep(1)
 
 nextPoint = 0
-arm_and_takeoff(15)
+arm_and_takeoff(70)
 
 if args.mission != None:
-
+    import json
+    dataMission  = json.loads(args.mission)
     # Get commands object from Vehicle.
     cmds = vehicle.commands
 
@@ -119,11 +122,10 @@ if args.mission != None:
     cmds.add(Command( 0, 0, 0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0, 10, 10, 10))
     vehicle.flush() # Send commands
 
-    val = eval(args.mission)
     #boucle
-    for lat,lon in val:
-            cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,lat, lon, 15)
-            cmds.add(cmd)
+    for missionitem in dataMission['mission']:
+        cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 0, 0, 0, 0, 0,missionitem['latitude'], missionitem['longitude'], 70)
+        cmds.add(cmd)
 
     cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,mavutil.mavlink.MAV_CMD_DO_JUMP, 0, 0, 1, -1, 0, 0, 0, 0, 0)
     cmds.add(cmd)

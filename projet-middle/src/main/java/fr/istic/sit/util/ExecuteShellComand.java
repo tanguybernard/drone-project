@@ -1,12 +1,17 @@
 package fr.istic.sit.util;
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
 import org.apache.tomcat.util.file.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -55,12 +60,79 @@ public class ExecuteShellComand {
             }
 
         } catch (Exception e) {
-            log.error("* * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
-            log.error("Exception while executing :  " + command);
+            log.info("* * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
+            log.info("Exception while executing :  " + command);
             e.printStackTrace();
         }
 
         return output.toString();
 
     }
+
+    public String executeCommand2(String command){
+       // String line = "AcroRd32.exe /p /h " + file.getAbsolutePath();
+        try {
+            log.info("executeCommand2.....");
+            CommandLine cmdLine = CommandLine.parse(command);
+            DefaultExecutor executor = new DefaultExecutor();
+            log.info("AVANT ------executeCommand2.....");
+
+            int exitValue = executor.execute(cmdLine);
+            return "Response "+exitValue;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return "XXXX";
+    }
+
+    public String executeCommandStart(String command, String id, String lat, String lon){
+        try {
+            log.info("Starting executeCommandStart..."+command);
+            ProcessBuilder pb = new ProcessBuilder(command, id, lat, lon);
+            Process p = pb.start();
+            log.info("End executeCommandStart...");
+        }
+        catch(IOException e) {
+            log.info("* * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
+            log.info("Exception while executing :  " + command);
+            e.printStackTrace();
+        }
+        return "OK executeCommandStart";
+
+    }
+
+    public String executeCommandMove( String command, String cmdArgs_connect, String cmdArgs_mission, String cmdArgs_idDrone, String cmdArgs_idIntervention ){
+        try {
+            log.info("Starting executeCommandMove..."+command);
+            ProcessBuilder pb = new ProcessBuilder(command, cmdArgs_connect, cmdArgs_mission, cmdArgs_idDrone, cmdArgs_idIntervention);
+            Process p = pb.start();
+            log.info("End executeCommandMove...");
+        }
+        catch(IOException e) {
+            log.info("* * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
+            log.info("Exception while executing :  " + command);
+            e.printStackTrace();
+        }
+        return "OK executeCommandMove";
+
+    }
+/*
+    public String executeCommandVar(String ... param){
+        try {
+            log.info("Starting executeCommandVar...");
+            ProcessBuilder pb = new ProcessBuilder(param);
+            Process p = pb.start();
+            log.info("End executeCommandStart...");
+        }
+        catch(IOException e) {
+            log.info("* * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
+            log.info("Exception while executing :  " + param);
+            e.printStackTrace();
+        }
+        return "OK executeCommandStart";
+
+    }*/
+
+
 }
+
