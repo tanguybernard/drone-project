@@ -98,6 +98,21 @@ public class ExecuteShellComand {
             e.printStackTrace();
         }
         return "OK executeCommandStart";
+    }
+
+    public String executeCommandStop(String command, String ip){
+        try {
+            log.info("Starting executeCommandStop..."+command);
+            ProcessBuilder pb = new ProcessBuilder(command, ip);
+            Process p = pb.start();
+            log.info("End executeCommandStop...");
+        }
+        catch(IOException e) {
+            log.info("* * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
+            log.info("Exception while executing :  " + command);
+            e.printStackTrace();
+        }
+        return "OK executeCommandStop";
 
     }
 

@@ -128,9 +128,11 @@ public class DroneService {
         else {
 
             //command += "python stop_drone.py --connect " + actionMissionDrone.getDrone().getIp()+":"+actionMissionDrone.getDrone().getPort() ;
-            command += "./stop_drone.sh " + actionMissionDrone.getDrone().getIp()+":"+actionMissionDrone.getDrone().getPort() ;
+            //command += "./stop_drone.sh " + actionMissionDrone.getDrone().getIp()+":"+actionMissionDrone.getDrone().getPort() ;
+            command = "./stop_drone.sh";
             log.info("- - -> Requete : "+ command);
-            response = executeShellComand.executeCommand(command);
+            response = executeShellComand.executeCommandStop(command, actionMissionDrone.getDrone().getIp()+":"+actionMissionDrone.getDrone().getPort());
+           // response = executeShellComand.executeCommand(command);
         }
         log.info("Response "+ response);
     }
