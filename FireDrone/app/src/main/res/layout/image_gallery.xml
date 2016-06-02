@@ -28,7 +28,7 @@
 
     </LinearLayout>
 
-    <Button android:id="@+id/btnAddIntervention" style="?android:attr/buttonStyleSmall"
+    <Button android:id="@+id/btnAllImages" style="?android:attr/buttonStyleSmall"
         android:layout_width="788dp" android:layout_height="wrap_content"
         android:text="Tout"
         android:layout_gravity="bottom"
