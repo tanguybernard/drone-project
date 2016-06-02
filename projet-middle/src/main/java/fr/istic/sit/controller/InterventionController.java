@@ -137,6 +137,7 @@ public class InterventionController {
         return service.editRessource(id,ressource).getRessources();
     }
 
+    @Notification
     @RequestMapping(value= "/{id}/drone" , method = RequestMethod.PATCH)
     @ApiOperation(value = "Edit a drone of an intervention", nickname = "EditDroneOfIntervention", response = Drone.class )
     public Drone updateDroneToIntervention(OAuth2Authentication authentication, @ParamNotification @PathVariable String id, @RequestBody Drone drone) {

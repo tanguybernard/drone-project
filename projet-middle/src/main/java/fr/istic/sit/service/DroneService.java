@@ -5,6 +5,7 @@ import fr.istic.sit.model.ActionMissionDrone;
 import fr.istic.sit.model.MissionDrone;
 import fr.istic.sit.model.ModeMissionDrone;
 import fr.istic.sit.util.ExecuteShellComand;
+import fr.istic.sit.util.ThreadExecuteShellCommand;
 import org.apache.xerces.util.SymbolTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +87,8 @@ public class DroneService {
             switch (ModeMissionDrone.getModeFromString(actionMissionDrone.getMission().getMode())) {
 
                 case LOOP:
-                    command += "python move_drone_boucle.py ";
+                    //command += "python move_drone_boucle.py ";
+                    command += "./move_drone_boucle.sh  ";
                     break;
 
                 case SEGMENT:
@@ -115,14 +117,18 @@ public class DroneService {
             command += cmdArgs_idIntervention;
 
             log.info("- - -> Requete : "+ command);
-            response = executeShellComand.executeCommand(command);
-            log.info("Response "+ response);
 
+            new ThreadExecuteShellCommand(actionMissionDrone.getMission().getMode(),command).start();
+            /*response = executeShellComand.executeCommand(command);
+            log.info("Response "+ response);
+            */
+            log.info("ThreadExecuteShellCommand APRES LANCER !!!!");
         }
         //** ACTION == STOP **//
         else {
 
-            command += "python stop_drone.py --connect " + actionMissionDrone.getDrone().getIp()+":"+actionMissionDrone.getDrone().getPort() ;
+            //command += "python stop_drone.py --connect " + actionMissionDrone.getDrone().getIp()+":"+actionMissionDrone.getDrone().getPort() ;
+            command += "./stop_drone.sh " + actionMissionDrone.getDrone().getIp()+":"+actionMissionDrone.getDrone().getPort() ;
             log.info("- - -> Requete : "+ command);
             response = executeShellComand.executeCommand(command);
         }

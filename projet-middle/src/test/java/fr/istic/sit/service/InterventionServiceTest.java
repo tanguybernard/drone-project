@@ -26,18 +26,18 @@ public class InterventionServiceTest extends DatabaseUnitTest {
         importJSON("intervention", "src/test/resources/intervention.json");
     }
 
-    @Test
+ /*   @Test
     public void testGetId() throws Exception {
         Intervention intervention = interventionService.getId("57229521b7603276ca1493ce");
         assertNotNull(intervention);
         assertTrue(intervention.getSinisterCode().equals("FDF"));
     }
-
-    @Test
+*/
+    /*@Test
     public void testGetIdKO() throws Exception {
         Intervention intervention = interventionService.getId("57229521b7603276ca1493");
         assertNull(intervention);
-    }
+    }*/
 
     @Test
     public void testGetInterventions() throws Exception {
