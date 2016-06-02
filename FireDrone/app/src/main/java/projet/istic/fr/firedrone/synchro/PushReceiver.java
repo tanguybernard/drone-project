@@ -10,6 +10,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import projet.istic.fr.firedrone.FiredroneConstante;
@@ -49,6 +50,9 @@ public class PushReceiver extends BroadcastReceiver  {
             idIntervention = intent.getStringExtra("idIntervention");
         }
 
+        if (intent.getStringExtra("test") != null) {
+            System.out.println("ddddddddddddddddddddddddddddddddddddddddddddddd");        }
+
         Intervention inter = InterventionSingleton.getInstance().getIntervention();
         if (inter != null) {
             if (idIntervention.equals(inter.getId())) {
@@ -78,9 +82,9 @@ public class PushReceiver extends BroadcastReceiver  {
                         .setContentText("Synchronisation ...");
         int NOTIFICATION_ID = 12345;
 
-        Intent targetIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(contentIntent);
+        //Intent targetIntent = new Intent(context, MainActivity.class);
+        //PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //builder.setContentIntent(contentIntent);
         NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nManager.notify(NOTIFICATION_ID, builder.build());
 

@@ -2,10 +2,14 @@ package projet.istic.fr.firedrone;
 
 
 import android.content.ComponentName;
+import android.support.design.internal.NavigationMenuItemView;
+import android.support.design.internal.NavigationMenuView;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
+import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -27,6 +31,7 @@ import projet.istic.fr.firedrone.LoginActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -36,41 +41,27 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.open;
+import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
+import static android.support.test.espresso.core.deps.guava.base.CharMatcher.is;
+import static android.support.test.espresso.core.deps.guava.base.Predicates.instanceOf;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.times;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.Matchers.hasToString;
+
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class LoginTest {
+public class MenuTest {
 
     @Rule
     public ActivityTestRule<LoginActivity> mLoginActivity = new ActivityTestRule<>(LoginActivity.class);
 
 
     @Test
-    public void login1(){
-
-        Espresso.onView(ViewMatchers.withId(R.id.loginField)).perform(typeText("toto"),closeSoftKeyboard());
-
-        Espresso.onView(ViewMatchers.withId(R.id.passField)).perform(typeText("titi"),closeSoftKeyboard());
-
-        Espresso.onView(ViewMatchers.withId(R.id.loginField))
-                .check(ViewAssertions.matches(ViewMatchers.withText("toto")));
-
-        Espresso.onView(ViewMatchers.withId(R.id.loginButton)).perform(ViewActions.click());
-
-
-    }
-
-    @Test
-    public void loginToMain(){
+    public void deconnexionTest(){
         Intents.init();//Initializes Intents and begins recording intents.
 
         Espresso.onView(ViewMatchers.withId(R.id.loginField)).perform(typeText("tanguy"),closeSoftKeyboard());//test account
@@ -83,14 +74,35 @@ public class LoginTest {
         Espresso.onView(ViewMatchers.withId(R.id.loginButton)).perform(ViewActions.click());
 
 
+        try {
+            Thread.sleep(4444);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
 
-        Intents.release();
+
+        onView(withId(R.id.drawer_layout)).perform(open());
+
+
+        try {
+            Thread.sleep(4444);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
+        //Espresso.onData(Matchers.allOf((Iterable<Matcher<? super Object>>) instanceOf(NavigationMenuView.class))).perform()
+
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_logout));
+        //onView(withId(R.id.nav_logout)).perform(click());
 
     }
 
     @Test
-    public void loginToMain2(){
+    public void selectInterTest(){
         Intents.init();//Initializes Intents and begins recording intents.
 
         Espresso.onView(ViewMatchers.withId(R.id.loginField)).perform(typeText("tanguy"),closeSoftKeyboard());//test account
@@ -103,7 +115,30 @@ public class LoginTest {
         Espresso.onView(ViewMatchers.withId(R.id.loginButton)).perform(ViewActions.click());
 
 
+        try {
+            Thread.sleep(4444);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
+
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onData(anything()).inAdapterView(withId(R.id.interventionList)).atPosition(0).perform(click());
+
+
+        try {
+            Thread.sleep(4444);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 

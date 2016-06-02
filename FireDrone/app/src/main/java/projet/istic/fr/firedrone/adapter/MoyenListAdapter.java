@@ -43,8 +43,8 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final Button subQuantity = (Button) convertView.findViewById(R.id.btn_req_refuse);
-        final Button addQuantity = (Button) convertView.findViewById(R.id.btn_req_valid);
+        final Button subQuantity = (Button) convertView.findViewById(R.id.btn_q_sub);
+        final Button addQuantity = (Button) convertView.findViewById(R.id.btn_q_add);
 
 
         final Spinner spinner = (Spinner) convertView.findViewById(R.id.colorMeanSpinner);
@@ -62,20 +62,24 @@ public class MoyenListAdapter extends ArrayAdapter<MoyenInterventionItem> {
                     break;
                 }
             }
+            subQuantity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    modifyQuantity(v,false);
+                }
+            });
 
-        subQuantity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                modifyQuantity(v,false);
-            }
-        });
 
-        addQuantity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                modifyQuantity(v,true);
-            }
-        });
+            addQuantity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    modifyQuantity(v,true);
+                }
+            });
+
+
+
+
 
         holder.myName.setText(item.getName());
         holder.quantity.setText(String.valueOf(item.getQuantity()), TextView.BufferType.EDITABLE);

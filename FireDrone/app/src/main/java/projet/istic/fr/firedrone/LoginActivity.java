@@ -132,25 +132,28 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        if(!new InternetConnectionService().isOnline(getApplicationContext()) || error.getCause() instanceof ConnectException){
-                            FiredroneConstante.getToastError(getApplicationContext()).show();
-                            FiredroneConstante.getToastError(getApplicationContext()).show();
-                        }
-                        else{
+
+                        if(new InternetConnectionService().isOnline(getApplicationContext())){
                             FiredroneConstante.getErrorLogin(getApplicationContext()).show();
                         }
+                        else{
+                            FiredroneConstante.getToastError(getApplicationContext()).show();
+                        }
+
                     }
                 });
             }
 
             @Override
             public void failure(RetrofitError error) {
-                if(new InternetConnectionService().isOnline(getApplicationContext())){
-                    FiredroneConstante.getErrorLogin(getApplicationContext()).show();
-                }
-                else{
+                if(!new InternetConnectionService().isOnline(getApplicationContext()) || error.getCause() instanceof ConnectException){
                     FiredroneConstante.getToastError(getApplicationContext()).show();
                 }
+                else{
+                    FiredroneConstante.getErrorLogin(getApplicationContext()).show();
+                }
+
+
             }
         });
 

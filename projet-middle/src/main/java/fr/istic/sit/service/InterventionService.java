@@ -36,6 +36,8 @@ public class InterventionService {
 
     @Autowired
     DroneService droneService;
+
+
     private Integer nextDroneID = 0;
     private String DEFAULT_IP_DRONE="127.0.0.1";
     private Integer DEFAULT_PORT_DRONE_MAV_PROXY = 14550;
@@ -271,6 +273,8 @@ public class InterventionService {
 
                 intervention.getDrones().add(drone);
                 repository.save(intervention);
+
+                droneService.createDrone(drone.getId(), drone.getLatitude(), drone.getLongitude());
 
                 return drone;
             }

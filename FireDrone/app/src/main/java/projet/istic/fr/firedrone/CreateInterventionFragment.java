@@ -53,16 +53,6 @@ import retrofit.client.Response;
 
 public class CreateInterventionFragment extends Fragment {
 
-    private static InterventionsListFragment INSTANCE;
-
-    public static InterventionsListFragment getInstance() {
-        if(INSTANCE == null){
-            INSTANCE = new InterventionsListFragment();
-        }
-        return INSTANCE;
-    }
-
-
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle saveInstantState){
 
