@@ -36,6 +36,9 @@ import projet.istic.fr.firedrone.listener.DroneMissionFragmentInterface;
 import projet.istic.fr.firedrone.model.Drone;
 import projet.istic.fr.firedrone.model.PointMissionDrone;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.synchro.MyObservable;
+import projet.istic.fr.firedrone.synchro.Observable;
+import projet.istic.fr.firedrone.synchro.Observateur;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -47,9 +50,7 @@ public class MapDroneFragment extends SupportMapFragment implements
         GoogleMap.OnMapClickListener,
         DroneMissionFragmentInterface,
         GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline, Serializable {
-
-
+        GoogleMap.OnCameraChangeListener, OnMapReadyCallback, ManagePolyline, Serializable,Observateur {
 
     private transient GoogleMap myMap;
     //ensemle des marqueurs, clé : identifiant du marqueur, valeur : marqueur
@@ -70,7 +71,7 @@ public class MapDroneFragment extends SupportMapFragment implements
     private transient ImageButton suppressionMarker;
 
     //marqueur du drône
-    transient List<Marker> markerDrones = new ArrayList<>();
+    transient Marker markerDrone;
 
     /**   CurrentDrone   **/
     transient private Drone currentDrone;
@@ -92,13 +93,14 @@ public class MapDroneFragment extends SupportMapFragment implements
         if (!InterventionSingleton.getInstance().getIntervention().getDrones().isEmpty()) {
             currentDrone = InterventionSingleton.getInstance().getIntervention().getDrones().get(0);
         }
-
         //**   -  DEFAULT MODE  -   **//
         setMode(ModeMissionDrone.NONE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        MyObservable.getInstance().setFragment(this);
+
         FrameLayout mapView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
 
         //création du bouton de suppression des marqueurs
@@ -200,34 +202,17 @@ public class MapDroneFragment extends SupportMapFragment implements
      * Actualize the position of the Drone
      */
     public void refreshPointDrone(){
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(FiredroneConstante.END_POINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setClient(new OkClient())
-                .build();
-        final InterventionAPI interventionAPI = restAdapter.create(InterventionAPI.class);
-        interventionAPI.getAllDrone(InterventionSingleton.getInstance().getIntervention().getId(), new Callback<List<Drone>>() {
+        List<Drone> drones=InterventionSingleton.getInstance().getIntervention().getDrones();
 
-            @Override
-            public void success(List<Drone> drones, Response response) {
-                for (Marker marker : markerDrones) {
-                    marker.remove();
-                }
-                markerDrones.clear();
-                for (Drone drone : drones) {
-                    LatLng position = new LatLng(Double.valueOf(drone.getLatitude()), Double.valueOf(drone.getLongitude()));
-                    markerDrones.add(myMap.addMarker(new MarkerOptions()
-                                    .position(position)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36)))
-                    );
-                }
+        if(drones.size() >0) {
+            LatLng position = new LatLng(Double.valueOf(drones.get(0).getLatitude()), Double.valueOf(drones.get(0).getLongitude()));
+
+            if (markerDrone == null) {
+                markerDrone = myMap.addMarker(new MarkerOptions().position(position).icon(BitmapDescriptorFactory.fromResource(R.drawable.drone_36_36)));
+            }else{
+                markerDrone.setPosition(position);
             }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
+        }
     }
 
     /**
@@ -374,5 +359,15 @@ public class MapDroneFragment extends SupportMapFragment implements
     @Override
     public ModeMissionDrone getMode() {
         return this.mode;
+    }
+
+    @Override
+    public void actualiser(Observable o) {
+        if(o instanceof MyObservable) {
+            if(this.isVisible()) {
+                refreshPointDrone();
+            }
+        }
+
     }
 }

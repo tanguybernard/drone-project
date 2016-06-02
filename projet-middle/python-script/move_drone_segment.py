@@ -52,7 +52,7 @@ def encode_multipart_formdata(fields, files):
 
 def post_multipart(host, fields, files):
     import requests
-    
+
     content_type, body = encode_multipart_formdata(fields, files)
     headers = {
         'content-type': content_type,
