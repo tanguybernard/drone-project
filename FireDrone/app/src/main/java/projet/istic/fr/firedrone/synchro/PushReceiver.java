@@ -82,9 +82,9 @@ public class PushReceiver extends BroadcastReceiver  {
                         .setContentText("Synchronisation ...");
         int NOTIFICATION_ID = 12345;
 
-        Intent targetIntent = new Intent(context, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(contentIntent);
+        //Intent targetIntent = new Intent(context, MainActivity.class);
+        //PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //builder.setContentIntent(contentIntent);
         NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nManager.notify(NOTIFICATION_ID, builder.build());
 
