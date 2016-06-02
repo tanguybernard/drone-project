@@ -78,6 +78,8 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
             }
         });
 
+        System.out.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+
         holder.myName.setText(item.getMsMeanName());
         holder.myInterventionAddress.setText((CharSequence) hashAddress.get(item.getMsMeanId()));
         holder.myInterventionId.setText((CharSequence) hashIdIntervention.get(item.getMsMeanId()));
@@ -101,8 +103,8 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
         Object o = listView.getItemAtPosition(position);
         MeansItem meansItem = (MeansItem) o;
 
-        if(vv!=null) {
-            TextView tt = (TextView) vv.findViewById(R.id.moyen_name2);
+
+
             if(meansItem!=null) {
                 if (valid) {
 
@@ -112,7 +114,7 @@ public class MoyenReqListAdapter extends ArrayAdapter<MeansItem> {
                     editStatus("R",meansItem);
                 }
             }
-        }
+
     }
 
     public void editStatus(String status, MeansItem meansItem){

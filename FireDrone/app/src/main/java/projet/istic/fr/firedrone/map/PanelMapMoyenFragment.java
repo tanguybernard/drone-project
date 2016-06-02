@@ -34,9 +34,11 @@ public class PanelMapMoyenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_map_panel_moyen, container, false);
+        if(InterventionSingleton.getInstance().getIntervention().getCos()!=null){
         if(!InterventionSingleton.getInstance().getIntervention().getCos().getId().equals(UserSingleton.getInstance().getUser().getId())){
             view.findViewById(R.id.panel_map_moyen).setVisibility(View.INVISIBLE);
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
         }
 
         mapMoyenFragment = new MapMoyenFragment();

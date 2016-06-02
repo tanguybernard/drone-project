@@ -73,7 +73,7 @@ public class MoyenFragment extends Fragment implements Observateur {
         final Button addMeans = (Button) view.findViewById(R.id.btnAddMean);
         addMeans.setVisibility(View.GONE);
 
-        //if (oUser.getUser().getRole().equals(FiredroneConstante.ROLE_COS)) {
+        if(InterventionSingleton.getInstance().getIntervention().getCos()!=null) {
         if(InterventionSingleton.getInstance().getIntervention().getCos().getId().equals(oUser.getUser().getId())){
             addMeans.setVisibility(View.VISIBLE);
             addMeans.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +83,7 @@ public class MoyenFragment extends Fragment implements Observateur {
                     popUp.show(getFragmentManager(), "");
                 }
             });
-        }
+        }}
     }
 
     private TableRow addRow(String[] plsValues, boolean pbHeader, final String psColor, String psStatus) {

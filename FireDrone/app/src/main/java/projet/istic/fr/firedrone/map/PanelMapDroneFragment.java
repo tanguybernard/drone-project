@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import projet.istic.fr.firedrone.R;
+import projet.istic.fr.firedrone.singleton.InterventionSingleton;
 import projet.istic.fr.firedrone.singleton.UserSingleton;
 
 /**
@@ -37,6 +38,8 @@ public class PanelMapDroneFragment extends Fragment {
         //**  Add the MAP Fragment  **//
         getChildFragmentManager().beginTransaction().replace(R.id.content_map_drone, mapDroneFragment).commit();
         //**  Non-SIT users don't see the Drone Control Fragment  **//
+
+
         if( UserSingleton.getInstance().getUser().isSIT()) {
             getChildFragmentManager().beginTransaction().replace(R.id.panel_map_drone, controlDroneFragment).commit();
         }
