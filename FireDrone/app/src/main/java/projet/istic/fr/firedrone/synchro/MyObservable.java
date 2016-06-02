@@ -31,9 +31,14 @@ public class MyObservable implements Observable {
     }
 
     private Observateur fragment;
+    private Observateur fragment1;
 
     public void setFragment(Observateur fragment){
         this.fragment = fragment;
+    }
+
+    public void setFragment1(Observateur fragment1){
+        this.fragment1 = fragment1;
     }
 
     public Observateur getFragment(){
@@ -45,7 +50,9 @@ public class MyObservable implements Observable {
     @Override
     public void notifierObservateurs() {
         fragment.actualiser(this);
-
+        if(fragment1 != null){
+            fragment1.actualiser(this);
+        }
         /*for(int i=0;i<tabObservateur.size();i++)
         {
             Observateur o = (Observateur) tabObservateur.get(i);

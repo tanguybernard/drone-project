@@ -99,7 +99,7 @@ public class MapDroneFragment extends SupportMapFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        MyObservable.getInstance().setFragment(this);
+        MyObservable.getInstance().setFragment1(this);
 
         FrameLayout mapView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
 

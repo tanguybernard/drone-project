@@ -41,6 +41,7 @@ import projet.istic.fr.firedrone.model.Resource;
 import projet.istic.fr.firedrone.model.Sig;
 import projet.istic.fr.firedrone.service.MeansItemService;
 import projet.istic.fr.firedrone.singleton.InterventionSingleton;
+import projet.istic.fr.firedrone.singleton.UserSingleton;
 import projet.istic.fr.firedrone.synchro.MyObservable;
 import projet.istic.fr.firedrone.synchro.Observable;
 import projet.istic.fr.firedrone.synchro.Observateur;
@@ -516,7 +517,7 @@ public class MapMoyenFragment extends SupportMapFragment implements OnMapReadyCa
     public void onClick(View v) {
         Object object = mapMarkerItem.get(markerSelected);
 
-        if(object instanceof MeansItem) {
+        if(object instanceof MeansItem  ) {
             MeansItem meansItem = (MeansItem) object;
             Date newDate = new Date();
 
