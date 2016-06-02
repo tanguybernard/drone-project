@@ -44,19 +44,15 @@ public class PointMissionDrone {
 
     //**     -      ToString      -     **//
 
-    @Override
-    public String toString() {
-        return '{' +
-                "latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
-    }
-
 
     public String toJson() {
         return '{' +
                 "\"latitude\" : " + latitude +
                 ", \"longitude\" :" + longitude +
                 '}';
+    }
+
+    public String stringCommand() {
+        return "(" + latitude + "," + longitude + ")";
     }
 }

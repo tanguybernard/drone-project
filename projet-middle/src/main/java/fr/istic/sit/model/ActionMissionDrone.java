@@ -101,4 +101,22 @@ public class ActionMissionDrone {
 
         return builder.toString();
     }
+
+    public String stringCommand(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("'(");
+        boolean firstRound = true;
+        for(PointMissionDrone pointMissionDrone: mission.getPoints()){
+            if(firstRound) {
+                firstRound = !firstRound;
+            }
+            else {
+                builder.append(",");
+            }
+            builder.append(pointMissionDrone.stringCommand());
+        }
+        builder.append(")'");
+
+        return builder.toString();
+    }
 }
