@@ -31,10 +31,10 @@ public class DroneService {
      * @param longitude
      */
     public void createDrone(String id, String latitude, String longitude){
-        log.debug("Creating drone....");
-        //String command = "./create-drone.sh " + id + " " + latitude + " " + longitude;
-        String commandCreateDrone = "python create_drone.py --instance " + id + " --latitude " + latitude + " --longitude " + longitude + " &" ;
-        String response = executeShellComand.executeCommand(commandCreateDrone);
+        log.info("Creating drone....");
+        String command = "./create-drone.sh " + id + " " + latitude + " " + longitude;
+        //String commandCreateDrone = "python create_drone.py --instance " + id + " --latitude " + latitude + " --longitude " + longitude + " &" ;
+        String response = executeShellComand.executeCommand(command);
 
         log.info("Response ----> create-drone.sh  " + response);
 
@@ -43,15 +43,15 @@ public class DroneService {
         ./create-mavproxy.sh $1
         */
 
-        try {
+       /* try {
             Thread.sleep(1000);                 //1000 milliseconds is one second.
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
-        }
+        }*/
 
-        String commandMavProxy = "./create-mavproxy.sh " + id ;
-        response = executeShellComand.executeCommand(commandMavProxy);
-        log.info("Response ----> create-mavproxy.sh "+ response);
+        //String commandMavProxy = "./create-mavproxy.sh " + id ;
+       // response = executeShellComand.executeCommand(commandMavProxy);
+       // log.info("Response ----> create-mavproxy.sh "+ response);
     }
 
     /**
@@ -65,7 +65,7 @@ public class DroneService {
 
      */
     public void action(ActionMissionDrone actionMissionDrone){
-        log.debug("Action on drone....");
+        log.info("Action on drone....");
 
         String command = new String();
         String response = "";
@@ -84,17 +84,24 @@ public class DroneService {
                     break;
 
                 case SEGMENT:
-                    command += "python move_drone_segment.py ";
+                    //command += "python move_drone_segment.py ";
+                    command += "./move_drone_segment.sh  ";
                     break;
 
                 case ZONE:
                     break;
 
             }
-            cmdArgs_connect = "--connect " + drone.getIp()+":"+drone.getPort() + " ";
+        /*    cmdArgs_connect = "--connect " + drone.getIp()+":"+drone.getPort() + " ";
             cmdArgs_mission = "--mission " + actionMissionDrone.toJson() + " ";
             cmdArgs_idDrone = "--idDrone " + drone.getId() + " ";
             cmdArgs_idIntervention = "--idIntervention " + actionMissionDrone.getIdIntervention() ;
+*/
+
+            cmdArgs_connect = drone.getIp()+":"+drone.getPort() + " ";
+            cmdArgs_mission = actionMissionDrone.toJson() + " ";
+            cmdArgs_idDrone = drone.getId() + " ";
+            cmdArgs_idIntervention = actionMissionDrone.getIdIntervention() ;
 
             command += cmdArgs_connect;
             command += cmdArgs_mission;
